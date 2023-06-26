@@ -8,6 +8,7 @@
 #include <map>
 #include <limits>
 #include <iostream>
+#include <algorithm>
 
 
 // Constants
@@ -42,5 +43,35 @@ inline std::vector<double> stringToVector(const std::string& s) {
     }
     return result;
 }
+
+template <typename T>
+inline std::vector<T> convertStringVector(const std::vector<std::string>& stringVector) {
+    // Create a vector of the new type
+    std::vector<T> convertedVector(stringVector.size());
+
+    // Convert each string to the new type
+    std::transform(stringVector.begin(), stringVector.end(), convertedVector.begin(),
+                   [](const std::string& str) {
+                       std::istringstream iss(str);
+                       T value;
+                       iss >> value;
+                       return value;
+                   }
+    );
+
+    return convertedVector;
+}
+
+template <typename T>
+std::vector<std::vector<T>> distributeNTimes(const std::vector<T>& source, int N) {
+    std::vector<std::vector<T>> result(N);  // Initialize vector of vectors
+
+    for (int i = 0; i < source.size(); ++i) {
+        result[i % N].push_back(source[i]);
+    }
+
+    return result;
+}
+
 
 #endif // HELPER_H

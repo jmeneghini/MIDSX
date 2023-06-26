@@ -4,7 +4,7 @@
 
 class DataAccessObject {
 public:
-    DataAccessObject(const std::string& db_name) {
+    explicit DataAccessObject(const std::string& db_name) {
         int rc = sqlite3_open(db_name.c_str(), &db);
         if(rc) {
             std::cout << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
@@ -27,7 +27,7 @@ public:
     }
 
 private:
-    sqlite3* db;
+    sqlite3* db{};
 
     static int callback(void* data, int argc, char** argv, char** azColName) {
         auto* results = static_cast<std::vector<std::string>*>(data);
