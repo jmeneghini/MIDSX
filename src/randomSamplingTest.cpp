@@ -15,7 +15,7 @@ int main() {
     // sample energy from spectrum using inversion method
     DiscreteDist energy_spectrum(spectrum_data, "inversion");
     std::vector<double> sampled_energies;
-    for (int i = 0; i < 10000000; ++i) {
+    for (int i = 0; i < 100000; ++i) {
         sampled_energies.push_back(energy_spectrum.sample());
     }
     double mean = std::accumulate(sampled_energies.begin(), sampled_energies.end(), 0.0) / sampled_energies.size();

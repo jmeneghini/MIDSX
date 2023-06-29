@@ -6,20 +6,19 @@
 #include <sstream>
 #include <string>
 #include <map>
-#include <limits>
+#include <functional>
 #include <iostream>
 #include <algorithm>
+#include "constants.h"
+#include <valarray>
+#include <Eigen/Dense>
+#include <fstream>
 
-
-// Constants
-
-const double infinity = std::numeric_limits<double>::infinity();
-const double pi = 3.1415926535897932385;
 
 // Utility Functions
 
 inline double degreesToRadians(double degrees) {
-    return degrees * pi / 180.0;
+    return degrees * PI / 180.0;
 }
 
 inline std::vector<double> stringToVector(const std::string& s) {
@@ -45,12 +44,12 @@ inline std::vector<double> stringToVector(const std::string& s) {
 }
 
 template <typename T>
-inline std::vector<T> convertStringVector(const std::vector<std::string>& stringVector) {
+inline std::vector<T> convertStringVector(const std::vector<std::string>& string_vector) {
     // Create a vector of the new type
-    std::vector<T> convertedVector(stringVector.size());
+    std::vector<T> converted_vector(string_vector.size());
 
     // Convert each string to the new type
-    std::transform(stringVector.begin(), stringVector.end(), convertedVector.begin(),
+    std::transform(string_vector.begin(), string_vector.end(), converted_vector.begin(),
                    [](const std::string& str) {
                        std::istringstream iss(str);
                        T value;
@@ -59,19 +58,70 @@ inline std::vector<T> convertStringVector(const std::vector<std::string>& string
                    }
     );
 
-    return convertedVector;
+    return converted_vector;
 }
 
 template <typename T>
-std::vector<std::vector<T>> distributeNTimes(const std::vector<T>& source, int N) {
-    std::vector<std::vector<T>> result(N);  // Initialize vector of vectors
+std::vector<std::vector<T>> distributeNTimes(const std::vector<T>& source, int n) {
+    std::vector<std::vector<T>> result(n);  // Initialize vector of vectors
 
     for (int i = 0; i < source.size(); ++i) {
-        result[i % N].push_back(source[i]);
+        result[i % n].push_back(source[i]);
     }
 
     return result;
 }
+
+// Convert N sets of vectors to an N-dimensional Eigen::MatrixXd
+template <typename T>
+Eigen::MatrixXd convertNVectorsToEigenMatrix(const std::vector<std::vector<T>>& source) {
+    Eigen::MatrixXd result(source[0].size(), source.size());
+
+    for (int i = 0; i < source.size(); ++i) {
+        result.col(i) = Eigen::Map<const Eigen::VectorXd>(source[i].data(), source[i].size());
+    }
+
+    return result;
+}
+
+// Convert Eigen::VectorXd to std::vector
+template <typename T>
+std::vector<T> convertEigenVectorToStdVector(const Eigen::Matrix<T, Eigen::Dynamic, 1>& source) {
+    std::vector<T> result(source.data(), source.data() + source.size());
+    return result;
+}
+
+// Eigen logspace function
+template <typename T>
+Eigen::Matrix<T, Eigen::Dynamic, 1> logspace(int num, T start, T end) {
+    Eigen::Matrix<T, Eigen::Dynamic, 1> result(num);
+    T delta = (end - start) / (num - 1);
+    for (int i = 0; i < num; ++i) {
+        result(i) = pow(10, start + delta * i);
+    }
+    return result;
+}
+
+template<typename T>
+T load_csv (const std::string& path) {
+    std::ifstream in_data;
+    in_data.open(path);
+    std::string line;
+    std::vector<double> values;
+    uint rows = 0;
+    while (std::getline(in_data, line)) {
+        std::stringstream lineStream(line);
+        std::string cell;
+        while (std::getline(lineStream, cell, ',')) {
+            values.push_back(std::stod(cell));
+        }
+        ++rows;
+    }
+    return Eigen::Map<const Eigen::Matrix<typename T::Scalar, T::RowsAtCompileTime, T::ColsAtCompileTime, Eigen::RowMajor>>(values.data(), rows, values.size()/rows);
+}
+
+
+
 
 
 #endif // HELPER_H

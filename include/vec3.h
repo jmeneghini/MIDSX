@@ -15,9 +15,6 @@ public:
     inline float x() const {return e[0];}
     inline float y() const {return e[1];}
     inline float z() const {return e[2];}
-    inline float r() const {return e[0];}
-    inline float g() const {return e[1];}
-    inline float b() const {return e[2];}
 
     Vec3 operator-() const {return Vec3(-e[0], -e[1], -e[2]);}
     float operator[](int i) const {return e[i];}
@@ -42,10 +39,10 @@ public:
     }
 
     float length() const {
-        return sqrt(length_squared());
+        return sqrt(lengthSquared());
     }
 
-    float length_squared() const {
+    float lengthSquared() const {
         return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
     }
 public:
@@ -94,7 +91,7 @@ inline Vec3 cross(const Vec3 &u, const Vec3 &v) {
                 u.e[2]*v.e[0] - u.e[0]*v.e[2],
                 u.e[0]*v.e[1] - u.e[1]*v.e[0]);
 }
-inline Vec3 unit_vector(Vec3 v) {
+inline Vec3 unitVector(Vec3 v) {
     return v / v.length();
 }
 
