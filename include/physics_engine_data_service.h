@@ -1,3 +1,6 @@
+#ifndef MC_XRAY_TRANSPORT_PHYSICS_ENGINE_DATA_SERVICE_H
+#define MC_XRAY_TRANSPORT_PHYSICS_ENGINE_DATA_SERVICE_H
+
 #include "helper.h"
 #include "data_access_object.h"
 
@@ -79,7 +82,4 @@ private:
     DataAccessObject dao_;
 };
 
-#ifndef PHYSICS_ENGINE_DATA_SERVICE_H
-#define PHYSICS_ENGINE_DATA_SERVICE_H
-
-#endif //PHYSICS_ENGINE_DATA_SERVICE_H
+#endif //MC_XRAY_TRANSPORT_PHYSICS_ENGINE_DATA_SERVICE_H
