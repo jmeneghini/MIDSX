@@ -4,7 +4,7 @@
 #include <helper.h>
 #include <matplot/matplot.h>
 #include <cmath>
-#include "spline.h"
+#include "interpolators.h"
 
 namespace plt = matplot;
 

@@ -120,26 +120,23 @@ T load_csv (const std::string& path) {
     return Eigen::Map<const Eigen::Matrix<typename T::Scalar, T::RowsAtCompileTime, T::ColsAtCompileTime, Eigen::RowMajor>>(values.data(), rows, values.size()/rows);
 }
 
-double linearInterpolation(const Eigen::MatrixXd& data, double x) {
-    // If x is out of range, extrapolate
-    if (x <= data(0, 0)) {
-        return data(0, 1);
-    } else if (x >= data(data.rows() - 1, 0)) {
-        return data(data.rows() - 1, 1);
-    } else {
-        // Find the index of the first value in the data that is greater than x
-        int i = 0;
-        while (data(i, 0) < x) {
-            ++i;
-        }
+// Merge a vector of Eigen::MatrixXd into a single Eigen::MatrixXd, removing duplicates and maintaining ascending order
+Eigen::MatrixXd mergeMatrices(std::vector<Eigen::MatrixXd>& matrices) {
+    std::vector<double> merged;
 
-        // Linearly interpolate between the two values
-        double x1 = data(i - 1, 0);
-        double x2 = data(i, 0);
-        double y1 = data(i - 1, 1);
-        double y2 = data(i, 1);
-        return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
+    for (const auto& matrix : matrices) {
+        std::vector<double> v(matrix.data(), matrix.data() + matrix.size());
+        merged.insert(merged.end(), v.begin(), v.end());
     }
+
+    std::sort(merged.begin(), merged.end());
+
+    auto last = std::unique(merged.begin(), merged.end());
+    merged.erase(last, merged.end());
+
+    Eigen::MatrixXd result = Eigen::Map<Eigen::MatrixXd>(merged.data(), merged.size(), 1);
+
+    return result;
 }
 
 
