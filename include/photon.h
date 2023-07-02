@@ -6,22 +6,22 @@
 class Photon {
 public:
     Photon() {}
-    Photon(const Vec3& position, const Vec3& direction, const float& energy) : position(position), direction(direction), energy(energy) {}
+    Photon(const Vec3& position, const Vec3& direction, const double& energy) : position(position), direction(direction), energy(energy) {}
 
     Vec3 getPosition() const {return position;}
     Vec3 getDirection() const {return direction;}
-    float getEnergy() const {return energy;}
+    double getEnergy() const {return energy;}
 
-    void move(const float& distance) {
-        position += direction * distance;
+    void move(const double& distance) {
+        position += distance * direction;
     }
 
-    void scatter(const Vec3& newDirection) {
+    void setDirection(const Vec3& newDirection) {
         direction = newDirection;
     }
 
-    void absorb(const float& absorption) {
-        energy *= absorption;
+    void setEnergy(const double& newEnergy) {
+        energy = newEnergy;
     }
 
     bool isTerminated() const {
@@ -36,7 +36,7 @@ public:
 private:
     Vec3 position;
     Vec3 direction;
-    float energy;
+    double energy;
     bool terminated = false;
 };
 

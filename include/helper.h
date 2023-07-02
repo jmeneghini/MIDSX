@@ -139,7 +139,27 @@ Eigen::MatrixXd mergeMatrices(std::vector<Eigen::MatrixXd>& matrices) {
     return result;
 }
 
+Eigen::MatrixXd getBlockByRowValue(Eigen::MatrixXd& matrix, double rowStartValue, double rowEndValue, int column) {
+    int rowStart = -1, rowEnd = -1;
 
+    for (int i = 0; i < matrix.rows(); ++i) {
+        double value = matrix(i, column);
+
+        if (value >= rowStartValue && value <= rowEndValue) {
+            if (rowStart == -1 || i < rowStart) rowStart = i;
+            if (rowEnd == -1 || i > rowEnd) rowEnd = i;
+        }
+    }
+
+    if (rowStart == -1 || rowEnd == -1) {
+        throw std::invalid_argument("getBlockByRowValue: Value range does not match any matrix elements");
+    }
+
+    int numRows = rowEnd - rowStart + 1;
+    int numCols = matrix.cols();
+    Eigen::MatrixXd block = matrix.block(rowStart, 0, numRows, numCols);
+    return block;
+}
 
 
 

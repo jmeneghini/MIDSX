@@ -32,6 +32,7 @@ struct InteractionDataForElement {
 struct InteractionData {
     std::map<int, InteractionDataForElement> interaction_data_map;
     Eigen::MatrixXd total_max_cross_sections_matrix;
+    std::shared_ptr<LinearInterpolator> total_max_interpolator;
 };
 
 
@@ -74,6 +75,7 @@ private:
             interaction_data.incoherent_scattering_functions_interpolator = std::make_shared<LinearInterpolator>(interaction_data.incoherent_scattering_functions_matrix);
 
             interaction_data.coherent_scattering_form_factors_matrix = getTableMatrix("CoherentScatteringFormFactors", "FormFactor", element, energy_range);
+            interaction_data.coherent_scattering_form_factors_matrix.row(1) = interaction_data.coherent_scattering_form_factors_matrix.row(1).array().pow(2); // form factor is only ever used squared, so do it here
             interaction_data.coherent_scattering_form_factors_interpolator = std::make_shared<LinearInterpolator>(interaction_data.coherent_scattering_form_factors_matrix);
 
             interaction_data.total_cross_sections_matrix = getTotalCrossSectionsMatrixFromInteractionData(interaction_data);
@@ -82,6 +84,7 @@ private:
             interaction_data_.interaction_data_map.emplace(element, std::move(interaction_data));
         }
         interaction_data_.total_max_cross_sections_matrix = getTotalMaxCrossSectionsMatrixFromInteractionData(elements);
+        interaction_data_.total_max_interpolator = std::make_shared<LinearInterpolator>(interaction_data_.total_max_cross_sections_matrix);
     }
 
     Eigen::MatrixXd getTableMatrix(const std::string& tableName, const std::string& dataColumnName, int element, const std::pair<double, double>& energy_range) {

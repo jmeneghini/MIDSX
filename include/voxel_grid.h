@@ -4,6 +4,7 @@
 #include <vector>
 #include "vec3.h"
 #include "voxel.h"
+#include <helper.h>
 
 
 class VoxelGrid {
@@ -17,30 +18,32 @@ public:
       voxels(numX * numY * numZ, Voxel()) {} // initialize voxels to default values
 
     // get voxel value at (x, y, z)
-    Voxel getVoxel(int x, int y, int z) {
-        withinGrid(x, y, z);
-        return voxels[index(x, y, z)];
+    Voxel getVoxel(std::array<int, 3> voxelIndex) {
+        handleOutOfBounds(voxelIndex);
+        return voxels[voxelNumber(voxelIndex)];
+
     }
 
     // set voxel value at (x, y, z)
-    void setVoxel(int x, int y, int z, Voxel& value) {
-        withinGrid(x, y, z);
-        voxels[index(x, y, z)] = value;
+    void setVoxel(std::array<int, 3> voxelIndex, Voxel& value) {
+        handleOutOfBounds(voxelIndex);
+        voxels[voxelNumber(voxelIndex)] = value;
     }
 
     // get spatial position of voxel at (x, y, z)
-    Vec3 getVoxelPosition(int x, int y, int z) {
-        withinGrid(x, y, z);
-        return Vec3(x*spacing, y*spacing, z*spacing);
+    Vec3 getVoxelPosition(std::array<int, 3> voxelIndex) {
+        handleOutOfBounds(voxelIndex);
+        return Vec3(voxelIndex[0]*spacing, voxelIndex[1]*spacing, voxelIndex[2]*spacing);
     }
 
     // get voxel index from spatial position
-    int getVoxelIndex(const Vec3& position) {
+    std::array<int, 3> getVoxelIndex(const Vec3& position) {
         int x = static_cast<int>(position.x()/spacing);
         int y = static_cast<int>(position.y()/spacing);
         int z = static_cast<int>(position.z()/spacing);
-        withinGrid(x, y, z);
-        return index(x, y, z);
+        std::array<int, 3> voxelIndex = {x, y, z};
+        handleOutOfBounds(voxelIndex);
+        return voxelIndex;
     }
     
 
@@ -51,14 +54,18 @@ private:
     std::vector<Voxel> voxels;
 
     // calculate the index of the voxel at (x, y, z)
-    int index(int x, int y, int z) const {
-        return x + y*numX + z*numX*numY;
+    int voxelNumber(std::array<int, 3> voxelIndex) const {
+        return voxelIndex[0] + voxelIndex[1]*numX + voxelIndex[2]*numX*numY;
     }
 
     // check if (x, y, z) is within the voxel grid
-    void withinGrid(int x, int y, int z) const {
-        if (x < 0 || x >= numX || y < 0 || y >= numY || z < 0 || z >= numZ) {
-            throw std::out_of_range("VoxelGrid::withinGrid: (x, y, z) is not within the voxel grid");
+    bool withinGrid(std::array<int, 3> voxelIndex) const {
+        return (0 <= voxelIndex[0] && voxelIndex[0] < numX) && (0 <= voxelIndex[1] && voxelIndex[1] < numY) && (0 <= voxelIndex[2] && voxelIndex[2] < numZ);
+    }
+
+    void handleOutOfBounds(std::array<int, 3> voxelIndex) const {
+        if (!withinGrid(voxelIndex)) {
+            throw std::out_of_range("VoxelGrid::handleOutOfBounds: voxel index out of range");
         }
     }
 };

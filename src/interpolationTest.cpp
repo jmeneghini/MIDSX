@@ -4,7 +4,7 @@
 #include <helper.h>
 #include <matplot/matplot.h>
 #include <cmath>
-#include "spline.h"
+#include "interpolators.h"
 
 namespace plt = matplot;
 
@@ -16,7 +16,7 @@ void testSplineInterpolation(int element, const std::string& data_type) {
     Eigen::VectorXd energies = scattering_functions[element].row(0)*1E-6;
     Eigen::VectorXd cross_sections = scattering_functions[element].row(1);
 
-    SplineFunction s(energies.array().log10(), cross_sections.array().log10());
+    SplineInterpolator s(energies.array().log10(), cross_sections.array().log10());
 
 
     Eigen::VectorXd interpolated_energies = logspace(energies.size()*4, log10(energies.minCoeff()), log10(energies.maxCoeff()));

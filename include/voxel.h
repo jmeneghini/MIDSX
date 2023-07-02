@@ -2,10 +2,11 @@
 #define VOXEL_H
 
 #include <string>
+#include "vec3.h"
 
 struct Voxel {
-    std::string material = "Air";
-    double density = 0.0;
+    int element;
+    double density;
     double dose = 0.0;
 };
 
