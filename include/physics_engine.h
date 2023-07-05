@@ -202,16 +202,7 @@ private:
                 return E-E_prime;
             }
         }
-
-
-
     }
-
-
-
-
-
-
 };
 
 #endif

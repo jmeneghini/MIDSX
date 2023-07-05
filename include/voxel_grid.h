@@ -90,5 +90,3 @@ private:
 };
 
 #endif // VOXELGRID_H
-
-// USE XCOM FOR CROSS SECTIONS

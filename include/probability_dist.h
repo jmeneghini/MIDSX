@@ -95,8 +95,6 @@ private:
         cdf.col(1) = cumsum(probabilities_matrix_.col(1));
         return cdf;
     }
-
-
 };
 
 #endif

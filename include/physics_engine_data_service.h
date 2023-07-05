@@ -144,12 +144,7 @@ private:
             total_max_cross_sections_matrix(i, 1) = max_cross_section;
         }
         return total_max_cross_sections_matrix;
-
     }
-
-
-
-
 };
 
 #endif //MC_XRAY_TRANSPORT_PHYSICS_ENGINE_DATA_SERVICE_H
