@@ -17,6 +17,8 @@
 
 // Utility Functions
 
+using Vector3D = Eigen::Vector3d;
+
 inline double degreesToRadians(double degrees) {
     return degrees * PI / 180.0;
 }

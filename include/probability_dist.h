@@ -29,7 +29,7 @@ private:
 
 class DiscreteDist : public ProbabilityDist {
 public:
-    explicit DiscreteDist(const Eigen::MatrixXd& probabilities_matrix, const std::string& sampling_algorithm = "inversion")
+    explicit DiscreteDist(const Eigen::Matrix<double, Eigen::Dynamic, 2>& probabilities_matrix, const std::string& sampling_algorithm = "inversion")
             : probabilities_matrix_(probabilities_matrix), sampling_algorithm_(sampling_algorithm), generator_(std::random_device{}()) {
         normalize(); // normalize probabilities if necessary
         cdf_matrix_ = generateCDF();
@@ -64,8 +64,8 @@ public:
     }
 
 private:
-    Eigen::MatrixXd probabilities_matrix_;
-    Eigen::MatrixXd cdf_matrix_;
+    Eigen::Matrix<double, Eigen::Dynamic, 2> probabilities_matrix_;
+    Eigen::Matrix<double, Eigen::Dynamic, 2> cdf_matrix_;
     std::string sampling_algorithm_;
     mutable std::mt19937 generator_;
 
@@ -89,8 +89,8 @@ private:
     }
     
     // generate cdf for sampling
-    Eigen::MatrixXd generateCDF() const {
-        Eigen::MatrixXd cdf(probabilities_matrix_.rows(), probabilities_matrix_.cols());
+    Eigen::Matrix<double, Eigen::Dynamic, 2> generateCDF() const {
+        Eigen::Matrix<double, Eigen::Dynamic, 2> cdf(probabilities_matrix_.rows(), probabilities_matrix_.cols());
         cdf.col(0) = probabilities_matrix_.col(0);
         cdf.col(1) = cumsum(probabilities_matrix_.col(1));
         return cdf;

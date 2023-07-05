@@ -7,31 +7,31 @@
 #include <memory>
 
 struct InteractionDataForElement {
-    Eigen::MatrixXd incoherent_cross_sections_matrix;
+    Eigen::Matrix<double, Eigen::Dynamic, 2> incoherent_cross_sections_matrix;
     std::shared_ptr<LogLogSplineInterpolator> incoherent_scattering_interpolator;
 
-    Eigen::MatrixXd coherent_cross_sections_matrix;
+    Eigen::Matrix<double, Eigen::Dynamic, 2> coherent_cross_sections_matrix;
     std::shared_ptr<LogLogSplineInterpolator> coherent_scattering_interpolator;
 
-    Eigen::MatrixXd photo_cross_sections_matrix;
+    Eigen::Matrix<double, Eigen::Dynamic, 2> photo_cross_sections_matrix;
     std::shared_ptr<LinearInterpolator> photoelectric_interpolator;
 
-    Eigen::MatrixXd total_cross_sections_matrix;
+    Eigen::Matrix<double, Eigen::Dynamic, 2> total_cross_sections_matrix;
     std::shared_ptr<LinearInterpolator> total_interpolator;
 
-    Eigen::MatrixXd tot_cross_sections_max_matrix;
+    Eigen::Matrix<double, Eigen::Dynamic, 2> tot_cross_sections_max_matrix;
     std::shared_ptr<LinearInterpolator> total_max_interpolator;
 
-    Eigen::MatrixXd incoherent_scattering_functions_matrix;
+    Eigen::Matrix<double, Eigen::Dynamic, 2> incoherent_scattering_functions_matrix;
     std::shared_ptr<LinearInterpolator> incoherent_scattering_functions_interpolator;
 
-    Eigen::MatrixXd coherent_scattering_form_factors_matrix;
+    Eigen::Matrix<double, Eigen::Dynamic, 2> coherent_scattering_form_factors_matrix;
     std::shared_ptr<LinearInterpolator> coherent_scattering_form_factors_interpolator;
 };
 
 struct InteractionData {
     std::map<int, InteractionDataForElement> interaction_data_map;
-    Eigen::MatrixXd total_max_cross_sections_matrix;
+    Eigen::Matrix<double, Eigen::Dynamic, 2> total_max_cross_sections_matrix;
     std::shared_ptr<LinearInterpolator> total_max_interpolator;
 };
 
@@ -87,7 +87,7 @@ private:
         interaction_data_.total_max_interpolator = std::make_shared<LinearInterpolator>(interaction_data_.total_max_cross_sections_matrix);
     }
 
-    Eigen::MatrixXd getTableMatrix(const std::string& tableName, const std::string& dataColumnName, int element, const std::pair<double, double>& energy_range) {
+    Eigen::Matrix<double, Eigen::Dynamic, 2> getTableMatrix(const std::string& tableName, const std::string& dataColumnName, int element, const std::pair<double, double>& energy_range) {
         std::string query = "SELECT Energy, " + dataColumnName + " FROM " + tableName + " WHERE ElementID = " + std::to_string(element)
                             + " AND Energy BETWEEN " + std::to_string(energy_range.first) + " AND " + std::to_string(energy_range.second);
         std::vector<double> res = convertStringVector<double>(dao_.executeQuery(query));
@@ -97,7 +97,7 @@ private:
     }
 
 
-    Eigen::MatrixXd getTotalCrossSectionsMatrixFromInteractionData(const InteractionDataForElement& interaction_data) {
+    Eigen::Matrix<double, Eigen::Dynamic, 2> getTotalCrossSectionsMatrixFromInteractionData(const InteractionDataForElement& interaction_data) {
         // create a vector of all energy matrices
         std::vector<Eigen::MatrixXd> all_energies = {interaction_data.incoherent_cross_sections_matrix.col(0),
                                                        interaction_data.coherent_cross_sections_matrix.col(0),
@@ -121,7 +121,7 @@ private:
         return total_cross_sections_matrix;
     }
 
-    Eigen::MatrixXd getTotalMaxCrossSectionsMatrixFromInteractionData(const std::vector<int>& elements) {
+    Eigen::Matrix<double, Eigen::Dynamic, 2> getTotalMaxCrossSectionsMatrixFromInteractionData(const std::vector<int>& elements) {
         // create a vector of all energy matrices for each element
         std::vector<Eigen::MatrixXd> all_energies;
         for (const auto& element : elements) {

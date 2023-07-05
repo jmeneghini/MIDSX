@@ -5,8 +5,8 @@
 #include "vec3.h"
 
 struct Voxel {
-    int element;
-    double density;
+    int element = 13;
+    double density = 2.70;
     double dose = 0.0;
 };
 

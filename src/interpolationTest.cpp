@@ -8,34 +8,40 @@
 
 namespace plt = matplot;
 
-void testSplineInterpolation(int element, const std::string& data_type) {
-    PhysicsEngineDataService data("data/data_sources/EPDL/EPDL.db");
-    std::vector<int> elements = {element};
-    auto scattering_functions = data.getCoherentScatteringFormFactors(elements, {1E-8, 1E-4});
-
-    Eigen::VectorXd energies = scattering_functions[element].row(0)*1E-6;
-    Eigen::VectorXd cross_sections = scattering_functions[element].row(1);
-
-    SplineInterpolator s(energies.array().log10(), cross_sections.array().log10());
-
-
-    Eigen::VectorXd interpolated_energies = logspace(energies.size()*4, log10(energies.minCoeff()), log10(energies.maxCoeff()));
-
-    Eigen::VectorXd interpolated_cross_sections(interpolated_energies.size());
-    for (int i = 0; i < interpolated_energies.size(); ++i) {
-        interpolated_cross_sections(i) = pow(10, s(log10(interpolated_energies(i))));
-    }
-
-    auto p = plt::loglog(energies, cross_sections, "ro", interpolated_energies, interpolated_cross_sections, "g-");
-    p[0]->marker_size(5);
-    p[1]->line_width(2);
-    plt::show();
-
-}
-
 int main() {
-    testSplineInterpolation(85, "photoelectric");
-    return 0;
+    std::vector<int> elements = {13};
+    PhysicsEngineDataService data_service("data/data_sources/EPDL/EPDL.db", elements);
+    InteractionData data = data_service.getInteractionData();
+
+    auto total_cross_sections_13 = data.interaction_data_map[13].total_cross_sections_matrix;
+    auto incoherent_cross_sections_13 = data.interaction_data_map[13].incoherent_cross_sections_matrix;
+    auto coherent_cross_sections_13 = data.interaction_data_map[13].coherent_cross_sections_matrix;
+    auto photoelectric_cross_sections_13 = data.interaction_data_map[13].photo_cross_sections_matrix;
+
+    Eigen::VectorXd energies_13 = total_cross_sections_13.col(0);
+    Eigen::VectorXd cross_sections_13 = total_cross_sections_13.col(1);
+
+    Eigen::VectorXd energies_13_incoherent = incoherent_cross_sections_13.col(0);
+    Eigen::VectorXd cross_sections_13_incoherent = incoherent_cross_sections_13.col(1);
+
+    Eigen::VectorXd energies_13_coherent = coherent_cross_sections_13.col(0);
+    Eigen::VectorXd cross_sections_13_coherent = coherent_cross_sections_13.col(1);
+
+    Eigen::VectorXd energies_13_photoelectric = photoelectric_cross_sections_13.col(0);
+    Eigen::VectorXd cross_sections_13_photoelectric = photoelectric_cross_sections_13.col(1);
+
+    plt::loglog(energies_13, cross_sections_13, "ko",
+                energies_13_incoherent, cross_sections_13_incoherent, "r-",
+                energies_13_coherent, cross_sections_13_coherent, "g-",
+                energies_13_photoelectric, cross_sections_13_photoelectric, "b-");
+
+    // add legend
+    plt::legend({"Total", "Incoherent", "Coherent", "Photoelectric"});
+
+
+    plt::xlabel("Energy [eV]");
+    plt::ylabel("Cross section [barn]");
+    plt::show();
 
 
 

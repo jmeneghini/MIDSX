@@ -45,7 +45,7 @@ private:
 
 class LogLogSplineInterpolator : public SplineInterpolator {
 public:
-    LogLogSplineInterpolator(const Eigen::MatrixXd& data)
+    LogLogSplineInterpolator(const Eigen::Matrix<double, Eigen::Dynamic, 2>& data)
             : SplineInterpolator(data)
     { }
 
@@ -56,9 +56,9 @@ public:
 
 class LinearInterpolator {
 public:
-    LinearInterpolator(const Eigen::MatrixXd& data)
+    LinearInterpolator(const Eigen::Matrix<double, Eigen::Dynamic, 2>& data)
             : x_vec_(data.col(0)),
-              y_vec_(data.col(1))
+              y_vec_(data.col(1)) // TODO: LogLog Linear Interpolator
     { }
 
     double operator()(double x) const {

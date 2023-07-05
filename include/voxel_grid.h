@@ -24,6 +24,16 @@ public:
 
     }
 
+    void addVoxelDose(std::array<int, 3> voxelIndex, double dose) {
+        handleOutOfBounds(voxelIndex);
+        voxels[voxelNumber(voxelIndex)].dose += dose;
+    }
+
+    int getVoxelElement(std::array<int, 3> voxelIndex) {
+        handleOutOfBounds(voxelIndex);
+        return voxels[voxelNumber(voxelIndex)].element;
+    }
+
     // set voxel value at (x, y, z)
     void setVoxel(std::array<int, 3> voxelIndex, Voxel& value) {
         handleOutOfBounds(voxelIndex);
@@ -31,19 +41,27 @@ public:
     }
 
     // get spatial position of voxel at (x, y, z)
-    Vec3 getVoxelPosition(std::array<int, 3> voxelIndex) {
+    Eigen::Vector3d getVoxelPosition(std::array<int, 3> voxelIndex) {
         handleOutOfBounds(voxelIndex);
-        return Vec3(voxelIndex[0]*spacing, voxelIndex[1]*spacing, voxelIndex[2]*spacing);
+        return Eigen::Vector3d {voxelIndex[0]*spacing, voxelIndex[1]*spacing, voxelIndex[2]*spacing};
     }
 
     // get voxel index from spatial position
-    std::array<int, 3> getVoxelIndex(const Vec3& position) {
+    std::array<int, 3> getVoxelIndex(const Eigen::Vector3d& position) {
         int x = static_cast<int>(position.x()/spacing);
         int y = static_cast<int>(position.y()/spacing);
         int z = static_cast<int>(position.z()/spacing);
         std::array<int, 3> voxelIndex = {x, y, z};
         handleOutOfBounds(voxelIndex);
         return voxelIndex;
+    }
+
+    double getTotalDose() {
+        double totalDose = 0.0;
+        for (auto& voxel : voxels) {
+            totalDose += voxel.dose;
+        }
+        return totalDose;
     }
     
 
@@ -60,7 +78,8 @@ private:
 
     // check if (x, y, z) is within the voxel grid
     bool withinGrid(std::array<int, 3> voxelIndex) const {
-        return (0 <= voxelIndex[0] && voxelIndex[0] < numX) && (0 <= voxelIndex[1] && voxelIndex[1] < numY) && (0 <= voxelIndex[2] && voxelIndex[2] < numZ);
+        bool is_in = (0 <= voxelIndex[0] && voxelIndex[0] < numX) && (0 <= voxelIndex[1] && voxelIndex[1] < numY) && (0 <= voxelIndex[2] && voxelIndex[2] < numZ);
+        return is_in;
     }
 
     void handleOutOfBounds(std::array<int, 3> voxelIndex) const {

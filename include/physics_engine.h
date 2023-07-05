@@ -11,21 +11,27 @@
 
 class PhysicsEngine {
 public:
-    PhysicsEngine(const VoxelGrid& voxel_grid, const PhysicsEngineDataService& data_service) : voxel_grid_(voxel_grid), interaction_data_(data_service.getInteractionData()),
-                                                                                                                                  uniform_dist_(0.0, 1.0) {}
+    PhysicsEngine(VoxelGrid& voxel_grid, const PhysicsEngineDataService& data_service) : voxel_grid_(voxel_grid), interaction_data_(data_service.getInteractionData()),
+    uniform_dist_(0.0, 1.0) {}
 
 
     void transportPhoton(Photon& photon) {
+        while (!photon.isTerminated()) {
+            transportPhotonOneStep(photon);
+        }
+    }
+
+    void transportPhotonOneStep(Photon& photon) {
         // delta tracking algorithm
         double photon_energy = photon.getEnergy();
         double max_cross_section = (*interaction_data_.total_max_interpolator)(photon_energy);
-        double free_path_length = getFreePath(photon_energy);
+        double free_path_length = getFreePath(max_cross_section);
 
         // move photon to distance of free path length
         photon.move(free_path_length);
 
         std::array<int, 3> current_voxel_index{};
-        // check if photon is still in voxel grid. If yes, kill photon
+        // Check if photon is still in voxel grid. If yes, kill photon
         try {
             current_voxel_index = voxel_grid_.getVoxelIndex(photon.getPosition());
         } catch (const std::out_of_range &e) {
@@ -34,8 +40,7 @@ public:
         }
 
         // get material of new voxel
-        Voxel current_voxel = voxel_grid_.getVoxel(current_voxel_index);
-        int current_element = current_voxel.element;
+        int current_element = voxel_grid_.getVoxelElement(current_voxel_index);
 
         // get total cross section for current element
         double total_cross_section = (*interaction_data_.interaction_data_map.at(current_element).total_interpolator)(
@@ -53,12 +58,15 @@ public:
 
         // simulate interaction
         if (interaction_type == "photoelectric") {
-            current_voxel.dose += photon.getEnergy();
+            voxel_grid_.addVoxelDose(current_voxel_index, photon_energy);
             photon.terminate();  // not considering secondary electrons for now
-            return;
         } else if (interaction_type == "coherent") {
-
-
+            simulateCoherentScattering(photon, current_element);
+        } else if (interaction_type == "incoherent") {
+            voxel_grid_.addVoxelDose(current_voxel_index, simulateIncoherentScattering(photon, current_element));
+            photon.terminate();  // not considering secondary electrons for now
+        } else {
+            throw std::runtime_error("Interaction type not recognized");
         }
     }
 
@@ -68,7 +76,7 @@ public:
         // get cross sections for current element
         double coherent_scattering_cross_section = (*interaction_data_.interaction_data_map.at(element).coherent_scattering_interpolator)(photon_energy);
         double incoherent_scattering_cross_section = (*interaction_data_.interaction_data_map.at(element).incoherent_scattering_interpolator)(photon_energy);
-
+// these values seem to small while debugging
 
 
         // sample interaction type
@@ -76,7 +84,8 @@ public:
         double p_incoherent = incoherent_scattering_cross_section / total_cross_section;
 
 
-        // this is a special case of inversion sampling that is done in DiscreteDistribution. In this case, the x values do not matter, only the y values
+        // This is a special case of inversion sampling that is done in DiscreteDistribution.
+        // In this case, the x values do not matter, only the y values
         double random_number = uniform_dist_.sample();
 
         if (random_number < p_coherent) {
@@ -93,7 +102,7 @@ public:
 
 
 private:
-    VoxelGrid voxel_grid_;
+    VoxelGrid& voxel_grid_;
     UniformDist uniform_dist_;
     InteractionData interaction_data_;
 
@@ -101,6 +110,7 @@ private:
     // get free path from using inverse sampling on the max cross section
     double getFreePath(double max_cross_section) {
         double free_path = -log(uniform_dist_.sample()) / max_cross_section;
+        return free_path;
     }
 
     bool isDeltaScatter(double cross_section, double max_cross_section) {
@@ -135,7 +145,63 @@ private:
         double phi = 2*PI*uniform_dist_.sample();
 
 
-        // sample
+        // rotate photon direction
+        photon.rotate(theta, phi);
+    }
+
+    double simulateIncoherentScattering(Photon& photon, int element) {
+        double E = photon.getEnergy();
+        double kappa = E / (ELECTRON_MASS * SPEED_OF_LIGHT * SPEED_OF_LIGHT);
+        double a_1 = log(1 + 2 * kappa);
+        double a_2 = (2 * kappa) * (1 + kappa) / pow((1 + 2 * kappa), 2);
+
+        double pi_1 = a_1 / (a_1 + a_2);
+        // pi_2 = 1 - pi_1
+
+        double tau_min = 1 / (1 + 2 * kappa);
+        double tau_max = 1;
+        double tau;
+
+        // sample phi
+        double phi = 2*PI*uniform_dist_.sample();
+
+
+        while(true) {
+            // sample cos(theta) (PENELOPE-2018 p. 71)
+
+            // special case of inversion sampling where x values do not matter,
+            // only y values (binary search isn't necessary,
+            // implement more efficient DiscreteDist.sample())
+            double random_number_1 = uniform_dist_.sample();
+            double random_number_2 = uniform_dist_.sample();
+
+            if (random_number_1 < pi_1) {
+                // i = 1
+                tau = pow(tau_min, random_number_2);
+            } else {
+                // i = 2
+                tau = sqrt((tau * tau) + random_number_2 * (1 - (tau * tau)));
+            }
+
+            double cos_theta = 1 - (1 - tau) / (kappa * tau);
+            double E_prime = E / (1 + kappa * (1 - cos_theta));
+
+            // calculate q_c for scattering function
+            double q_c = 1 / SPEED_OF_LIGHT * sqrt((E_prime * E_prime) + (E * E) - 2 * E_prime * E * cos_theta);
+
+            // compute scattering function at q_c
+            double scattering_function = (*interaction_data_.interaction_data_map.at(
+                    element).incoherent_scattering_interpolator)(q_c);
+
+            double random_number_3 = uniform_dist_.sample();
+
+            if (random_number_3 < scattering_function) {
+                // accept
+                photon.setEnergy(E_prime);
+                photon.rotate(acos(cos_theta), phi);
+                return E-E_prime;
+            }
+        }
 
 
 
