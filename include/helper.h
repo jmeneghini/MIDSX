@@ -45,46 +45,10 @@ inline std::vector<double> stringToVector(const std::string& s) {
     return result;
 }
 
-template <typename T>
-inline std::vector<T> convertStringVector(const std::vector<std::string>& string_vector) {
-    // Create a vector of the new type
-    std::vector<T> converted_vector(string_vector.size());
 
-    // Convert each string to the new type
-    std::transform(string_vector.begin(), string_vector.end(), converted_vector.begin(),
-                   [](const std::string& str) {
-                       std::istringstream iss(str);
-                       T value;
-                       iss >> value;
-                       return value;
-                   }
-    );
 
-    return converted_vector;
-}
 
-template <typename T>
-std::vector<std::vector<T>> distributeNTimes(const std::vector<T>& source, int n) {
-    std::vector<std::vector<T>> result(n);  // Initialize vector of vectors
 
-    for (int i = 0; i < source.size(); ++i) {
-        result[i % n].push_back(source[i]);
-    }
-
-    return result;
-}
-
-// Convert N sets of vectors to an N-dimensional Eigen::MatrixXd
-template <typename T>
-Eigen::MatrixXd convertNVectorsToEigenMatrix(const std::vector<std::vector<T>>& source) {
-    Eigen::MatrixXd result(source[0].size(), source.size());
-
-    for (int i = 0; i < source.size(); ++i) {
-        result.col(i) = Eigen::Map<const Eigen::VectorXd>(source[i].data(), source[i].size());
-    }
-
-    return result;
-}
 
 // Convert Eigen::VectorXd to std::vector
 template <typename T>
@@ -121,48 +85,6 @@ T load_csv (const std::string& path) {
     }
     return Eigen::Map<const Eigen::Matrix<typename T::Scalar, T::RowsAtCompileTime, T::ColsAtCompileTime, Eigen::RowMajor>>(values.data(), rows, values.size()/rows);
 }
-
-// Merge a vector of Eigen::MatrixXd into a single Eigen::MatrixXd, removing duplicates and maintaining ascending order
-Eigen::MatrixXd mergeMatrices(std::vector<Eigen::MatrixXd>& matrices) {
-    std::vector<double> merged;
-
-    for (const auto& matrix : matrices) {
-        std::vector<double> v(matrix.data(), matrix.data() + matrix.size());
-        merged.insert(merged.end(), v.begin(), v.end());
-    }
-
-    std::sort(merged.begin(), merged.end());
-
-    auto last = std::unique(merged.begin(), merged.end());
-    merged.erase(last, merged.end());
-
-    Eigen::MatrixXd result = Eigen::Map<Eigen::MatrixXd>(merged.data(), merged.size(), 1);
-
-    return result;
-}
-
-Eigen::MatrixXd getBlockByRowValue(Eigen::MatrixXd& matrix, double rowStartValue, double rowEndValue, int column) {
-    int rowStart = -1, rowEnd = -1;
-
-    for (int i = 0; i < matrix.rows(); ++i) {
-        double value = matrix(i, column);
-
-        if (value >= rowStartValue && value <= rowEndValue) {
-            if (rowStart == -1 || i < rowStart) rowStart = i;
-            if (rowEnd == -1 || i > rowEnd) rowEnd = i;
-        }
-    }
-
-    if (rowStart == -1 || rowEnd == -1) {
-        throw std::invalid_argument("getBlockByRowValue: Value range does not match any matrix elements");
-    }
-
-    int numRows = rowEnd - rowStart + 1;
-    int numCols = matrix.cols();
-    Eigen::MatrixXd block = matrix.block(rowStart, 0, numRows, numCols);
-    return block;
-}
-
 
 
 #endif // HELPER_H

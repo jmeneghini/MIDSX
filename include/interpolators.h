@@ -8,81 +8,52 @@
 
 #include <iostream>
 
-class SplineInterpolator {
-public:
-    SplineInterpolator(const Eigen::MatrixXd& data)
-            : x_vec_(data.col(0)),
-              y_vec_(data.col(1)),
-              x_min_(x_vec_.minCoeff()),
-              x_max_(x_vec_.maxCoeff()),
-              spline_(Eigen::SplineFitting<Eigen::Spline<double, 1>>::Interpolate(
-                      y_vec_.transpose(),
-                      std::min<int>(x_vec_.rows() - 1, 3),
-                      scaledValues(x_vec_)))
-    { }
+namespace Interpolator {
 
-    double operator()(double x) const {
-        return spline_(scaledValue(x))(0);
-    }
+    class Spline {
+    public:
+        explicit Spline(const Eigen::MatrixXd &data);
 
-private:
-    double scaledValue(double x) const {
-        return (x - x_min_) / (x_max_ - x_min_);
-    }
+        virtual double operator()(double x) const;
 
-    Eigen::RowVectorXd scaledValues(Eigen::VectorXd const &x_vec) const {
-        return x_vec.unaryExpr([this](double x) { return scaledValue(x); }).transpose();
-    }
+    private:
+        double scaledValue(double x) const;
 
-    Eigen::VectorXd x_vec_;
-    Eigen::VectorXd y_vec_;
+        Eigen::RowVectorXd scaledValues(Eigen::VectorXd const &x_vec) const;
 
-    double x_min_;
-    double x_max_;
+        Eigen::VectorXd x_vec_;
+        Eigen::VectorXd y_vec_;
 
-    Eigen::Spline<double, 1> spline_;
-};
+        double x_min_;
+        double x_max_;
 
-class LogLogSplineInterpolator : public SplineInterpolator {
-public:
-    LogLogSplineInterpolator(const Eigen::Matrix<double, Eigen::Dynamic, 2>& data)
-            : SplineInterpolator(data)
-    { }
+        Eigen::Spline<double, 1> spline_;
+    };
 
-    double operator()(double x) const {
-        return pow(10, SplineInterpolator::operator()(log10(x)));
-    }
-};
+    class LogLogSpline : public Spline {
+    public:
+        explicit LogLogSpline(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data);
 
-class LinearInterpolator {
-public:
-    LinearInterpolator(const Eigen::Matrix<double, Eigen::Dynamic, 2>& data)
-            : x_vec_(data.col(0)),
-              y_vec_(data.col(1)) // TODO: LogLog Linear Interpolator
-    { }
+        double operator()(double x) const override;
+    };
 
-    double operator()(double x) const {
-        // Check for out of range x values
-        if (x <= x_vec_(0)) return y_vec_(0);
-        if (x >= x_vec_(x_vec_.size() - 1)) return y_vec_(y_vec_.size() - 1);
+    class Linear {
+    public:
+        explicit Linear(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data);
+        virtual double operator()(double x) const;
 
-        // Find the interval where the x value is located
-        auto upper_bound_it = std::upper_bound(x_vec_.data(), x_vec_.data() + x_vec_.size(), x);
-        int idx = upper_bound_it - x_vec_.data();
+    private:
+        Eigen::VectorXd x_vec_;
+        Eigen::VectorXd y_vec_;
+    };
 
-        // Calculate the interpolation
-        double x1 = x_vec_(idx - 1);
-        double x2 = x_vec_(idx);
-        double y1 = y_vec_(idx - 1);
-        double y2 = y_vec_(idx);
+    class LogLogLinear : public Linear {
+    public:
+        // convert data to log-log space
+        explicit LogLogLinear(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data);
 
-        double slope = (y2 - y1) / (x2 - x1);
-        return y1 + slope * (x - x1);
-};
-
-private:
-    Eigen::VectorXd x_vec_;
-    Eigen::VectorXd y_vec_;
-};
+        double operator()(double x) const override;
+    };
+}
 
 #endif //MC_XRAY_TRANSPORT_SPLINE_H

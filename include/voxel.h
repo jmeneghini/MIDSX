@@ -6,7 +6,6 @@
 
 struct Voxel {
     int element = 13;
-    double density = 2.70;
     double dose = 0.0;
 };
 

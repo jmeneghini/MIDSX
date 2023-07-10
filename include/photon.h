@@ -5,57 +5,29 @@
 
 #include "vec3.h"
 #include "helper.h"
+#include "photon_interactions.h"
+#include "particle.h"
+#include "physics_engine_data_service.h"
+#include "particle_interaction_behavior.h"
+#include <memory>
 
-class Photon {
+class Photon : public Particle {
 public:
-    Photon() = default;
-    Photon(Eigen::Vector3d position, Eigen::Vector3d  direction, const double energy) : position(std::move(position)), direction(std::move(direction)), energy(energy) {}
-
-    Eigen::Vector3d getPosition() const {return position;}
-    Eigen::Vector3d getDirection() const {return direction;}
-    double getEnergy() const {return energy;}
-
-    void move(const double& distance) {
-        position += distance * direction;
+    Photon(Eigen::Vector3d& position, Eigen::Vector3d& direction, double energy) : Particle(position, direction, energy) {
+        interaction_behavior_ = std::make_unique<PhotoelectricEffect>();
     }
 
-    void setDirection(const Eigen::Vector3d& newDirection) {
-        direction = newDirection;
+    double interact(const InteractionData& interaction_data, int element) {
+        return interaction_behavior_->interact(*this, interaction_data, element);
     }
 
-    void rotate(const double& theta, const double& phi) {
-        direction = rotateVector(direction, theta, phi);
+    void setInteractionBehavior(std::unique_ptr<ParticleInteractionBehavior> interaction_behavior) {
+        interaction_behavior_ = std::move(interaction_behavior);
     }
 
-    void setEnergy(const double& newEnergy) {
-        energy = newEnergy;
-    }
-
-    bool isTerminated() const {
-        return terminated;
-    }
-
-    void terminate() {
-        terminated = true;
-    }
-    
 
 private:
-    Eigen::Vector3d position;
-    Eigen::Vector3d direction;
-    double energy{};
-    bool terminated = false;
-
-
-    Eigen::Vector3d rotateVector(const Eigen::Vector3d& vector, const double& theta, const double& phi) {
-        Eigen::Vector3d rotatedVector;
-        Eigen::Matrix3d rotation_matrix;
-        rotation_matrix = Eigen::AngleAxisd(phi, Eigen::Vector3d::UnitZ())
-                      * Eigen::AngleAxisd(theta, Eigen::Vector3d::UnitY());
-
-        rotatedVector = rotation_matrix * vector;
-        return rotatedVector;
-    }
+    std::unique_ptr<ParticleInteractionBehavior> interaction_behavior_;
 };
 
 #endif

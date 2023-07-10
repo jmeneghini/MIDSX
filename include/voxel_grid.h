@@ -9,84 +9,48 @@
 
 class VoxelGrid {
 public:
-    VoxelGrid() {}
-    VoxelGrid(double dimX, double dimY, double dimZ, double spacing) 
-    : dimX(dimX), dimY(dimY), dimZ(dimZ), spacing(spacing), 
-      numX(static_cast<int>(dimX/spacing)), 
-      numY(static_cast<int>(dimY/spacing)), 
-      numZ(static_cast<int>(dimZ/spacing)), 
-      voxels(numX * numY * numZ, Voxel()) {} // initialize voxels to default values
+    VoxelGrid() = default;
+    VoxelGrid(double dimX, double dimY, double dimZ, double spacing);
 
     // get voxel value at (x, y, z)
-    Voxel getVoxel(std::array<int, 3> voxelIndex) {
-        handleOutOfBounds(voxelIndex);
-        return voxels[voxelNumber(voxelIndex)];
-
-    }
-
-    void addVoxelDose(std::array<int, 3> voxelIndex, double dose) {
-        handleOutOfBounds(voxelIndex);
-        voxels[voxelNumber(voxelIndex)].dose += dose;
-    }
-
-    int getVoxelElement(std::array<int, 3> voxelIndex) {
-        handleOutOfBounds(voxelIndex);
-        return voxels[voxelNumber(voxelIndex)].element;
-    }
+    Voxel& getVoxel(const std::array<int, 3>& voxelIndex);
 
     // set voxel value at (x, y, z)
-    void setVoxel(std::array<int, 3> voxelIndex, Voxel& value) {
-        handleOutOfBounds(voxelIndex);
-        voxels[voxelNumber(voxelIndex)] = value;
-    }
+    void setVoxel(const std::array<int, 3>& voxelIndex, Voxel& value);
 
     // get spatial position of voxel at (x, y, z)
-    Eigen::Vector3d getVoxelPosition(std::array<int, 3> voxelIndex) {
-        handleOutOfBounds(voxelIndex);
-        return Eigen::Vector3d {voxelIndex[0]*spacing, voxelIndex[1]*spacing, voxelIndex[2]*spacing};
-    }
+    Eigen::Vector3d getVoxelPosition(const std::array<int, 3>& voxelIndex);
 
     // get voxel index from spatial position
-    std::array<int, 3> getVoxelIndex(const Eigen::Vector3d& position) {
-        int x = static_cast<int>(position.x()/spacing);
-        int y = static_cast<int>(position.y()/spacing);
-        int z = static_cast<int>(position.z()/spacing);
-        std::array<int, 3> voxelIndex = {x, y, z};
-        handleOutOfBounds(voxelIndex);
-        return voxelIndex;
+    std::array<int, 3> getVoxelIndex(const Eigen::Vector3d& position);
+
+    double getTotalEnergyDeposited();
+
+    // add to number of photons that have exited the voxel grid
+    void addExit() {
+        numExits++;
     }
 
-    double getTotalDose() {
-        double totalDose = 0.0;
-        for (auto& voxel : voxels) {
-            totalDose += voxel.dose;
-        }
-        return totalDose;
+    // get number of photons that have exited the voxel grid
+    int getNumExits() const {
+        return numExits;
     }
     
 
 private:
-    double dimX, dimY, dimZ;
-    double spacing;
-    int numX, numY, numZ;
+    double dimX{}, dimY{}, dimZ{};
+    double spacing{};
+    int numX{}, numY{}, numZ{};
+    int numExits = 0;
     std::vector<Voxel> voxels;
 
     // calculate the index of the voxel at (x, y, z)
-    int voxelNumber(std::array<int, 3> voxelIndex) const {
-        return voxelIndex[0] + voxelIndex[1]*numX + voxelIndex[2]*numX*numY;
-    }
+    int voxelNumber(const std::array<int, 3>& voxelIndex) const;
 
     // check if (x, y, z) is within the voxel grid
-    bool withinGrid(std::array<int, 3> voxelIndex) const {
-        bool is_in = (0 <= voxelIndex[0] && voxelIndex[0] < numX) && (0 <= voxelIndex[1] && voxelIndex[1] < numY) && (0 <= voxelIndex[2] && voxelIndex[2] < numZ);
-        return is_in;
-    }
+    bool withinGrid(const std::array<int, 3>& voxelIndex) const;
 
-    void handleOutOfBounds(std::array<int, 3> voxelIndex) const {
-        if (!withinGrid(voxelIndex)) {
-            throw std::out_of_range("VoxelGrid::handleOutOfBounds: voxel index out of range");
-        }
-    }
+    void handleOutOfBounds(const std::array<int, 3>& voxelIndex) const;
 };
 
 #endif // VOXELGRID_H
