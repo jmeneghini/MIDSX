@@ -28,6 +28,10 @@ private:
     VoxelGrid& voxel_grid_;
     ProbabilityDist::Uniform uniform_dist_;
     InteractionData interaction_data_;
+    std::shared_ptr<PhotoelectricEffect> photoelectric_effect_;
+    std::shared_ptr<IncoherentScattering> incoherent_scattering_;
+    std::shared_ptr<CoherentScattering> coherent_scattering_;
+
 
     // get free path from using inverse sampling on the max cross section
     double getFreePath(double max_cross_section, int element);

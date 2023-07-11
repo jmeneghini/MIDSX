@@ -14,20 +14,20 @@
 class Photon : public Particle {
 public:
     Photon(Eigen::Vector3d& position, Eigen::Vector3d& direction, double energy) : Particle(position, direction, energy) {
-        interaction_behavior_ = std::make_unique<PhotoelectricEffect>();
+        interaction_behavior_ = std::make_shared<PhotoelectricEffect>();
     }
 
     double interact(const InteractionData& interaction_data, int element) {
         return interaction_behavior_->interact(*this, interaction_data, element);
     }
 
-    void setInteractionBehavior(std::unique_ptr<ParticleInteractionBehavior> interaction_behavior) {
+    void setInteractionBehavior(std::shared_ptr<ParticleInteractionBehavior> interaction_behavior) {
         interaction_behavior_ = std::move(interaction_behavior);
     }
 
 
 private:
-    std::unique_ptr<ParticleInteractionBehavior> interaction_behavior_;
+    std::shared_ptr<ParticleInteractionBehavior> interaction_behavior_;
 };
 
 #endif

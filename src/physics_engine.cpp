@@ -1,7 +1,9 @@
 #include "physics_engine.h"
 
 PhysicsEngine::PhysicsEngine(VoxelGrid& voxel_grid, const PhysicsEngineDataService& data_service) : voxel_grid_(voxel_grid), interaction_data_(data_service.getInteractionData()),
-                                                                                                    uniform_dist_(0.0, 1.0) {};
+                                                                                                    uniform_dist_(0.0, 1.0), photoelectric_effect_(std::make_shared<PhotoelectricEffect>()),
+                                                                                                            coherent_scattering_(std::make_shared<CoherentScattering>()),
+                                                                                                            incoherent_scattering_(std::make_shared<IncoherentScattering>()) {};
 void PhysicsEngine::transportPhoton(Photon& photon) {
     while (!photon.isTerminated()) {
         transportPhotonOneStep(photon);
@@ -68,14 +70,15 @@ void PhysicsEngine::setInteractionType(Photon& photon, int element, double total
     // In this case, the x values do not matter, only the y values
     double random_number = uniform_dist_.sample();
 
+
     if (random_number < p_coherent) {
-        photon.setInteractionBehavior(std::make_unique<CoherentScattering>());
+        photon.setInteractionBehavior(coherent_scattering_);
     }
     else if (random_number < p_coherent + p_incoherent) {
-        photon.setInteractionBehavior(std::make_unique<IncoherentScattering>());
+        photon.setInteractionBehavior(incoherent_scattering_);
     }
     else {
-        photon.setInteractionBehavior(std::make_unique<PhotoelectricEffect>());
+        photon.setInteractionBehavior(photoelectric_effect_);
     }
 }
 

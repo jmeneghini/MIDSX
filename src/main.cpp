@@ -18,7 +18,7 @@ int main() {
     PhysicsEngine physics_engine(voxel_grid, data_service);
     Eigen::Vector3d position(5, 5, 0);
     Eigen::Vector3d direction(0, 0, 1);
-    int N_photons = 100000;
+    int N_photons = 1000000;
     for (int i=0; i<N_photons; i++) {
         Photon photon(position, direction, 20E3);
         physics_engine.transportPhoton(photon);
