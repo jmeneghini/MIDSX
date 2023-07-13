@@ -23,6 +23,7 @@ public:
     // set interaction type based on max cross section and total cross section of photon's current voxel
     void setInteractionType(Photon& photon, int element, double total_cross_section);
 
+    bool isPointingToExit(Photon &photon);
 
 private:
     VoxelGrid& voxel_grid_;

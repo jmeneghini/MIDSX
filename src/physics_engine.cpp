@@ -28,7 +28,9 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
         current_voxel_index = voxel_grid_.getVoxelIndex(photon.getPosition());
     } catch (const std::out_of_range &e) {
         photon.terminate();
-        voxel_grid_.addExit();
+        if (isPointingToExit(photon)) {
+            voxel_grid_.addExit();
+        }
         return;
     }
 
@@ -50,6 +52,19 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
         double energy_deposited = photon.interact(interaction_data_, current_element);
         current_voxel.dose += energy_deposited;
     }
+}
+
+bool PhysicsEngine::isPointingToExit(Photon &photon) {
+    Eigen::Vector3d exit_vector = {0, 0, 1};
+    Eigen::Vector3d photon_direction = photon.getDirection();
+    double dot_product = photon_direction.dot(exit_vector);
+    if (dot_product > 0) {
+        return true;
+    }
+    else {
+        return false;
+    }
+
 }
 
 void PhysicsEngine::setInteractionType(Photon& photon, int element, double total_cross_section) {
@@ -92,5 +107,6 @@ bool PhysicsEngine::isDeltaScatter(double cross_section, double max_cross_sectio
     double p_delta_scatter = 1 - cross_section / max_cross_section;
     return uniform_dist_.sample() < p_delta_scatter;
 }
+
 
 
