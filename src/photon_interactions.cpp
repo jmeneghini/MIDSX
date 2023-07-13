@@ -55,7 +55,7 @@ double CoherentScattering::interact(Particle& photon, const InteractionData& int
     double x_max = k;
 
     // restrict form factor matrix to energies between E_min and E_max
-    Eigen::MatrixXd restricted_form_factor_matrix = PhotonInteractionHelpers::getBlockByRowValue(form_factor_matrix, x_min, x_max, 0);
+    Eigen::MatrixXd restricted_form_factor_matrix = PhotonInteractionHelpers::getBlockByRowValue(form_factor_matrix, x_min, x_max*x_max, 0);
     ProbabilityDist::Discrete form_factor_dist(restricted_form_factor_matrix);
 
     double theta;
@@ -63,7 +63,7 @@ double CoherentScattering::interact(Particle& photon, const InteractionData& int
         double sampled_x = form_factor_dist.sample();
 
 
-        double cos_theta = 1 - 2*pow(sampled_x/k, 2);
+        double cos_theta = 1 - 2*sampled_x*pow(1/k, 2);
         double random_number = uniform_dist_.sample();
         double g = (1 + cos_theta*cos_theta)/2;
         if (random_number < g) {
