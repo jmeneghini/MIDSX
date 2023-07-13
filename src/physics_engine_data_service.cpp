@@ -92,7 +92,7 @@ void PhysicsEngineDataService::initializeData(const std::vector<int> &elements,
         interaction_data.incoherent_scattering_function_interpolator = std::make_shared<Interpolator::LogLogLinear>(interaction_data.incoherent_scattering_function_matrix);
 
         interaction_data.coherent_form_factor_matrix = getTableMatrix("CoherentScatteringFormFactors", "FormFactor", element, energy_range);
-        interaction_data.coherent_form_factor_matrix.row(1) = interaction_data.coherent_form_factor_matrix.row(1).array().pow(2); // form factor is only ever used squared, so do it here
+        interaction_data.coherent_form_factor_matrix.col(1) = interaction_data.coherent_form_factor_matrix.col(1).array().pow(2); // form factor is only ever used squared, so do it here
         interaction_data.coherent_form_factor_interpolator = std::make_shared<Interpolator::LogLogLinear>(interaction_data.coherent_form_factor_matrix);
 
         interaction_data.total_cs_matrix = getTotalCrossSectionsMatrixFromInteractionData(interaction_data);
