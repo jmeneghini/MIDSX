@@ -61,6 +61,8 @@ std::vector<T> convertEigenVectorToStdVector(const Eigen::Matrix<T, Eigen::Dynam
 template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, 1> logspace(int num, T start, T end) {
     Eigen::Matrix<T, Eigen::Dynamic, 1> result(num);
+    start = log10(start);
+    end = log10(end);
     T delta = (end - start) / (num - 1);
     for (int i = 0; i < num; ++i) {
         result(i) = pow(10, start + delta * i);

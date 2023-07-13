@@ -136,7 +136,7 @@ Eigen::Matrix<double, Eigen::Dynamic, 2> PhysicsEngineDataService::getTotalCross
     // fill the total cross section matrix with the sum of the cross sections, for each energy, interpolating when necessary
     for (int i = 0; i < merged_energy_matrix.rows(); ++i) {
         double energy = merged_energy_matrix(i, 0);
-        double incoherent_cross_section = (*interaction_data.coherent_cs_interpolator)(energy);
+        double incoherent_cross_section = (*interaction_data.incoherent_cs_interpolator)(energy);
         double coherent_cross_section = (*interaction_data.coherent_cs_interpolator)(energy);
         double photo_cross_section = (*interaction_data.photoelectric_cs_interpolator)(energy);
         total_cross_sections_matrix(i, 0) = energy;
