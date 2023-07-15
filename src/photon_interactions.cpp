@@ -49,10 +49,11 @@ double CoherentScattering::interact(Particle& photon, const InteractionData& int
     // get coherent scattering form factor
     Eigen::MatrixXd form_factor_matrix = interaction_data.interaction_data_map.at(element).coherent_form_factor_matrix;
 
-    double k= photon.getEnergy() / (PLANCK_CONSTANT * SPEED_OF_LIGHT * 10E8); // in inverse angstroms
+    double k = photon.getEnergy()/ELECTRON_REST_MASS; // unitless
+    double a = ELECTRON_REST_MASS/(sqrt(2)*PLANCK_CONSTANT*SPEED_OF_LIGHT*1E8); // in inverse angstroms
 
     double x_min = 0;
-    double x_max = k;
+    double x_max = a*k*sqrt(2);
 
     // restrict form factor matrix to energies between E_min and E_max
     Eigen::MatrixXd restricted_form_factor_matrix = PhotonInteractionHelpers::getBlockByRowValue(form_factor_matrix, x_min, x_max*x_max, 0);
@@ -60,10 +61,10 @@ double CoherentScattering::interact(Particle& photon, const InteractionData& int
 
     double theta;
     while (true) {
-        double sampled_x = form_factor_dist.sample();
+        double sampled_x_squared = form_factor_dist.sample();
 
 
-        double cos_theta = 1 - 2*sampled_x*pow(1/k, 2);
+        double cos_theta = 1 - 2*sampled_x_squared/(x_max*x_max);
         double random_number = uniform_dist_.sample();
         double g = (1 + cos_theta*cos_theta)/2;
         if (random_number < g) {
@@ -83,64 +84,36 @@ double CoherentScattering::interact(Particle& photon, const InteractionData& int
 }
 
 double IncoherentScattering::interact(Particle& photon, const InteractionData& interaction_data, int element) {
-    double E = photon.getEnergy();
-    double kappa = E / (ELECTRON_MASS);
-    double a_1 = log(1 + 2 * kappa);
-    double a_2 = (2 * kappa) * (1 + kappa) / pow((1 + 2 * kappa), 2);
+    double k = photon.getEnergy()/ELECTRON_REST_MASS; // unitless
 
-    double pi_1 = a_1 / (a_1 + a_2);
-    // pi_2 = 1 - pi_1
-
-    double tau_min = 1 / (1 + 2 * kappa);
-    double tau_max = 1;
-    double tau;
-
-    double k = photon.getEnergy() / (PLANCK_CONSTANT * SPEED_OF_LIGHT * 10E8); // in inverse angstroms
-
-    // sample phi
-    double phi = 2 * PI * uniform_dist_.sample();
+    double c_0 = 2*(2*k*k + 2*k + 1)/pow(2*k + 1, 3);
+    double b = (1 + c_0/2)/(1-c_0/2);
+    double a = 2*(b-1);
 
     while (true) {
-        // sample cos(theta) (PENELOPE-2018 p. 71)
+        // sample h(k, x) = a/(b-x), where x = cos(theta)
+        double random_number = uniform_dist_.sample();
+        double x = b - (b + 1) * pow(c_0 / 2, random_number);
 
-        // special case of inversion sampling where x values do not matter,
-        // only y values (binary search isn't necessary,
-        // implement more efficient DiscreteDist.sample())
-        double random_number_1 = uniform_dist_.sample();
+        // calculate DCS(x) and h(x)
+        double f = (1 + x * x + (k * k * (1 - x) * (1 - x)) / (1 + k * (1 - x))) / pow(1 + k * (1 - x), 2);
+        double h = a / (b - x);
+
+        double ratio = f/h;
         double random_number_2 = uniform_dist_.sample();
+        if (random_number_2 < ratio) {
+            double theta = acos(x);
+            double phi = 2*PI*uniform_dist_.sample();
+            photon.rotate(theta, phi);
 
-        if (random_number_1 < pi_1) {
-            // i = 1
-            tau = pow(tau_min, random_number_2);
-        } else {
-            // i = 2
-            tau = sqrt((tau * tau) + random_number_2 * (1 - (tau * tau)));
-        }
-
-        double cos_theta = 1 - (1 - tau) / (kappa * tau);
-        double E_prime = E / (1 + kappa * (1 - cos_theta));
-
-        // calculate x for scattering function
-
-        double x = k * sqrt(0.5 * (1 - cos_theta));
-
-        // compute scattering function at q_c
-        double scattering_function = (*interaction_data.interaction_data_map.at(
-                element).incoherent_scattering_function_interpolator)(x);
-
-        double scattering_function_at_pi = (*interaction_data.interaction_data_map.at(
-                element).incoherent_scattering_function_interpolator)(k);
-
-        double random_number_3 = uniform_dist_.sample();
-
-        double T = (1 - ((1 - tau) * ((2 * kappa + 1) * tau - 1)) / (kappa * kappa * tau * (1 + tau * tau))) *
-                   (scattering_function / scattering_function_at_pi);
-
-        if (random_number_3 < T) {
-            // accept
-            photon.setEnergy(E_prime);
-            photon.rotate(acos(cos_theta), phi);
-            return E - E_prime;
+            double k_prime = 1/(1 - x + 1/k);
+            double resulting_energy = k_prime*ELECTRON_REST_MASS;
+            photon.setEnergy(resulting_energy);
+            return photon.getEnergy() - resulting_energy;
         }
     }
 }
+
+
+
+

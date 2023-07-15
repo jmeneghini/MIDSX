@@ -6,7 +6,7 @@
 // cgs units (except for energy, which is in eV/c^2, because I'm not a complete monster)
 
 const double PI = 3.14159265358979323846;
-const double ELECTRON_MASS = 0.51099895000E6; // eV/c^2
+const double ELECTRON_REST_MASS = 0.51099895000E6; // eV
 const double ELECTRON_CHARGE = 1.6021766208e-19; // C
 const double ELECTRON_RADIUS = 2.8179403227e-13; // cm
 const double SPEED_OF_LIGHT = 299792458E2; // cm/s

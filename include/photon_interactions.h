@@ -26,6 +26,10 @@ public:
 class IncoherentScattering : public ParticleInteractionBehavior {
 public:
     double interact(Particle& photon, const InteractionData& interaction_data, int element) override;
+
+    static double getEnvelopeFunctionForIncoherentSampling(double k, double x);
 };
+
+
 
 #endif //MCXRAYTRANSPORT_PHOTON_INTERACTIONS_H
