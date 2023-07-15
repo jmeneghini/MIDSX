@@ -42,6 +42,11 @@ namespace Interpolator {
         explicit Linear(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data);
         virtual double operator()(double x) const;
 
+        bool isXSmallerThanMin(double x) const;
+        bool isXBiggerThanMax(double x) const;
+        int findIndexOfNextLargestValue(double x) const;
+        double calculateInterpolatedY(int idx, double x) const;
+
     private:
         Eigen::VectorXd x_vec_;
         Eigen::VectorXd y_vec_;

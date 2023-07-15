@@ -44,7 +44,7 @@ namespace ProbabilityDist {
         Eigen::Matrix<double, Eigen::Dynamic, 2> probabilities_matrix_;
         Eigen::Matrix<double, Eigen::Dynamic, 2> cdf_matrix_;
         std::string sampling_algorithm_;
-        mutable std::mt19937 generator_;
+        ProbabilityDist::Uniform uniform_dist_;
 
         // Checks if discrete distribution is normalized. If not, normalizes it.
         void normalize();
@@ -54,6 +54,8 @@ namespace ProbabilityDist {
 
         // generate cdf for sampling
         Eigen::Matrix<double, Eigen::Dynamic, 2> generateCDF() const;
+
+        int findIndexOfNextSmallestValue(double x) const;
     };
 }
 #endif

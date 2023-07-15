@@ -36,14 +36,29 @@ Interpolator::Linear::Linear(const Eigen::Matrix<double, Eigen::Dynamic, 2> &dat
 
 double Interpolator::Linear::operator()(double x) const {
     // Check for out of range x values
-    if (x <= x_vec_(0)) return y_vec_(0);
-    if (x >= x_vec_(x_vec_.size() - 1)) return y_vec_(y_vec_.size() - 1);
+    if (isXSmallerThanMin(x)) {
+        return y_vec_(0);
+    } else if (isXBiggerThanMax(x)) {
+        return y_vec_(y_vec_.size() - 1);
+    }
+    int idx = findIndexOfNextLargestValue(x);
+    return calculateInterpolatedY(idx, x);
+}
 
-    // Find the interval where the x value is located
+bool Interpolator::Linear::isXSmallerThanMin(double x) const {
+    return x <= x_vec_(0);
+}
+
+bool Interpolator::Linear::isXBiggerThanMax(double x) const {
+    return x >= x_vec_(x_vec_.size() - 1);
+}
+
+int Interpolator::Linear::findIndexOfNextLargestValue(double x) const {
     auto upper_bound_it = std::upper_bound(x_vec_.data(), x_vec_.data() + x_vec_.size(), x);
-    int idx = upper_bound_it - x_vec_.data();
+    return upper_bound_it - x_vec_.data();
+}
 
-    // Calculate the interpolation
+double Interpolator::Linear::calculateInterpolatedY(int idx, double x) const {
     double x1 = x_vec_(idx - 1);
     double x2 = x_vec_(idx);
     double y1 = y_vec_(idx - 1);
@@ -59,6 +74,8 @@ Interpolator::LogLogLinear::LogLogLinear(const Eigen::Matrix<double, Eigen::Dyna
 double Interpolator::LogLogLinear::operator()(double x) const {
     return pow(10, Linear::operator()(log10(x)));
 }
+
+
 
 
 

@@ -61,18 +61,33 @@ public:
 
 private:
     DataAccessObject dao_;
+    std::vector<int> elements_;
+    std::pair<double, double> energy_range_;
     // Store the data in member variables
     InteractionData interaction_data_;
 
-    void initializeData(const std::vector<int>& elements, const std::pair<double, double>& energy_range);
-    Eigen::Matrix<double, Eigen::Dynamic, 2> getTableMatrix(const std::string& tableName, const std::string& dataColumnName, int element, const std::pair<double, double>& energy_range);
+    void initializeData();
 
+    void setInteractionCrossSectionsAndInterpolators(InteractionDataForElement& interaction_data, int element);
+    void setNumberDensity(InteractionDataForElement& interaction_data, int element);
+    void setIncoherentScatteringFunctionAndInterpolator(InteractionDataForElement& interaction_data, int element);
+    void setCoherentScatteringFormFactorAndInterpolator(InteractionDataForElement& interaction_data, int element);
+    void setMaxTotalCrossSectionsAndInterpolator();
+    void moveInteractionDataToMap(InteractionDataForElement& interaction_data, int element);
+    static void setTotalCrossSectionsAndInterpolator(InteractionDataForElement& interaction_data);
+
+    void setIncoherentScatteringCrossSectionAndInterpolator(InteractionDataForElement& interaction_data, int element);
+    void setCoherentScatteringCrossSectionAndInterpolator(InteractionDataForElement& interaction_data, int element);
+    void setPhotoelectricCrossSectionAndInterpolator(InteractionDataForElement& interaction_data, int element);
+
+
+    Eigen::Matrix<double, Eigen::Dynamic, 2> getTableMatrix(const std::string& tableName, const std::string& dataColumnName, int element);
+    static Eigen::Matrix<double, Eigen::Dynamic, 2> getTotalCrossSectionsMatrixFromInteractionData(const InteractionDataForElement& interaction_data);
+    Eigen::Matrix<double, Eigen::Dynamic, 2> getTotalMaxCrossSectionsMatrixFromInteractionData();
     double getNumberDensity(int element);
 
-
-    static Eigen::Matrix<double, Eigen::Dynamic, 2> getTotalCrossSectionsMatrixFromInteractionData(const InteractionDataForElement& interaction_data);
-
-    Eigen::Matrix<double, Eigen::Dynamic, 2> getTotalMaxCrossSectionsMatrixFromInteractionData(const std::vector<int>& elements);
+    static void fillTotalCrossSectionsMatrix(const InteractionDataForElement& interaction_data, Eigen::MatrixXd& total_cross_sections_matrix, const Eigen::MatrixXd& merged_energy_matrix);
+    void fillTotalMaxCrossSectionsMatrix(Eigen::MatrixXd& total_max_cross_sections_matrix, const Eigen::MatrixXd& merged_energy_matrix);
 };
 
 #endif //MC_XRAY_TRANSPORT_PHYSICS_ENGINE_DATA_SERVICE_H

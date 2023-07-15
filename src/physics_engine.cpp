@@ -54,6 +54,7 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
     }
 }
 
+
 bool PhysicsEngine::isPointingToExit(Photon &photon) {
     Eigen::Vector3d exit_vector = {0, 0, 1};
     Eigen::Vector3d photon_direction = photon.getDirection();

@@ -21,13 +21,20 @@ public:
 class CoherentScattering : public ParticleInteractionBehavior {
 public:
     double interact(Particle& photon, const InteractionData& interaction_data, int element) override;
+
+private:
+    static ProbabilityDist::Discrete createFormFactorDistribution(Eigen::MatrixXd form_factor_matrix, double x_min, double x_max);
+    double sampleThetaFromCoherentScatteringDCS(const ProbabilityDist::Discrete& form_factor_dist, double x_max);
 };
 
 class IncoherentScattering : public ParticleInteractionBehavior {
 public:
     double interact(Particle& photon, const InteractionData& interaction_data, int element) override;
-
-    static double getEnvelopeFunctionForIncoherentSampling(double k, double x);
+private:
+    double changeTrajectoryAndReturnEnergyForCoherentScattering(Particle& photon, double x, double k);
+    double sampleXFromH(double b, double c_0);
+    static double getAcceptanceProbability(double a, double b, double x, double k);
+    static double getResultingEnergy(double x, double k);
 };
 
 
