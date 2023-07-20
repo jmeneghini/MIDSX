@@ -14,16 +14,22 @@ namespace plt = matplot;
 int main() {
     std::vector<int> elements = {13};
     PhysicsEngineDataService data_service("data/data_sources/EPDL/EPDL.db", elements);
-    VoxelGrid voxel_grid(1.0, 1.0, 0.23, 0.01);
-    Eigen::Vector3d detector_position(0.5, 0.5, 100);
+    VoxelGrid voxel_grid(10, 10, 1.49, 0.01);
+    Eigen::Vector3d detector_position(5, 5, 100);
     Detector detector(detector_position); // creates a point detector
     PhysicsEngine physics_engine(voxel_grid, data_service, detector);
-    Eigen::Vector3d position(0.5, 0.5, 0);
+    Eigen::Vector3d position(5, 5, 0);
     Eigen::Vector3d direction(0, 0, 1);
-    int N_photons = 100000;
+    int N_photons = 1000000;
+    int j = 0;
     for (int i=0; i<N_photons; i++) {
-        Photon photon(position, direction, 30E3);
+        Photon photon(position, direction, 100E3);
         physics_engine.transportPhoton(photon);
+        if (i % (N_photons/20) == 0) {
+            std::cout << "Progress: " << j << "%" << std::flush << "\r";
+            j += 5;
+        }
+
     }
     DetectorTallies detector_tallies = detector.getTallies();
     std::cout << "Detector tallies: " << std::endl;
