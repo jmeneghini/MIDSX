@@ -10,4 +10,4 @@ Eigen::Vector3d ParticleHelpers::rotateVector(const Eigen::Vector3d &vector, con
     return rotatedVector;
 }
 
-Particle::Particle(Eigen::Vector3d& position, Eigen::Vector3d& direction, double energy) : position(std::move(position)), direction(std::move(direction)), energy(energy) {}
+Particle::Particle(Eigen::Vector3d& position, Eigen::Vector3d& direction, double energy) : position_(std::move(position)), direction_(std::move(direction)), energy_(energy) {}

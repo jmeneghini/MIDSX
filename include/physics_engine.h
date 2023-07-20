@@ -8,11 +8,17 @@
 #include "physics_engine_data_service.h"
 #include "interpolators.h"
 #include "photon_interactions.h"
+#include "detector.h"
 #include <cmath>
+
+namespace PhysicsEngineHelpers {
+    bool areCollinearAndSameDirection(const Eigen::Vector3d& vec1, const Eigen::Vector3d& vec2);
+}
+
 
 class PhysicsEngine {
 public:
-    PhysicsEngine(VoxelGrid& voxel_grid, const PhysicsEngineDataService& data_service);
+    PhysicsEngine(VoxelGrid& voxel_grid, const PhysicsEngineDataService& data_service, Detector& detector);
 
     // transport photon until it is absorbed or leaves the voxel grid (i.e. terminated)
     void transportPhoton(Photon& photon);
@@ -23,12 +29,15 @@ public:
     // set interaction type based on max cross section and total cross section of photon's current voxel
     void setInteractionType(Photon& photon, int element, double total_cross_section);
 
-    static bool isPointingToExit(Photon &photon);
+    // process photon if it is outside the voxel grid
+    void processPhotonOutsideVoxelGrid(Photon& photon);
+
 
 private:
     VoxelGrid& voxel_grid_;
     ProbabilityDist::Uniform uniform_dist_;
     InteractionData interaction_data_;
+    Detector& detector_;
     std::shared_ptr<PhotoelectricEffect> photoelectric_effect_;
     std::shared_ptr<IncoherentScattering> incoherent_scattering_;
     std::shared_ptr<CoherentScattering> coherent_scattering_;
@@ -39,6 +48,10 @@ private:
 
     // check if photon undergoes delta scattering or if it interacts
     bool isDeltaScatter(double cross_section, double max_cross_section);
+
+    // check if detector is hit by exiting photon
+    bool isDetectorHit(Photon& photon);
+
 };
 
 #endif

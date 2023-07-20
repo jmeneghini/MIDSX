@@ -13,39 +13,50 @@ class Particle {
 public:
     Particle() = default;
     Particle(Eigen::Vector3d& position, Eigen::Vector3d& direction, double energy);
-    Eigen::Vector3d getPosition() const {return position;}
-    Eigen::Vector3d getDirection() const {return direction;}
-    double getEnergy() const {return energy;}
+    Eigen::Vector3d getPosition() const {return position_;}
+    Eigen::Vector3d getDirection() const {return direction_;}
+    double getEnergy() const {return energy_;}
 
     void move(const double& distance) {
-        position += distance * direction;
+        position_ += distance * direction_;
     }
 
     void setDirection(const Eigen::Vector3d& newDirection) {
-        direction = newDirection;
+        direction_ = newDirection;
     }
 
     void rotate(const double& theta, const double& phi) {
-        direction = ParticleHelpers::rotateVector(direction, theta, phi);
+        direction_ = ParticleHelpers::rotateVector(direction_, theta, phi);
     }
 
     void setEnergy(const double& newEnergy) {
-        energy = newEnergy;
+        energy_ = newEnergy;
     }
 
     bool isTerminated() const {
-        return terminated;
+        return terminated_;
     }
 
     void terminate() {
-        terminated = true;
+        terminated_ = true;
     }
 
+    bool isPrimary() const {
+        return isPrimary_;
+    }
+
+    void setPrimary(bool primary_status) {
+        isPrimary_ = primary_status;
+    }
+
+
+
 private:
-    Eigen::Vector3d position;
-    Eigen::Vector3d direction;
-    double energy{};
-    bool terminated = false;
+    Eigen::Vector3d position_;
+    Eigen::Vector3d direction_;
+    double energy_{};
+    bool terminated_ = false;
+    bool isPrimary_ = true;
 };
 
 #endif //MCXRAYTRANSPORT_PARTICLE_H

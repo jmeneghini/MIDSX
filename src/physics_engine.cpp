@@ -1,9 +1,18 @@
 #include "physics_engine.h"
 
-PhysicsEngine::PhysicsEngine(VoxelGrid& voxel_grid, const PhysicsEngineDataService& data_service) : voxel_grid_(voxel_grid), interaction_data_(data_service.getInteractionData()),
+bool PhysicsEngineHelpers::areCollinearAndSameDirection(const Eigen::Vector3d& vec1, const Eigen::Vector3d& vec2) {
+    double tolerance = 1E-6;
+    // The vectors are collinear and pointing in the same direction
+    // if their normalized forms are approximately equal
+    double mag_diff = (vec1.normalized() - vec2.normalized()).norm();
+    return mag_diff < tolerance;
+}
+
+PhysicsEngine::PhysicsEngine(VoxelGrid& voxel_grid, const PhysicsEngineDataService& data_service, Detector& detector) : voxel_grid_(voxel_grid), interaction_data_(data_service.getInteractionData()),
                                                                                                     uniform_dist_(0.0, 1.0), photoelectric_effect_(std::make_shared<PhotoelectricEffect>()),
                                                                                                             coherent_scattering_(std::make_shared<CoherentScattering>()),
-                                                                                                            incoherent_scattering_(std::make_shared<IncoherentScattering>()) {};
+                                                                                                            incoherent_scattering_(std::make_shared<IncoherentScattering>()),
+                                                                                                            detector_(detector){};
 void PhysicsEngine::transportPhoton(Photon& photon) {
     while (!photon.isTerminated()) {
         transportPhotonOneStep(photon);
@@ -27,10 +36,7 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
     try {
         current_voxel_index = voxel_grid_.getVoxelIndex(photon.getPosition());
     } catch (const std::out_of_range &e) {
-        photon.terminate();
-        if (isPointingToExit(photon)) {
-            voxel_grid_.addExit();
-        }
+        processPhotonOutsideVoxelGrid(photon);
         return;
     }
 
@@ -49,24 +55,12 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
     }
     else {
         setInteractionType(photon, current_element, total_cross_section);
+        photon.setPrimary(false); // photon has interacted
         double energy_deposited = photon.interact(interaction_data_, current_element);
         current_voxel.dose += energy_deposited;
     }
 }
 
-
-bool PhysicsEngine::isPointingToExit(Photon &photon) {
-    Eigen::Vector3d exit_vector = {0, 0, 1};
-    Eigen::Vector3d photon_direction = photon.getDirection();
-    double dot_product = photon_direction.dot(exit_vector);
-    if (dot_product > 0) {
-        return true;
-    }
-    else {
-        return false;
-    }
-
-}
 
 void PhysicsEngine::setInteractionType(Photon& photon, int element, double total_cross_section) {
 
@@ -104,10 +98,23 @@ double PhysicsEngine::getFreePath(double max_cross_section, int element) {
     return free_path;
 }
 
+void PhysicsEngine::processPhotonOutsideVoxelGrid(Photon& photon) {
+    photon.terminate();
+    if (isDetectorHit(photon)) {
+        detector_.updateTallies(photon);
+    }
+}
+
 bool PhysicsEngine::isDeltaScatter(double cross_section, double max_cross_section) {
     double p_delta_scatter = 1 - cross_section / max_cross_section;
     return uniform_dist_.sample() < p_delta_scatter;
 }
+
+bool PhysicsEngine::isDetectorHit(Photon& photon) {
+    // check if Omega is a scalar multiple of detector position - photon position
+    return PhysicsEngineHelpers::areCollinearAndSameDirection(photon.getDirection(), detector_.getPosition() - photon.getPosition());
+}
+
 
 
 

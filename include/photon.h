@@ -26,6 +26,7 @@ public:
     }
 
 
+
 private:
     std::shared_ptr<ParticleInteractionBehavior> interaction_behavior_;
 };
