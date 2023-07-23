@@ -5,7 +5,7 @@
 #include "voxel_grid.h"
 #include "vec3.h"
 #include "probability_dist.h"
-#include "physics_engine_data_service.h"
+#include "interaction_data.h"
 #include "interpolators.h"
 #include "photon_interactions.h"
 #include "detector.h"
@@ -18,7 +18,7 @@ namespace PhysicsEngineHelpers {
 
 class PhysicsEngine {
 public:
-    PhysicsEngine(VoxelGrid& voxel_grid, const PhysicsEngineDataService& data_service, Detector& detector);
+    PhysicsEngine(VoxelGrid& voxel_grid, const InteractionData& interaction_data, Detector& detector);
 
     // transport photon until it is absorbed or leaves the voxel grid (i.e. terminated)
     void transportPhoton(Photon& photon);
@@ -27,7 +27,7 @@ public:
     void transportPhotonOneStep(Photon& photon);
 
     // set interaction type based on max cross section and total cross section of photon's current voxel
-    void setInteractionType(Photon& photon, int element, double total_cross_section);
+    void setInteractionType(Photon& photon, Material& material, double total_cross_section);
 
     // process photon if it is outside the voxel grid
     void processPhotonOutsideVoxelGrid(Photon& photon);
@@ -44,7 +44,7 @@ private:
 
 
     // get free path from using inverse sampling on the max cross section
-    double getFreePath(double max_cross_section, int element);
+    double getFreePath(double max_cross_section);
 
     // check if photon undergoes delta scattering or if it interacts
     bool isDeltaScatter(double cross_section, double max_cross_section);

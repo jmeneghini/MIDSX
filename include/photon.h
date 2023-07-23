@@ -7,7 +7,7 @@
 #include "helper.h"
 #include "photon_interactions.h"
 #include "particle.h"
-#include "physics_engine_data_service.h"
+#include "interaction_data.h"
 #include "particle_interaction_behavior.h"
 #include <memory>
 
@@ -17,8 +17,8 @@ public:
         interaction_behavior_ = std::make_shared<PhotoelectricEffect>();
     }
 
-    double interact(const InteractionData& interaction_data, int element) {
-        return interaction_behavior_->interact(*this, interaction_data, element);
+    double interact(const InteractionData& interaction_data, Material& material) {
+        return interaction_behavior_->interact(*this, interaction_data, material);
     }
 
     void setInteractionBehavior(std::shared_ptr<ParticleInteractionBehavior> interaction_behavior) {

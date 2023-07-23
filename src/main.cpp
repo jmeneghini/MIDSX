@@ -1,5 +1,5 @@
 #include "source.h"
-#include "physics_engine_data_service.h"
+#include "interaction_data.h"
 #include "probability_dist.h"
 #include <helper.h>
 #include <matplot/matplot.h>
@@ -12,15 +12,17 @@
 namespace plt = matplot;
 
 int main() {
-    std::vector<int> elements = {13};
-    PhysicsEngineDataService data_service("data/data_sources/EPDL/EPDL.db", elements);
+    auto data_service = std::make_shared<DataAccessObject>("data/data_sources/EPDL/EPDL.db");
+    std::vector<std::shared_ptr<Material>> materials;
+    materials.emplace_back(std::make_shared<Material>(Material("Adipose Tissue (ICRU-44)", data_service)));
+    InteractionData interaction_data(materials, data_service);
     VoxelGrid voxel_grid(10, 10, 1.49, 0.01);
     Eigen::Vector3d detector_position(5, 5, 100);
     Detector detector(detector_position); // creates a point detector
-    PhysicsEngine physics_engine(voxel_grid, data_service, detector);
+    PhysicsEngine physics_engine(voxel_grid, interaction_data, detector);
     Eigen::Vector3d position(5, 5, 0);
     Eigen::Vector3d direction(0, 0, 1);
-    int N_photons = 1000000;
+    int N_photons = 10000000;
     int j = 0;
     for (int i=0; i<N_photons; i++) {
         Photon photon(position, direction, 100E3);
@@ -39,5 +41,6 @@ int main() {
     std::cout << "Energy deposited by primary photons: " << detector_tallies.energy_deposited_by_primary_photons << std::endl;
     std::cout << "Number of secondary photons detected: " << detector_tallies.secondary_photons_hit << std::endl;
     std::cout << "Energy deposited by secondary photons: " << detector_tallies.energy_deposited_by_secondary_photons << std::endl;
+    std::cout << "Energy Deposited in Voxel Grid (ev/photon): " << voxel_grid.getTotalEnergyDeposited() / N_photons << std::endl;
 
 }

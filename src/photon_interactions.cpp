@@ -40,14 +40,14 @@ Eigen::MatrixXd PhotonInteractionHelpers::getBlockByRowValue(Eigen::MatrixXd& ma
     return block;
 }
 
-double PhotoelectricEffect::interact(Particle& photon, const InteractionData& interaction_data, int element) {
+double PhotoelectricEffect::interact(Particle& photon, const InteractionData& interaction_data, Material& material) {
     photon.terminate();
     return photon.getEnergy();
 }
 
-double CoherentScattering::interact(Particle& photon, const InteractionData& interaction_data, int element) {
+double CoherentScattering::interact(Particle& photon, const InteractionData& interaction_data, Material& material) {
     // get coherent scattering form factor
-    Eigen::MatrixXd form_factor_matrix = interaction_data.interaction_data_map.at(element).coherent_form_factor_matrix;
+    Eigen::MatrixXd form_factor_matrix = material.getData()->getCoherentFormFactorMatrix();
 
     double k = photon.getEnergy()/ELECTRON_REST_MASS; // unitless
     double a = ELECTRON_REST_MASS/(sqrt(2)*PLANCK_CONSTANT*SPEED_OF_LIGHT*1E8); // in inverse angstroms
@@ -64,7 +64,7 @@ double CoherentScattering::interact(Particle& photon, const InteractionData& int
     return 0;
 }
 
-double IncoherentScattering::interact(Particle& photon, const InteractionData& interaction_data, int element) {
+double IncoherentScattering::interact(Particle& photon, const InteractionData& interaction_data, Material& material) {
     double k = photon.getEnergy()/ELECTRON_REST_MASS; // unitless
 
     double c_0 = 2*(2*k*k + 2*k + 1)/pow(2*k + 1, 3);
@@ -117,6 +117,7 @@ double IncoherentScattering::sampleXFromH(double b, double c_0) {
     // sample h(k, x) = a/(b-x), where x = cos(theta)
     double random_number = uniform_dist_.sample();
     double x = b - (b + 1) * pow(c_0 / 2, random_number);
+    return x;
 }
 
 double IncoherentScattering::getAcceptanceProbability(double a, double b, double x, double k) {

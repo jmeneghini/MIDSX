@@ -8,11 +8,11 @@ bool PhysicsEngineHelpers::areCollinearAndSameDirection(const Eigen::Vector3d& v
     return mag_diff < tolerance;
 }
 
-PhysicsEngine::PhysicsEngine(VoxelGrid& voxel_grid, const PhysicsEngineDataService& data_service, Detector& detector) : voxel_grid_(voxel_grid), interaction_data_(data_service.getInteractionData()),
-                                                                                                    uniform_dist_(0.0, 1.0), photoelectric_effect_(std::make_shared<PhotoelectricEffect>()),
-                                                                                                            coherent_scattering_(std::make_shared<CoherentScattering>()),
-                                                                                                            incoherent_scattering_(std::make_shared<IncoherentScattering>()),
-                                                                                                            detector_(detector){};
+PhysicsEngine::PhysicsEngine(VoxelGrid& voxel_grid, const InteractionData& interaction_data, Detector& detector) : voxel_grid_(voxel_grid), interaction_data_(interaction_data),
+                                                                                                               uniform_dist_(0.0, 1.0), photoelectric_effect_(std::make_shared<PhotoelectricEffect>()),
+                                                                                                               coherent_scattering_(std::make_shared<CoherentScattering>()),
+                                                                                                               incoherent_scattering_(std::make_shared<IncoherentScattering>()),
+                                                                                                               detector_(detector){};
 void PhysicsEngine::transportPhoton(Photon& photon) {
     while (!photon.isTerminated()) {
         transportPhotonOneStep(photon);
@@ -22,17 +22,14 @@ void PhysicsEngine::transportPhoton(Photon& photon) {
 void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
     // delta tracking algorithm
     double photon_energy = photon.getEnergy();
-    double max_cross_section = (*interaction_data_.max_total_cs_interpolator)(photon_energy);
-
-    // get element of current voxel
-    std::array<int, 3> current_voxel_index = voxel_grid_.getVoxelIndex(photon.getPosition());
-    int current_element = voxel_grid_.getVoxel(current_voxel_index).element;
+    double max_cross_section = interaction_data_.interpolateMaxTotalCrossSection(photon_energy);
 
     // move photon to distance of free path length
-    double free_path_length = getFreePath(max_cross_section, current_element);
+    double free_path_length = getFreePath(max_cross_section);
     photon.move(free_path_length);
 
     // Check if photon is still in voxel grid. If no, kill photon
+    std::array<int, 3> current_voxel_index{};
     try {
         current_voxel_index = voxel_grid_.getVoxelIndex(photon.getPosition());
     } catch (const std::out_of_range &e) {
@@ -42,11 +39,11 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
 
     // get material of new voxel
     Voxel& current_voxel = voxel_grid_.getVoxel(current_voxel_index);
-    current_element = current_voxel.element;
+    int current_material_id = current_voxel.materialID;
 
-    // get total cross section for current element
-    double total_cross_section = (*interaction_data_.interaction_data_map.at(current_element).total_cs_interpolator)(
-            photon_energy);
+    // get total cross section for current material
+    Material current_material = interaction_data_.getMaterial(current_material_id);
+    double total_cross_section = (current_material.getData()->interpolateTotalCrossSection(photon_energy));
 
     // sample delta scattering
     bool delta_scattering = isDeltaScatter(total_cross_section, max_cross_section);
@@ -54,21 +51,21 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
         return;
     }
     else {
-        setInteractionType(photon, current_element, total_cross_section);
+        setInteractionType(photon, current_material, total_cross_section);
         photon.setPrimary(false); // photon has interacted
-        double energy_deposited = photon.interact(interaction_data_, current_element);
+        double energy_deposited = photon.interact(interaction_data_, current_material);
         current_voxel.dose += energy_deposited;
     }
 }
 
 
-void PhysicsEngine::setInteractionType(Photon& photon, int element, double total_cross_section) {
+void PhysicsEngine::setInteractionType(Photon& photon, Material& material, double total_cross_section) {
 
     double photon_energy = photon.getEnergy();
 
     // get cross sections for current element
-    double coherent_scattering_cross_section = (*interaction_data_.interaction_data_map.at(element).coherent_cs_interpolator)(photon_energy);
-    double incoherent_scattering_cross_section = (*interaction_data_.interaction_data_map.at(element).incoherent_cs_interpolator)(photon_energy);
+    double coherent_scattering_cross_section = material.getData()->interpolateCoherentScatteringCrossSection(photon_energy);
+    double incoherent_scattering_cross_section = material.getData()->interpolateIncoherentScatteringCrossSection(photon_energy);
 // these values seem to small while debugging
 
 
@@ -92,9 +89,9 @@ void PhysicsEngine::setInteractionType(Photon& photon, int element, double total
     }
 }
 
-double PhysicsEngine::getFreePath(double max_cross_section, int element) {
+double PhysicsEngine::getFreePath(double max_cross_section) {
     double free_path = -log(uniform_dist_.sample()) /
-                       (max_cross_section * interaction_data_.interaction_data_map.at(element).number_density);
+                       (max_cross_section);
     return free_path;
 }
 

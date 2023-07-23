@@ -1,7 +1,7 @@
 #ifndef MCXRAYTRANSPORT_PHOTON_INTERACTIONS_H
 #define MCXRAYTRANSPORT_PHOTON_INTERACTIONS_H
 
-#include "physics_engine_data_service.h"
+#include "interaction_data.h"
 #include "probability_dist.h"
 #include "particle_interaction_behavior.h"
 
@@ -15,12 +15,12 @@ namespace PhotonInteractionHelpers {
 
 class PhotoelectricEffect : public ParticleInteractionBehavior {
 public:
-    double interact(Particle& photon, const InteractionData& interaction_data, int element) override;
+    double interact(Particle& photon, const InteractionData& interaction_data, Material& material) override;
 };
 
 class CoherentScattering : public ParticleInteractionBehavior {
 public:
-    double interact(Particle& photon, const InteractionData& interaction_data, int element) override;
+    double interact(Particle& photon, const InteractionData& interaction_data, Material& material) override;
 
 private:
     static ProbabilityDist::Discrete createFormFactorDistribution(Eigen::MatrixXd form_factor_matrix, double x_min, double x_max);
@@ -29,7 +29,7 @@ private:
 
 class IncoherentScattering : public ParticleInteractionBehavior {
 public:
-    double interact(Particle& photon, const InteractionData& interaction_data, int element) override;
+    double interact(Particle& photon, const InteractionData& interaction_data, Material& material) override;
 private:
     double changeTrajectoryAndReturnEnergyForCoherentScattering(Particle& photon, double x, double k);
     double sampleXFromH(double b, double c_0);
