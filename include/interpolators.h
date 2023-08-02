@@ -10,7 +10,15 @@
 
 namespace Interpolator {
 
-    class Spline {
+    // Base class
+    class Interpolator {
+    public:
+        virtual ~Interpolator() = default;
+
+        virtual double operator()(double x) const = 0;
+    };
+
+    class Spline : public Interpolator{
     public:
         explicit Spline(const Eigen::MatrixXd &data);
 
@@ -37,7 +45,7 @@ namespace Interpolator {
         double operator()(double x) const override;
     };
 
-    class Linear {
+    class Linear : public Interpolator {
     public:
         explicit Linear(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data);
         virtual double operator()(double x) const;

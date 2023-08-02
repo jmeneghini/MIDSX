@@ -69,24 +69,34 @@ Eigen::Matrix<double, Eigen::Dynamic, 2> MaterialData::getTotalCrossSectionsMatr
 }
 
 Eigen::Matrix<double, Eigen::Dynamic, 2> MaterialData::calculateWeightedAverageOfColumns(const std::string &tableName, const std::string &dataColumnName) {
-    auto elemental_composition = MaterialHelpers::mapElementsToVector(properties_->getElementalComposition());
-    auto matrices = getTableMatrixForAllElements(tableName, dataColumnName);
-    Eigen::Matrix<double, Eigen::Dynamic, 2> weighted_average_matrix(matrices[0].rows(), 2);
-    weighted_average_matrix.col(0) = matrices[0].col(0);
-    weighted_average_matrix.col(1) = Eigen::VectorXd::Zero(matrices[0].rows());
-    for (int i = 0; i < elemental_composition.size(); ++i) {
-        weighted_average_matrix.col(1) += elemental_composition[i] * matrices[i].col(1);
+    auto matrices_map = getTableMatrixForAllElements(tableName, dataColumnName);
+    std::vector<Eigen::MatrixXd> all_energies;
+    for (const auto& element : matrices_map) {
+        all_energies.emplace_back(element.second.col(0));
     }
+    Eigen::MatrixXd merged_energy_matrix = InteractionDataHelpers::mergeMatrices(all_energies);
+    Eigen::MatrixXd weighted_average_matrix = Eigen::MatrixXd::Zero(merged_energy_matrix.rows(), 2);
+    std::unordered_map<int, std::shared_ptr<Interpolator::Interpolator>> interpolators_map = getInterpolatorsForAllElements(tableName, matrices_map);
+    std::unordered_map<int, double> elemental_composition = properties_->getElementalComposition();
+    for (int i = 0; i < merged_energy_matrix.rows(); ++i) {
+            double energy = merged_energy_matrix(i, 0);
+            double weighted_average = 0;
+            for (const auto& element_interpolator : interpolators_map) {
+                weighted_average += elemental_composition[element_interpolator.first] * (*element_interpolator.second)(energy);
+            }
+            weighted_average_matrix(i, 0) = energy;
+            weighted_average_matrix(i, 1) = weighted_average;
+        }
     return weighted_average_matrix;
-} // TODO: Assumed energies were the same for all elements, but this is not the case. Need to fix this.
+}
 
-std::vector<Eigen::Matrix<double, Eigen::Dynamic, 2>> MaterialData::getTableMatrixForAllElements(const std::string &tableName, const std::string &dataColumnName) {
+std::unordered_map<int, Eigen::Matrix<double, Eigen::Dynamic, 2>> MaterialData::getTableMatrixForAllElements(const std::string &tableName, const std::string &dataColumnName) {
     std::vector<int> element_ids = MaterialHelpers::mapKeysToVector(properties_->getElementalComposition());
-    std::vector<Eigen::Matrix<double, Eigen::Dynamic, 2>> matrices;
+    std::unordered_map<int, Eigen::Matrix<double, Eigen::Dynamic, 2>> matrices_map;
     for (int element : element_ids) {
-        matrices.push_back(getTableMatrix(tableName, dataColumnName, element));
+        matrices_map[element] = getTableMatrix(tableName, dataColumnName, element);
     }
-    return matrices;
+    return matrices_map;
 }
 
 void MaterialData::fillTotalCrossSectionsMatrix(Eigen::MatrixXd& total_cross_sections_matrix, const Eigen::MatrixXd& merged_energy_matrix) {
@@ -100,6 +110,15 @@ void MaterialData::fillTotalCrossSectionsMatrix(Eigen::MatrixXd& total_cross_sec
     }
 }
 
+std::unordered_map<int, std::shared_ptr<Interpolator::Interpolator>> MaterialData::getInterpolatorsForAllElements(const std::string &tableName,
+        const std::unordered_map<int, Eigen::Matrix<double, Eigen::Dynamic, 2>>& table_matrix_map) {
+    std::unordered_map<int, std::shared_ptr<Interpolator::Interpolator>> interpolators_map;
+    for (const auto& element_matrix : table_matrix_map) {
+        interpolators_map[element_matrix.first] = getInterpolatorForElement(tableName, element_matrix.second);
+    }
+    return interpolators_map;
+}
+
 Eigen::Matrix<double, Eigen::Dynamic, 2> MaterialData::getTableMatrix(const std::string &tableName,
                                                                       const std::string &dataColumnName, int element) {
     std::string query = "SELECT Energy, " + dataColumnName + " FROM " + tableName + " WHERE ElementID = " + std::to_string(element);
@@ -107,6 +126,22 @@ Eigen::Matrix<double, Eigen::Dynamic, 2> MaterialData::getTableMatrix(const std:
     auto res_distributed = InteractionDataHelpers::distributeNTimes(res, 2);
 
     return InteractionDataHelpers::convertNVectorsToEigenMatrix(res_distributed);
+}
+
+std::shared_ptr<Interpolator::Interpolator> MaterialData::getInterpolatorForElement(const std::string& tableName, const Eigen::Matrix<double, Eigen::Dynamic, 2>& matrix) {
+    if (tableName == "IncoherentScatteringFunctions") {
+        return std::make_shared<Interpolator::LogLogLinear>(matrix);
+    } else if (tableName == "CoherentScatteringFormFactors") {
+        return std::make_shared<Interpolator::LogLogLinear>(matrix);
+    } else if (tableName == "IncoherentScatteringCrossSections") {
+        return std::make_shared<Interpolator::LogLogSpline>(matrix);
+    } else if (tableName == "CoherentScatteringCrossSections") {
+        return std::make_shared<Interpolator::LogLogSpline>(matrix);
+    } else if (tableName == "TotalPhotoIonizationCrossSections") {
+        return std::make_shared<Interpolator::LogLogLinear>(matrix);
+    } else {
+        throw std::runtime_error("Invalid table");
+    }
 }
 
 

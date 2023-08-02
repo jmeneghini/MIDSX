@@ -5,7 +5,7 @@
 #include "vec3.h"
 
 struct Voxel {
-    int materialID = 2;
+    int materialID = 48;
     double dose = 0.0;
 };
 

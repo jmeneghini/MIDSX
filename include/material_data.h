@@ -61,7 +61,11 @@ private:
     Eigen::Matrix<double, Eigen::Dynamic, 2> calculateWeightedAverageOfColumns(const std::string &tableName, const std::string &dataColumnName);
 
     void fillTotalCrossSectionsMatrix(Eigen::MatrixXd& total_cross_sections_matrix, const Eigen::MatrixXd& merged_energy_matrix);
-    std::vector<Eigen::Matrix<double, Eigen::Dynamic, 2>> getTableMatrixForAllElements(const std::string &tableName, const std::string &dataColumnName);
+    std::unordered_map<int, Eigen::Matrix<double, Eigen::Dynamic, 2>> getTableMatrixForAllElements(const std::string &tableName, const std::string &dataColumnName);
+    std::unordered_map<int, std::shared_ptr<Interpolator::Interpolator>> getInterpolatorsForAllElements(const std::string &tableName,
+            const std::unordered_map<int, Eigen::Matrix<double, Eigen::Dynamic, 2>>& table_matrix_map);
+
+    std::shared_ptr<Interpolator::Interpolator> getInterpolatorForElement(const std::string& tableName, const Eigen::Matrix<double, Eigen::Dynamic, 2>& matrix);
 
     Eigen::Matrix<double, Eigen::Dynamic, 2> getTableMatrix(const std::string& tableName, const std::string& dataColumnName, int element);
 };
