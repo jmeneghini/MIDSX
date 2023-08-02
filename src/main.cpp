@@ -1,10 +1,7 @@
 #include "source.h"
 #include "interaction_data.h"
 #include "probability_dist.h"
-#include <helper.h>
 #include <matplot/matplot.h>
-#include <cmath>
-#include "interpolators.h"
 #include "voxel_grid.h"
 #include "physics_engine.h"
 #include "detector.h"
