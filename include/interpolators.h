@@ -22,7 +22,7 @@ namespace Interpolator {
     public:
         explicit Spline(const Eigen::MatrixXd &data);
 
-        virtual double operator()(double x) const;
+        double operator()(double x) const override;
 
     private:
         double scaledValue(double x) const;
@@ -48,16 +48,16 @@ namespace Interpolator {
     class Linear : public Interpolator {
     public:
         explicit Linear(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data);
-        virtual double operator()(double x) const;
+        double operator()(double x) const override;
+
+    private:
+        Eigen::VectorXd x_vec_;
+        Eigen::VectorXd y_vec_;
 
         bool isXSmallerThanMin(double x) const;
         bool isXBiggerThanMax(double x) const;
         int findIndexOfNextLargestValue(double x) const;
         double calculateInterpolatedY(int idx, double x) const;
-
-    private:
-        Eigen::VectorXd x_vec_;
-        Eigen::VectorXd y_vec_;
     };
 
     class LogLogLinear : public Linear {

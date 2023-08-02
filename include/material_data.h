@@ -21,13 +21,13 @@ public:
     Eigen::Matrix<double, Eigen::Dynamic, 2> getIncoherentScatteringFunctionMatrix() const { return incoherent_scattering_function_matrix_; }
     Eigen::Matrix<double, Eigen::Dynamic, 2> getCoherentFormFactorMatrix() const { return coherent_form_factor_matrix_; }
 
-    double interpolateIncoherentScatteringCrossSection(double energy) const { return (*incoherent_cs_interpolator_)(0); }
-    double interpolateCoherentScatteringCrossSection(double energy) const { return (*coherent_cs_interpolator_)(0); }
-    double interpolatePhotoelectricCrossSection(double energy) const { return (*photoelectric_cs_interpolator_)(0); }
-    double interpolateTotalCrossSection(double energy) const { return (*total_cs_interpolator_)(0); }
+    double interpolateIncoherentScatteringCrossSection(double energy) const { return (*incoherent_cs_interpolator_)(energy); }
+    double interpolateCoherentScatteringCrossSection(double energy) const { return (*coherent_cs_interpolator_)(energy); }
+    double interpolatePhotoelectricCrossSection(double energy) const { return (*photoelectric_cs_interpolator_)(energy); }
+    double interpolateTotalCrossSection(double energy) const { return (*total_cs_interpolator_)(energy); }
 
-    double interpolateIncoherentScatteringFunction(double energy) const { return (*incoherent_scattering_function_interpolator_)(0); }
-    double interpolateCoherentFormFactor(double energy) const { return (*coherent_form_factor_interpolator_)(0); }
+    double interpolateIncoherentScatteringFunction(double energy) const { return (*incoherent_scattering_function_interpolator_)(energy); }
+    double interpolateCoherentFormFactor(double energy) const { return (*coherent_form_factor_interpolator_)(energy); }
 
 private:
     std::shared_ptr<MaterialProperties> properties_;
