@@ -2,9 +2,6 @@
 #define PHOTON_H
 
 #include <utility>
-
-#include "vec3.h"
-#include "helper.h"
 #include "photon_interactions.h"
 #include "particle.h"
 #include "interaction_data.h"

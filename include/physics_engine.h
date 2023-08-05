@@ -3,7 +3,6 @@
 
 #include "photon.h"
 #include "voxel_grid.h"
-#include "vec3.h"
 #include "probability_dist.h"
 #include "interaction_data.h"
 #include "interpolators.h"

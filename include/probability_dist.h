@@ -24,6 +24,10 @@ namespace ProbabilityDist {
             return dist_(generator_);
         }
 
+        void setRange(double min, double max) {
+            dist_ = std::uniform_real_distribution<double>(min, max);
+        }
+
     private:
         mutable std::uniform_real_distribution<double> dist_;
         mutable std::mt19937 generator_;

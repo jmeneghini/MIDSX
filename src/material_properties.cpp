@@ -2,6 +2,7 @@
 
 #include <utility>
 #include "data_access_object.h"
+#include "constants.h"
 #include "interaction_data.h"
 
 MaterialProperties::MaterialProperties(std::string name, std::shared_ptr<DataAccessObject> dao) : name_(std::move(name)), dao_(std::move(dao)) {
@@ -40,7 +41,12 @@ void MaterialProperties::initializeElementalProperties() {
 
 void MaterialProperties::initializeMaterialProperties() {
     setMassDensity();
-    number_density_ = MaterialHelpers::calculateWeightedAverage(MaterialHelpers::mapElementsToVector(elemental_composition_), MaterialHelpers::mapElementsToVector(elemental_number_density_));
+    if (name_ == "Air, Dry (near sea level)") {
+        number_density_ = NUMBER_DENSITY_AT_STP; // only gas in database, made an exception, not proud of it
+    }
+    else {
+        number_density_ = MaterialHelpers::calculateWeightedAverage(MaterialHelpers::mapElementsToVector(elemental_composition_), MaterialHelpers::mapElementsToVector(elemental_number_density_));
+    }
     atomic_weight_ = MaterialHelpers::calculateWeightedAverage(MaterialHelpers::mapElementsToVector(elemental_composition_), MaterialHelpers::mapElementsToVector(elemental_atomic_weight_));
 }
 

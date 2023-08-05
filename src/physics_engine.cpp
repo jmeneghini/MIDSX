@@ -29,7 +29,7 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
     photon.move(free_path_length);
 
     // Check if photon is still in voxel grid. If no, kill photon
-    std::array<int, 3> current_voxel_index{};
+    Eigen::Vector3i current_voxel_index;
     try {
         current_voxel_index = voxel_grid_.getVoxelIndex(photon.getPosition());
     } catch (const std::out_of_range &e) {
@@ -76,7 +76,6 @@ void PhysicsEngine::setInteractionType(Photon& photon, Material& material, doubl
     // This is a special case of inversion sampling that is done in DiscreteDistribution.
     // In this case, the x values do not matter, only the y values
     double random_number = uniform_dist_.sample();
-
 
     if (random_number < p_coherent) {
         photon.setInteractionBehavior(coherent_scattering_);

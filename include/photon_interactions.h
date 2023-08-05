@@ -2,6 +2,7 @@
 #define MCXRAYTRANSPORT_PHOTON_INTERACTIONS_H
 
 #include "interaction_data.h"
+#include "constants.h"
 #include "probability_dist.h"
 #include "particle_interaction_behavior.h"
 

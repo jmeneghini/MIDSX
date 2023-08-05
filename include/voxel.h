@@ -2,10 +2,9 @@
 #define VOXEL_H
 
 #include <string>
-#include "vec3.h"
 
 struct Voxel {
-    int materialID = 61;
+    uint8_t materialID = 0;
     double dose = 0.0;
 };
 

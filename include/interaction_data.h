@@ -1,7 +1,6 @@
 #ifndef MC_XRAY_TRANSPORT_PHYSICS_ENGINE_DATA_SERVICE_H
 #define MC_XRAY_TRANSPORT_PHYSICS_ENGINE_DATA_SERVICE_H
 
-#include "helper.h"
 #include "data_access_object.h"
 #include "interpolators.h"
 #include "material.h"

@@ -3,6 +3,7 @@
 
 #include <Eigen/Core>
 #include "particle.h"
+#include <unordered_map>
 
 struct DetectorTallies {
     int primary_photons_hit = 0;
@@ -11,6 +12,7 @@ struct DetectorTallies {
     double energy_deposited_by_secondary_photons = 0.0;
     int total_photons_hit = 0;
     double total_energy_deposited = 0.0;
+    std::unordered_map<std::string, double> energy_deposited_in_material;
 };
 
 class Detector {
@@ -32,8 +34,6 @@ private:
     void updatePrimaryTallies(Particle& photon);
     void updateSecondaryTallies(Particle& photon);
     void updateTotalTallies(Particle& photon);
-
-
 };
 
 #endif //MCXRAYTRANSPORT_DETECTOR_H
