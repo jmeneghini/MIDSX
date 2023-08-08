@@ -28,6 +28,7 @@ public:
 
     double interpolateIncoherentScatteringFunction(double energy) const { return (*incoherent_scattering_function_interpolator_)(energy); }
     double interpolateCoherentFormFactor(double energy) const { return (*coherent_form_factor_interpolator_)(energy); }
+    double interpolateMassEnergyAbsorptionCoefficient(double energy) const { return (*mass_energy_absorption_coefficient_interpolator_)(energy); }
 
 private:
     std::shared_ptr<MaterialProperties> properties_;
@@ -45,6 +46,8 @@ private:
     std::shared_ptr<Interpolator::LogLogLinear> incoherent_scattering_function_interpolator_;
     Eigen::Matrix<double, Eigen::Dynamic, 2> coherent_form_factor_matrix_;
     std::shared_ptr<Interpolator::LogLogLinear> coherent_form_factor_interpolator_;
+    Eigen::Matrix<double, Eigen::Dynamic, 2> mass_energy_absorption_coefficient_matrix_;
+    std::shared_ptr<Interpolator::LogLogLinear> mass_energy_absorption_coefficient_interpolator_;
 
     void initializeData();
 
@@ -52,6 +55,7 @@ private:
     void setTotalCrossSectionsAndInterpolator();
     void setIncoherentScatteringFunctionAndInterpolator();
     void setCoherentScatteringFormFactorAndInterpolator();
+    void setMassEnergyAbsorptionCoefficientsAndInterpolator();
 
     void setIncoherentScatteringCrossSectionAndInterpolator();
     void setCoherentScatteringCrossSectionAndInterpolator();
@@ -65,7 +69,7 @@ private:
     std::unordered_map<int, std::shared_ptr<Interpolator::Interpolator>> getInterpolatorsForAllElements(const std::string &tableName,
             const std::unordered_map<int, Eigen::Matrix<double, Eigen::Dynamic, 2>>& table_matrix_map);
 
-    std::shared_ptr<Interpolator::Interpolator> getInterpolatorForElement(const std::string& tableName, const Eigen::Matrix<double, Eigen::Dynamic, 2>& matrix);
+    static std::shared_ptr<Interpolator::Interpolator> getInterpolatorForElement(const std::string& tableName, const Eigen::Matrix<double, Eigen::Dynamic, 2>& matrix);
 
     Eigen::Matrix<double, Eigen::Dynamic, 2> getTableMatrix(const std::string& tableName, const std::string& dataColumnName, int element);
 };

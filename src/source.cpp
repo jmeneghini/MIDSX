@@ -6,6 +6,30 @@ Eigen::Vector3d SourceHelpers::angleToUnitDirection(double theta, double phi) {
     return unit_direction;
 }
 
+Eigen::MatrixXd SourceHelpers::readCSV(std::string file) {
+    std::ifstream in(file);
+    std::string line;
+
+    std::vector<double> values;
+    int rows = 0;
+    int cols = 0;
+
+    if (in.is_open()) {
+        while (std::getline(in, line)) {
+            std::stringstream lineStream(line);
+            std::string cell;
+            while (std::getline(lineStream, cell, ',')) {
+                values.push_back(std::stod(cell));
+            }
+            ++rows;
+        }
+        in.close();
+    }
+
+    cols = values.size() / rows; // Calculate number of columns
+    return Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(values.data(), rows, cols);
+}
+
 MonoenergeticSpectrum::MonoenergeticSpectrum(double energy) : energy_(energy) {}
 
 double MonoenergeticSpectrum::sampleEnergy() {
@@ -16,7 +40,8 @@ PolyenergeticSpectrum::PolyenergeticSpectrum(const Eigen::Matrix<double, Eigen::
 : energy_dist_(probabilities_matrix) {}
 
 double PolyenergeticSpectrum::sampleEnergy() {
-    return energy_dist_.sample();
+    double energy = energy_dist_.sample();
+    return energy;
 }
 
 double PolyenergeticSpectrum::getExpectationValue() const {

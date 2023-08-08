@@ -18,7 +18,7 @@ struct DetectorTallies {
 class Detector {
 public:
     Detector() = default;
-    Detector(Eigen::Vector3d& position);
+    explicit Detector(Eigen::Vector3d& position);
 
     void updateTallies(Particle& photon);
 

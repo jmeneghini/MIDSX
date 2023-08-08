@@ -108,9 +108,10 @@ double IncoherentScattering::changeTrajectoryAndReturnEnergyForCoherentScatterin
     double phi = 2*PI*uniform_dist_.sample();
     photon.rotate(theta, phi);
 
+    double initial_energy = photon.getEnergy();
     double resulting_energy = getResultingEnergy(x, k);
     photon.setEnergy(resulting_energy);
-    return photon.getEnergy() - resulting_energy;
+    return initial_energy - resulting_energy;
 }
 
 double IncoherentScattering::sampleXFromH(double b, double c_0) {

@@ -10,6 +10,7 @@
 
 class Photon : public Particle {
 public:
+    Photon() = default;
     Photon(Eigen::Vector3d& position, Eigen::Vector3d& direction, double energy) : Particle(position, direction, energy) {
         interaction_behavior_ = std::make_shared<PhotoelectricEffect>();
     }

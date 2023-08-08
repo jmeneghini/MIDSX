@@ -12,6 +12,7 @@ void MaterialData::initializeData() {
     setTotalCrossSectionsAndInterpolator();
     setIncoherentScatteringFunctionAndInterpolator();
     setCoherentScatteringFormFactorAndInterpolator();
+    setMassEnergyAbsorptionCoefficientsAndInterpolator();
 }
 
 void MaterialData::setInteractionCrossSectionsAndInterpolators() {
@@ -25,17 +26,19 @@ void MaterialData::setTotalCrossSectionsAndInterpolator() {
     total_cs_interpolator_ = std::make_shared<Interpolator::LogLogLinear>(total_cs_matrix_);
 }
 
-
 void MaterialData::setIncoherentScatteringFunctionAndInterpolator() {
     incoherent_scattering_function_matrix_ = calculateWeightedAverageOfColumns("IncoherentScatteringFunctions", "ScatteringFunction");
     incoherent_scattering_function_interpolator_ = std::make_shared<Interpolator::LogLogLinear>(incoherent_scattering_function_matrix_);
 }
 
-
-
 void MaterialData::setCoherentScatteringFormFactorAndInterpolator() {
     coherent_form_factor_matrix_ = calculateWeightedAverageOfColumns("CoherentScatteringFormFactors", "FormFactor");
     coherent_form_factor_interpolator_ = std::make_shared<Interpolator::LogLogLinear>(coherent_form_factor_matrix_);
+}
+
+void MaterialData::setMassEnergyAbsorptionCoefficientsAndInterpolator() {
+    mass_energy_absorption_coefficient_matrix_ = calculateWeightedAverageOfColumns("MassEnergyAbsorptionCoefficients", "Coefficient");
+    mass_energy_absorption_coefficient_interpolator_ = std::make_shared<Interpolator::LogLogLinear>(mass_energy_absorption_coefficient_matrix_);
 }
 
 void MaterialData::setIncoherentScatteringCrossSectionAndInterpolator() {
@@ -138,6 +141,8 @@ std::shared_ptr<Interpolator::Interpolator> MaterialData::getInterpolatorForElem
     } else if (tableName == "CoherentScatteringCrossSections") {
         return std::make_shared<Interpolator::LogLogSpline>(matrix);
     } else if (tableName == "TotalPhotoIonizationCrossSections") {
+        return std::make_shared<Interpolator::LogLogLinear>(matrix);
+    } else if (tableName == "MassEnergyAbsorptionCoefficients") {
         return std::make_shared<Interpolator::LogLogLinear>(matrix);
     } else {
         throw std::runtime_error("Invalid table");

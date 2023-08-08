@@ -3,18 +3,24 @@
 
 #include <Eigen/Dense>
 #include <cassert>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
 #include "photon.h"
 #include "probability_dist.h"
 #include "constants.h"
 
 namespace SourceHelpers {
     Eigen::Vector3d angleToUnitDirection(double theta, double phi);
+    Eigen::MatrixXd readCSV(std::string file);
 }
 
 
 class EnergySpectrum {
 public:
     virtual double sampleEnergy() = 0;
+    virtual ~EnergySpectrum() = default;
 };
 
 class MonoenergeticSpectrum : public EnergySpectrum {
@@ -40,6 +46,7 @@ private:
 class Directionality {
 public:
     virtual Eigen::Vector3d sampleDirection(const Eigen::Vector3d &photon_initial_position) = 0;
+    virtual ~Directionality() = default;
 };
 
 class IsotropicDirectionality : public Directionality {
@@ -80,6 +87,7 @@ private:
 class SourceGeometry {
 public:
     virtual Eigen::Vector3d samplePosition() = 0;
+    virtual ~SourceGeometry() = default;
 
 protected:
     explicit SourceGeometry(const Eigen::Vector3d& position);

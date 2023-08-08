@@ -8,6 +8,7 @@
 #include "interpolators.h"
 #include "photon_interactions.h"
 #include "detector.h"
+#include "tally.h"
 #include <cmath>
 
 namespace PhysicsEngineHelpers {
@@ -17,7 +18,8 @@ namespace PhysicsEngineHelpers {
 
 class PhysicsEngine {
 public:
-    PhysicsEngine(VoxelGrid& voxel_grid, const InteractionData& interaction_data, Detector& detector);
+    // default constructor
+    PhysicsEngine(VoxelGrid& voxel_grid, const InteractionData& interaction_data, Detector& detector, std::vector<std::shared_ptr<Tally>> tallies);
 
     // transport photon until it is absorbed or leaves the voxel grid (i.e. terminated)
     void transportPhoton(Photon& photon);
@@ -36,6 +38,7 @@ private:
     VoxelGrid& voxel_grid_;
     ProbabilityDist::Uniform uniform_dist_;
     InteractionData interaction_data_;
+    std::vector<std::shared_ptr<Tally>> tallies_;
     Detector& detector_;
     std::shared_ptr<PhotoelectricEffect> photoelectric_effect_;
     std::shared_ptr<IncoherentScattering> incoherent_scattering_;
@@ -50,6 +53,8 @@ private:
 
     // check if detector is hit by exiting photon
     bool isDetectorHit(Photon& photon);
+
+    void processTallies(TempTallyData& temp_tally_data);
 
 };
 

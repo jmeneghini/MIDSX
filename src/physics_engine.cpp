@@ -8,11 +8,12 @@ bool PhysicsEngineHelpers::areCollinearAndSameDirection(const Eigen::Vector3d& v
     return mag_diff < tolerance;
 }
 
-PhysicsEngine::PhysicsEngine(VoxelGrid& voxel_grid, const InteractionData& interaction_data, Detector& detector) : voxel_grid_(voxel_grid), interaction_data_(interaction_data),
+PhysicsEngine::PhysicsEngine(VoxelGrid& voxel_grid, const InteractionData& interaction_data, Detector& detector, std::vector<std::shared_ptr<Tally>> tallies) : voxel_grid_(voxel_grid), interaction_data_(interaction_data),
                                                                                                                uniform_dist_(0.0, 1.0), photoelectric_effect_(std::make_shared<PhotoelectricEffect>()),
                                                                                                                coherent_scattering_(std::make_shared<CoherentScattering>()),
                                                                                                                incoherent_scattering_(std::make_shared<IncoherentScattering>()),
-                                                                                                               detector_(detector){};
+                                                                                                               detector_(detector),
+                                                                                                                tallies_(tallies) {}
 void PhysicsEngine::transportPhoton(Photon& photon) {
     while (!photon.isTerminated()) {
         transportPhotonOneStep(photon);
@@ -20,12 +21,17 @@ void PhysicsEngine::transportPhoton(Photon& photon) {
 }
 
 void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
+    TempTallyData temp_tally_data;
+
     // delta tracking algorithm
+    temp_tally_data.initial_photon = photon;
     double photon_energy = photon.getEnergy();
     double max_cross_section = interaction_data_.interpolateMaxTotalCrossSection(photon_energy);
 
     // move photon to distance of free path length
+    Eigen::Vector3d initial_position = photon.getPosition();
     double free_path_length = getFreePath(max_cross_section);
+    temp_tally_data.free_path = free_path_length;
     photon.move(free_path_length);
 
     // Check if photon is still in voxel grid. If no, kill photon
@@ -33,6 +39,7 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
     try {
         current_voxel_index = voxel_grid_.getVoxelIndex(photon.getPosition());
     } catch (const std::out_of_range &e) {
+        processTallies(temp_tally_data);
         processPhotonOutsideVoxelGrid(photon);
         return;
     }
@@ -47,15 +54,15 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
 
     // sample delta scattering
     bool delta_scattering = isDeltaScatter(total_cross_section, max_cross_section);
-    if (delta_scattering) {
-        return;
-    }
-    else {
+    if (!delta_scattering) {
+        temp_tally_data.isInteract = true;
         setInteractionType(photon, current_material, total_cross_section);
         photon.setPrimary(false); // photon has interacted
         double energy_deposited = photon.interact(interaction_data_, current_material);
         current_voxel.dose += energy_deposited;
+        temp_tally_data.energy_deposited = energy_deposited;
     }
+    processTallies(temp_tally_data);
 }
 
 
@@ -111,6 +118,8 @@ bool PhysicsEngine::isDetectorHit(Photon& photon) {
     return PhysicsEngineHelpers::areCollinearAndSameDirection(photon.getDirection(), detector_.getPosition() - photon.getPosition());
 }
 
-
-
-
+void PhysicsEngine::processTallies(TempTallyData &temp_tally_data) {
+    for (auto& tally : tallies_) {
+        tally->processMeasurements(temp_tally_data);
+    }
+}

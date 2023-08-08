@@ -45,9 +45,9 @@ Eigen::Matrix<double, Eigen::Dynamic, 2> ProbabilityDist::Discrete::generateCDF(
 }
 
 int ProbabilityDist::Discrete::findIndexOfNextSmallestValue(double x) const {
-    auto lower_bound_it = std::lower_bound(cdf_matrix_.col(0).data(), cdf_matrix_.col(0).data() + cdf_matrix_.rows(),
+    auto lower_bound_it = std::lower_bound(cdf_matrix_.col(1).data(), cdf_matrix_.col(1).data() + cdf_matrix_.rows(),
                                            x);
-    return lower_bound_it - cdf_matrix_.col(0).data();
+    return lower_bound_it - cdf_matrix_.col(1).data();
 }
 
 Eigen::VectorXd ProbabilityDist::Discrete::cumsum(const Eigen::VectorXd &vector) {
