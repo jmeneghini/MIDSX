@@ -119,7 +119,10 @@ bool PhysicsEngine::isDetectorHit(Photon& photon) {
 }
 
 void PhysicsEngine::processTallies(TempTallyData &temp_tally_data) {
-    for (auto& tally : tallies_) {
-        tally->processMeasurements(temp_tally_data);
+    for (auto &tally: tallies_) {
+#pragma omp critical
+        { // this is needed because tallies are shared between threads
+            tally->processMeasurements(temp_tally_data);
+        }
     }
 }
