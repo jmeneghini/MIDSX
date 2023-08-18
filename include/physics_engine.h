@@ -25,7 +25,7 @@ public:
     void transportPhoton(Photon& photon);
 
     // transport photon and simulate one interaction (photoelectric, coherent, or incoherent)
-    void transportPhotonOneStep(Photon& photon);
+    void transportPhotonOneStep(Photon& photon, std::vector<TempTallyData>& temp_tally_data_per_photon);
 
     // set interaction type based on max cross section and total cross section of photon's current voxel
     void setInteractionType(Photon& photon, Material& material, double total_cross_section);

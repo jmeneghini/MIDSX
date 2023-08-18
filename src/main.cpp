@@ -27,7 +27,7 @@ std::vector<std::shared_ptr<Material>> initializeMaterials(const std::shared_ptr
 std::vector<std::shared_ptr<Tally>> initializeTallies() {
     std::vector<std::shared_ptr<Tally>> tallies;
     tallies.emplace_back(std::make_shared<DiscSurfaceTally>(
-            Eigen::Vector3d(2, 2, 0.03431),
+            Eigen::Vector3d(2, 2, 3.022),
             Eigen::Vector3d(0, 0, 1),
             0.001,
             QuantityContainerFactory::AllQuantities()));
@@ -48,9 +48,9 @@ Eigen::MatrixXd processEnergySpectrum() {
 }
 
 void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_photons) {
-    Photon photon;
     int j = 0;
-#pragma omp parallel for private(photon)
+//    std::cout << "Maximum threads that can be used: " << omp_get_num_procs() << std::endl;
+#pragma omp parallel for
     for (int i = 0; i < N_photons; i++) {
         Photon photon = source.generatePhoton();
         physics_engine.transportPhoton(photon);
@@ -107,14 +107,15 @@ int main() {
     auto tallies = initializeTallies();
 
     InteractionData interaction_data(materials, data_service);
-    VoxelGrid voxel_grid("data/voxels/al_hvl_30kVp_Mo.nii.gz");
+    VoxelGrid voxel_grid("data/voxels/al_qvl_100keV.nii.gz");
     Eigen::Vector3d detector_position(2, 2, 100);
     Detector detector(detector_position);
     PhysicsEngine physics_engine(voxel_grid, interaction_data, detector, tallies);
     auto energy_spectrum = processEnergySpectrum();
 
-    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
-    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<PolyenergeticSpectrum>(poly_spectrum);
+//    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
+    MonoenergeticSpectrum mono_spectrum(100E3);
+    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
 
     Eigen::Vector3d voxel_origin_to_max = voxel_grid.getDimSpace();
     std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(detector_position));
@@ -123,9 +124,9 @@ int main() {
 
     PhotonSource source(std::move(spectrum), std::move(directionality), std::move(geometry));
 
-    runSimulation(source, physics_engine, 1000000);
+    runSimulation(source, physics_engine, 10000000);
 
-    displayResults(voxel_grid, detector, tallies, 1000000, interaction_data, energy_spectrum);
+    displayResults(voxel_grid, detector, tallies, 10000000, interaction_data, energy_spectrum);
 
     return 0;
 }

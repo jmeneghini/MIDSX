@@ -15,12 +15,19 @@ PhysicsEngine::PhysicsEngine(VoxelGrid& voxel_grid, const InteractionData& inter
                                                                                                                detector_(detector),
                                                                                                                 tallies_(tallies) {}
 void PhysicsEngine::transportPhoton(Photon& photon) {
+    std::vector<TempTallyData> temp_tally_data_per_photon;
     while (!photon.isTerminated()) {
-        transportPhotonOneStep(photon);
+        transportPhotonOneStep(photon, temp_tally_data_per_photon);
+    }
+#pragma omp critical
+    {
+    for (auto &temp_tally_data: temp_tally_data_per_photon) {
+        processTallies(temp_tally_data);
     }
 }
+}
 
-void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
+void PhysicsEngine::transportPhotonOneStep(Photon& photon, std::vector<TempTallyData>& temp_tally_data_per_photon) {
     TempTallyData temp_tally_data;
 
     // delta tracking algorithm
@@ -39,7 +46,7 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
     try {
         current_voxel_index = voxel_grid_.getVoxelIndex(photon.getPosition());
     } catch (const std::out_of_range &e) {
-        processTallies(temp_tally_data);
+        temp_tally_data_per_photon.push_back(temp_tally_data);
         processPhotonOutsideVoxelGrid(photon);
         return;
     }
@@ -62,7 +69,7 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon) {
         current_voxel.dose += energy_deposited;
         temp_tally_data.energy_deposited = energy_deposited;
     }
-    processTallies(temp_tally_data);
+    temp_tally_data_per_photon.push_back(temp_tally_data);
 }
 
 
@@ -120,7 +127,7 @@ bool PhysicsEngine::isDetectorHit(Photon& photon) {
 
 void PhysicsEngine::processTallies(TempTallyData &temp_tally_data) {
     for (auto &tally: tallies_) {
-#pragma omp critical
+//#pragma omp critical
         { // this is needed because tallies are shared between threads
             tally->processMeasurements(temp_tally_data);
         }
