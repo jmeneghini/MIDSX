@@ -1,5 +1,8 @@
 #include "probability_dist.h"
 
+// ensures rng is thread safe
+thread_local std::mt19937 ProbabilityDist::Uniform::generator_(std::random_device{}());
+
 ProbabilityDist::Discrete::Discrete(const Eigen::Matrix<double, Eigen::Dynamic, 2> &probabilities_matrix,
                                     std::string sampling_algorithm)
         : probabilities_matrix_(probabilities_matrix), sampling_algorithm_(std::move(sampling_algorithm)),

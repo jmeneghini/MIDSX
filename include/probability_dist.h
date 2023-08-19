@@ -18,7 +18,7 @@ namespace ProbabilityDist {
 
     class Uniform : public ProbabilityDistribution {
     public:
-        Uniform(double min, double max) : generator_(std::random_device{}()), dist_(min, max) {}
+        Uniform(double min, double max) : dist_(min, max) {}
 
         double sample() const override {
             return dist_(generator_);
@@ -30,8 +30,9 @@ namespace ProbabilityDist {
 
     private:
         mutable std::uniform_real_distribution<double> dist_;
-        mutable std::mt19937 generator_;
+        static thread_local std::mt19937 generator_;
     };
+
 
     class Discrete : public ProbabilityDistribution {
     public:

@@ -27,7 +27,7 @@ std::vector<std::shared_ptr<Material>> initializeMaterials(const std::shared_ptr
 std::vector<std::shared_ptr<Tally>> initializeTallies() {
     std::vector<std::shared_ptr<Tally>> tallies;
     tallies.emplace_back(std::make_shared<DiscSurfaceTally>(
-            Eigen::Vector3d(2, 2, 3.022),
+            Eigen::Vector3d(2, 2, 1.511),
             Eigen::Vector3d(0, 0, 1),
             0.001,
             QuantityContainerFactory::AllQuantities()));
@@ -47,9 +47,12 @@ Eigen::MatrixXd processEnergySpectrum() {
     return energy_spectrum;
 }
 
+
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "openmp-use-default-none"
 void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_photons) {
     int j = 0;
-//    std::cout << "Maximum threads that can be used: " << omp_get_num_procs() << std::endl;
 #pragma omp parallel for
     for (int i = 0; i < N_photons; i++) {
         Photon photon = source.generatePhoton();
@@ -60,6 +63,7 @@ void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_ph
         }
     }
 }
+#pragma clang diagnostic pop
 
 void displayResults(VoxelGrid& voxel_grid, const Detector& detector, const std::vector<std::shared_ptr<Tally>>& tallies, int N_photons, InteractionData& interaction_data, const Eigen::MatrixXd& energy_spectrum) {
     auto quantity_container_2 = tallies[0]->getQuantityContainer();
@@ -84,17 +88,6 @@ void displayResults(VoxelGrid& voxel_grid, const Detector& detector, const std::
     std::cout << "Number of total photons at detector 1: " << quantity_1.number_of_particles << std::endl;
     std::cout << "length of primary cosine: " << quantity_2.primary_entrance_cosines.size() << std::endl;
     std::cout << "length of cosine: " << quantity_1.primary_entrance_cosines.size() << std::endl;
-
-    DetectorTallies detector_tallies = detector.getTallies();
-    std::cout << "Detector tallies: " << std::endl;
-    std::cout << "Total number of photons detected: " << detector_tallies.total_photons_hit << std::endl;
-    std::cout << "Total energy deposited: " << detector_tallies.total_energy_deposited << std::endl;
-    std::cout << "Number of primary photons detected: " << detector_tallies.primary_photons_hit << std::endl;
-    std::cout << "Energy deposited by primary photons: " << detector_tallies.energy_deposited_by_primary_photons << std::endl;
-    std::cout << "Number of secondary photons detected: " << detector_tallies.secondary_photons_hit << std::endl;
-    std::cout << "Energy deposited by secondary photons: " << detector_tallies.energy_deposited_by_secondary_photons << std::endl;
-    std::cout << "Energy Deposited in Voxel Grid (ev/photon): " << voxel_grid.getTotalEnergyDeposited() / N_photons << std::endl;
-    std::cout << "Energy Deposited in Voxel Grid per material (ev/photon): " << std::endl;
     auto materials_dose = voxel_grid.getEnergyDepositedInMaterials();
     for (auto& material_dose : materials_dose) {
         std::cout << material_dose.first << ": " << material_dose.second / N_photons << std::endl;
@@ -107,7 +100,7 @@ int main() {
     auto tallies = initializeTallies();
 
     InteractionData interaction_data(materials, data_service);
-    VoxelGrid voxel_grid("data/voxels/al_qvl_100keV.nii.gz");
+    VoxelGrid voxel_grid("data/voxels/al_hvl_100keV.nii.gz");
     Eigen::Vector3d detector_position(2, 2, 100);
     Detector detector(detector_position);
     PhysicsEngine physics_engine(voxel_grid, interaction_data, detector, tallies);
