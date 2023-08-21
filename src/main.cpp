@@ -27,14 +27,8 @@ std::vector<std::shared_ptr<Material>> initializeMaterials(const std::shared_ptr
 std::vector<std::shared_ptr<Tally>> initializeTallies() {
     std::vector<std::shared_ptr<Tally>> tallies;
 
-    tallies.emplace_back(std::make_shared<DiscSurfaceTally>(
-            Eigen::Vector3d(39.0/2, 39.0/2, 0),
-            Eigen::Vector3d(0, 0, 1),
-            0.001,
-            QuantityContainerFactory::AllQuantities()));
-
     tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
-            Eigen::Vector3d(0, 0, 158),
+            Eigen::Vector3d(0, 0, 155),
             Eigen::Vector3d(39.0, 0, 0),
             Eigen::Vector3d(0, 39.0, 0),
             QuantityContainerFactory::AllQuantities()));
@@ -46,6 +40,24 @@ Eigen::MatrixXd processEnergySpectrum() {
     Eigen::MatrixXd energy_spectrum = SourceHelpers::readCSV("data/source_distributions/RQRM3_MO_MO_30kVp_E_spectrum.csv");
     energy_spectrum.col(0) = energy_spectrum.col(0).array() * 1000;  // Convert from keV to eV
     return energy_spectrum;
+}
+
+PhotonSource initializeSource() {
+    auto energy_spectrum = processEnergySpectrum();
+
+//    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
+    MonoenergeticSpectrum mono_spectrum(56.4E3);
+    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
+
+//    std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(detector_position));
+    std::unique_ptr<Directionality> directionality = std::make_unique<RectangularIsotropicDirectionality>(
+            RectangularIsotropicDirectionality(Eigen::Vector3d(0, 0, 180),
+                                               Eigen::Vector3d(39.0, 0, 0),
+                                               Eigen::Vector3d(0, 39.0, 0)));
+    std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(PointGeometry(Eigen::Vector3d(39.0/2, 39.0/2, 0)));
+
+    PhotonSource source(std::move(spectrum), std::move(directionality), std::move(geometry));
+    return source;
 }
 
 
@@ -66,29 +78,21 @@ void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_ph
 }
 #pragma clang diagnostic pop
 
-void displayResults(VoxelGrid& voxel_grid, const Detector& detector, const std::vector<std::shared_ptr<Tally>>& tallies, int N_photons, InteractionData& interaction_data, const Eigen::MatrixXd& energy_spectrum) {
-    auto quantity_container_2 = tallies[0]->getQuantityContainer();
-    quantity_container_2->processMeasurements();
-    auto quantity_2 = quantity_container_2->getTallyData();
-    auto primary_air_kerma_2 = quantity_container_2->getPrimaryAirKerma(interaction_data, 3, energy_spectrum.col(0));
+void displayResults(VoxelGrid& voxel_grid, const Detector& detector, const std::vector<std::shared_ptr<Tally>>& tallies, int N_photons, InteractionData& interaction_data) {
+    int i = 1;
+    for (auto& tally : tallies) {
+        auto quantity_container = tally->getQuantityContainer();
+        quantity_container->processMeasurements();
+        auto quantity = quantity_container->getTallyData();
+//        auto primary_air_kerma = quantity_container->getPrimaryAirKerma(interaction_data, 3, energy_spectrum.col(0));
 
+        std::cout << "Number of total photons at detector " << i << ": " << quantity.number_of_particles << std::endl;
+        std::cout << "Number of primary photons at detector " << i << ": " << quantity.number_of_primary_particles << std::endl;
+        std::cout << "Number of secondary photons at detector " << i << ": " << quantity.number_of_secondary_particles << std::endl;
 
-    auto quantity_container_1 = tallies[1]->getQuantityContainer();
-    quantity_container_1->processMeasurements();
-    auto quantity_1 = quantity_container_1->getTallyData();
-    auto primary_air_kerma_1 = quantity_container_1->getPrimaryAirKerma(interaction_data, 3, energy_spectrum.col(0));
+        i++;
+    }
 
-    std::cout << "Air kerma at detector 2: " << primary_air_kerma_2 << std::endl;
-    std::cout << "Air kerma at detector 1: " << primary_air_kerma_1 << std::endl;
-    std::cout << "Air kerma ratio: " << primary_air_kerma_2 / primary_air_kerma_1 << std::endl;
-    std::cout << "Number of primary photons at detector 2: " << quantity_2.number_of_primary_particles << std::endl;
-    std::cout << "Number of primary photons at detector 1: " << quantity_1.number_of_primary_particles << std::endl;
-    std::cout << "Number of secondary photons at detector 2: " << quantity_2.number_of_secondary_particles << std::endl;
-    std::cout << "Number of secondary photons at detector 1: " << quantity_1.number_of_secondary_particles << std::endl;
-    std::cout << "Number of total photons at detector 2: " << quantity_2.number_of_particles << std::endl;
-    std::cout << "Number of total photons at detector 1: " << quantity_1.number_of_particles << std::endl;
-    std::cout << "length of primary cosine: " << quantity_2.primary_entrance_cosines.size() << std::endl;
-    std::cout << "length of cosine: " << quantity_1.primary_entrance_cosines.size() << std::endl;
     auto materials_dose = voxel_grid.getEnergyDepositedInMaterials();
     for (auto& material_dose : materials_dose) {
         std::cout << material_dose.first << ": " << material_dose.second / N_photons << std::endl;
@@ -105,23 +109,14 @@ int main() {
     Eigen::Vector3d detector_position(2, 2, 100);
     Detector detector(detector_position);
     PhysicsEngine physics_engine(voxel_grid, interaction_data, detector, tallies);
-    auto energy_spectrum = processEnergySpectrum();
 
-//    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
-    MonoenergeticSpectrum mono_spectrum(56.4E3);
-    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
 
-    Eigen::Vector3d voxel_origin_to_max = voxel_grid.getDimSpace();
-//    std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(detector_position));
-    std::unique_ptr<Directionality> directionality = std::make_unique<RectangularIsotropicDirectionality>(
-            RectangularIsotropicDirectionality(Eigen::Vector3d(0, 0, 180), Eigen::Vector3d(39, 39, 180)));
-    std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(PointGeometry(Eigen::Vector3d(39.0/2, 39.0/2, 0)));
 
-    PhotonSource source(std::move(spectrum), std::move(directionality), std::move(geometry));
+    PhotonSource source = initializeSource();
 
     runSimulation(source, physics_engine, 1000000);
 
-    displayResults(voxel_grid, detector, tallies, 1000000, interaction_data, energy_spectrum);
+    displayResults(voxel_grid, detector, tallies, 1000000, interaction_data);
 
     return 0;
 }

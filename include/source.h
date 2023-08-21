@@ -69,19 +69,19 @@ private:
 
 class RectangularIsotropicDirectionality : public Directionality {
 public:
-    RectangularIsotropicDirectionality(const Eigen::Vector3d& min_position_of_rectangle,
-                                       const Eigen::Vector3d& max_position_of_rectangle);
+    RectangularIsotropicDirectionality(Eigen::Vector3d corner, Eigen::Vector3d edge1, Eigen::Vector3d edge2);
     Eigen::Vector3d sampleDirection(const Eigen::Vector3d &photon_initial_position) override;
 
 private:
-    Eigen::Vector3d min_position_;
-    Eigen::Vector3d max_position_;
+    Eigen::Vector3d corner_;
+    Eigen::Vector3d edge1_;
+    Eigen::Vector3d edge2_;
     Eigen::Vector3d normal_;
     ProbabilityDist::Uniform uniform_dist_;
 
-    void setNormal();
+    void handleOrthogonalEdges();
 
-    double getZFromPlaneEquation(double x, double y);
+    bool areEdgesOrthogonal();
 };
 
 class SourceGeometry {
@@ -90,7 +90,7 @@ public:
     virtual ~SourceGeometry() = default;
 
 protected:
-    explicit SourceGeometry(const Eigen::Vector3d& position);
+    explicit SourceGeometry(Eigen::Vector3d  position);
     Eigen::Vector3d position_;
 };
 

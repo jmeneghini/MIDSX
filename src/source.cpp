@@ -69,38 +69,31 @@ Eigen::Vector3d BeamDirectionality::sampleDirection(const Eigen::Vector3d &photo
 
 
 
-RectangularIsotropicDirectionality::RectangularIsotropicDirectionality(const Eigen::Vector3d& min_position_of_rectangle,
-                                                                       const Eigen::Vector3d& max_position_of_rectangle):
-                                                                       min_position_(min_position_of_rectangle),
-                                                                       max_position_(max_position_of_rectangle),
-                                                                       uniform_dist_(0, 2*PI) {
-    assert(min_position_.x() < max_position_.x());
-    assert(min_position_.y() < max_position_.y());
-    setNormal();
+RectangularIsotropicDirectionality::RectangularIsotropicDirectionality(Eigen::Vector3d corner, Eigen::Vector3d edge1, Eigen::Vector3d edge2):
+                                                                       corner_(std::move(corner)), edge1_(std::move(edge1)), edge2_(std::move(edge2)),
+                                                                       uniform_dist_(0, 1) {
+    handleOrthogonalEdges();
 }
 
 Eigen::Vector3d RectangularIsotropicDirectionality::sampleDirection(const Eigen::Vector3d &photon_initial_position) {
-    uniform_dist_.setRange(min_position_.x(), max_position_.x());
-    double x = uniform_dist_.sample();
-    uniform_dist_.setRange(min_position_.y(), max_position_.y());
-    double y = uniform_dist_.sample();
-    double z = getZFromPlaneEquation(x, y);
-    Eigen::Vector3d direction = Eigen::Vector3d(x, y, z) - photon_initial_position;
-    return direction.normalized();
-};
-
-void RectangularIsotropicDirectionality::setNormal() {
-    Eigen::Vector3d min_corner_to_max_corner = max_position_ - min_position_;
-    Eigen::Vector3d min_corner_to_above_corner = Eigen::Vector3d(max_position_.x(), min_position_.y(), min_position_.z()) - min_position_;
-    normal_ = min_corner_to_max_corner.cross(min_corner_to_above_corner);
+    double alpha_1 = uniform_dist_.sample();
+    double alpha_2 = uniform_dist_.sample();
+    Eigen::Vector3d direction = (corner_ + alpha_1 * edge1_ + alpha_2 * edge2_ - photon_initial_position).normalized();
+    return direction;
 }
 
-double
-RectangularIsotropicDirectionality::getZFromPlaneEquation(double x, double y) {
-    return min_position_.z() - (normal_.x() * (x - min_position_.x()) + normal_.y() * (y - min_position_.y())) / normal_.z();
+void RectangularIsotropicDirectionality::handleOrthogonalEdges() {
+    if (!areEdgesOrthogonal()) {
+        throw std::invalid_argument("Edges are not orthogonal");
+    }
 }
 
-SourceGeometry::SourceGeometry(const Eigen::Vector3d &position) : position_(position) {};
+bool RectangularIsotropicDirectionality::areEdgesOrthogonal() {
+    double EPSILON = 1e-9;
+    return std::abs(edge1_.dot(edge2_)) < EPSILON;
+}
+
+SourceGeometry::SourceGeometry(Eigen::Vector3d position) : position_(std::move(position)) {};
 
 PointGeometry::PointGeometry(const Eigen::Vector3d &position) : SourceGeometry(position) {};
 
