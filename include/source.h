@@ -102,6 +102,7 @@ public:
 
 class PhotonSource {
 public:
+    PhotonSource() = default;
     PhotonSource(std::unique_ptr<EnergySpectrum> energy_spectrum,
                  std::unique_ptr<Directionality> directionality,
                  std::unique_ptr<SourceGeometry> source_geometry);

@@ -43,6 +43,8 @@ Eigen::MatrixXd PhotonInteractionHelpers::getBlockByRowValue(Eigen::MatrixXd& ma
 double PhotoelectricEffect::interact(Particle& photon, const InteractionData& interaction_data, Material& material) {
     photon.terminate();
     return photon.getEnergy();
+    // A decent approximation for the photoelectric effect is to terminate the photon and return its energy,
+    // neglecting lower energy secondary particles
 }
 
 double CoherentScattering::interact(Particle& photon, const InteractionData& interaction_data, Material& material) {

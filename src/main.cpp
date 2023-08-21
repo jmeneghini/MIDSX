@@ -19,23 +19,24 @@ std::shared_ptr<DataAccessObject> setupDataService() {
 
 std::vector<std::shared_ptr<Material>> initializeMaterials(const std::shared_ptr<DataAccessObject>& data_service) {
     std::vector<std::shared_ptr<Material>> materials;
-    materials.emplace_back(std::make_shared<Material>("Al", data_service));
+    materials.emplace_back(std::make_shared<Material>("Tissue, Soft (ICRU-46)", data_service));
     materials.emplace_back(std::make_shared<Material>("Air, Dry (near sea level)", data_service));
     return materials;
 }
 
 std::vector<std::shared_ptr<Tally>> initializeTallies() {
     std::vector<std::shared_ptr<Tally>> tallies;
+
     tallies.emplace_back(std::make_shared<DiscSurfaceTally>(
-            Eigen::Vector3d(2, 2, 1.511),
+            Eigen::Vector3d(39.0/2, 39.0/2, 0),
             Eigen::Vector3d(0, 0, 1),
             0.001,
             QuantityContainerFactory::AllQuantities()));
 
-    tallies.emplace_back(std::make_shared<DiscSurfaceTally>(
-            Eigen::Vector3d(2, 2, 0),
-            Eigen::Vector3d(0, 0, 1),
-            0.001,
+    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+            Eigen::Vector3d(0, 0, 158),
+            Eigen::Vector3d(39.0, 0, 0),
+            Eigen::Vector3d(0, 39.0, 0),
             QuantityContainerFactory::AllQuantities()));
 
     return tallies;
@@ -53,7 +54,7 @@ Eigen::MatrixXd processEnergySpectrum() {
 #pragma ide diagnostic ignored "openmp-use-default-none"
 void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_photons) {
     int j = 0;
-#pragma omp parallel for
+#pragma omp parallel for private(source)
     for (int i = 0; i < N_photons; i++) {
         Photon photon = source.generatePhoton();
         physics_engine.transportPhoton(photon);
@@ -100,26 +101,27 @@ int main() {
     auto tallies = initializeTallies();
 
     InteractionData interaction_data(materials, data_service);
-    VoxelGrid voxel_grid("data/voxels/al_hvl_100keV.nii.gz");
+    VoxelGrid voxel_grid("data/voxels/case_2_0_degrees.nii.gz");
     Eigen::Vector3d detector_position(2, 2, 100);
     Detector detector(detector_position);
     PhysicsEngine physics_engine(voxel_grid, interaction_data, detector, tallies);
     auto energy_spectrum = processEnergySpectrum();
 
 //    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
-    MonoenergeticSpectrum mono_spectrum(100E3);
+    MonoenergeticSpectrum mono_spectrum(56.4E3);
     std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
 
     Eigen::Vector3d voxel_origin_to_max = voxel_grid.getDimSpace();
-    std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(detector_position));
-
-    std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(PointGeometry(Eigen::Vector3d(2, 2, 0)));
+//    std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(detector_position));
+    std::unique_ptr<Directionality> directionality = std::make_unique<RectangularIsotropicDirectionality>(
+            RectangularIsotropicDirectionality(Eigen::Vector3d(0, 0, 180), Eigen::Vector3d(39, 39, 180)));
+    std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(PointGeometry(Eigen::Vector3d(39.0/2, 39.0/2, 0)));
 
     PhotonSource source(std::move(spectrum), std::move(directionality), std::move(geometry));
 
-    runSimulation(source, physics_engine, 10000000);
+    runSimulation(source, physics_engine, 1000000);
 
-    displayResults(voxel_grid, detector, tallies, 10000000, interaction_data, energy_spectrum);
+    displayResults(voxel_grid, detector, tallies, 1000000, interaction_data, energy_spectrum);
 
     return 0;
 }
