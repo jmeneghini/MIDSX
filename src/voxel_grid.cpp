@@ -1,4 +1,5 @@
 #include <iostream>
+#include <utility>
 #include "voxel_grid.h"
 
 
@@ -35,9 +36,9 @@ int VoxelGridHelpers::dimensionStringToIndex(const std::string& dimension) {
 
 
 
-VoxelGrid::VoxelGrid(const std::string& nii_filename,
-                     const Eigen::Vector3d& origin):
-                     filename_(nii_filename), origin_(origin) {
+VoxelGrid::VoxelGrid(std::string  nii_filename,
+                     Eigen::Vector3d  origin):
+                     filename_(std::move(nii_filename)), origin_(std::move(origin)) {
     initializeVoxels();
 };
 // initialize voxels to default values
@@ -68,30 +69,6 @@ double VoxelGrid::getTotalEnergyDeposited() {
     }
     return totalDose;
 }
-
-Eigen::Matrix<double, Eigen::Dynamic, 2> VoxelGrid::getEnergyDepositedAlongAxis(const std::string &axis) {
-    Eigen::Matrix<double, Eigen::Dynamic, 2> energyDepositedAlongAxis;
-    int axis_index = VoxelGridHelpers::dimensionStringToIndex(axis);
-    int numVoxelsAlongAxis = dim_vox_[axis_index];
-    energyDepositedAlongAxis.resize(numVoxelsAlongAxis, 2);
-    // get the energy deposited along the axis
-    int two_other_axes[2] = { (axis_index + 1) % 3, (axis_index + 2) % 3 };
-    for (int i = 0; i < numVoxelsAlongAxis; i++) {
-        Eigen::Vector3i index = Eigen::Vector3i::Zero();
-        index[axis_index] = i;
-        for (int j = 0; j < dim_vox_[two_other_axes[0]]; j++) {
-            for (int k = 0; k < dim_vox_[two_other_axes[1]]; k++) {
-                index[two_other_axes[0]] = j;
-                index[two_other_axes[1]] = k;
-                Voxel& voxel = getVoxel(index);
-                energyDepositedAlongAxis(i, 1) += voxel.dose;
-            }
-        }
-        energyDepositedAlongAxis(i, 0) = i;
-    }
-    return energyDepositedAlongAxis;
-} // TODO: clean up this function. ALSO... IT SEEMS IM GETTING MEMORY ERRORS WHEN I DO THE Y-AXIS BUT NOT WHEN IN ISOLATION?????
-// I'VE BEEN TRYING TO PICK THIS APART FOR 3 HRS STRAIGHT. MAYBE IT'S TIME TO SWITCH TO BUSINESS
 
 std::unordered_map<int, double> VoxelGrid::getEnergyDepositedInMaterials() {
     std::unordered_map<int, double> energyDepositedInMaterials;

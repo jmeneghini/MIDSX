@@ -16,6 +16,10 @@ PrimaryIncidentEnergy::PrimaryIncidentEnergy() {
     name_ = "Primary Incident Energy";
 }
 
+SecondaryIncidentEnergy::SecondaryIncidentEnergy() {
+    name_ = "Secondary Incident Energy";
+}
+
 NumberOfParticles::NumberOfParticles() {
     name_ = "Number of Particles";
 }
@@ -51,6 +55,12 @@ void IncidentEnergy::measure(TempTallyData &temp_tally_data) {
 void PrimaryIncidentEnergy::measure(TempTallyData &temp_tally_data) {
     if (temp_tally_data.initial_photon.isPrimary()) {
         primary_incident_energy_.push_back(temp_tally_data.initial_photon.getEnergy());
+    }
+}
+
+void SecondaryIncidentEnergy::measure(TempTallyData &temp_tally_data) {
+    if (!temp_tally_data.initial_photon.isPrimary()) {
+        secondary_incident_energy_.push_back(temp_tally_data.initial_photon.getEnergy());
     }
 }
 
@@ -94,6 +104,10 @@ std::vector<double> IncidentEnergy::getValue() const {
 
 std::vector<double> PrimaryIncidentEnergy::getValue() const {
     return primary_incident_energy_;
+}
+
+std::vector<double> SecondaryIncidentEnergy::getValue() const {
+    return secondary_incident_energy_;
 }
 
 int NumberOfParticles::getValue() const {

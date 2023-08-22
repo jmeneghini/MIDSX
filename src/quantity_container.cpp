@@ -21,6 +21,9 @@ void QuantityContainer::processMeasurements() {
         } else if (quantity.first == "Primary Incident Energy") {
             tally_data_.primary_incident_energy = InteractionDataHelpers::convertNVectorsToEigenMatrix<double>
                     ({(dynamic_cast<PrimaryIncidentEnergy*>(quantity.second.get()))->getValue()});
+        } else if (quantity.first == "Secondary Incident Energy") {
+            tally_data_.secondary_incident_energy = InteractionDataHelpers::convertNVectorsToEigenMatrix<double>
+                    ({(dynamic_cast<SecondaryIncidentEnergy*>(quantity.second.get()))->getValue()});
         } else if (quantity.first == "Number of Particles") {
             tally_data_.number_of_particles = (dynamic_cast<NumberOfParticles*>(quantity.second.get()))->getValue();
         } else if (quantity.first == "Number of Primary Particles") {
@@ -147,6 +150,7 @@ std::unique_ptr<QuantityContainer> QuantityContainerFactory::AllQuantities() {
     container->addQuantity(std::make_unique<PrimaryEntranceCosines>());
     container->addQuantity(std::make_unique<IncidentEnergy>());
     container->addQuantity(std::make_unique<PrimaryIncidentEnergy>());
+    container->addQuantity(std::make_unique<SecondaryIncidentEnergy>());
     container->addQuantity(std::make_unique<NumberOfPrimaryParticles>());
     container->addQuantity(std::make_unique<NumberOfSecondaryParticles>());
     container->addQuantity(std::make_unique<NumberOfParticles>());

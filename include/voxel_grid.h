@@ -20,7 +20,7 @@ namespace VoxelGridHelpers {
 class VoxelGrid {
 public:
     VoxelGrid() = default;
-    VoxelGrid(const std::string& filename, const Eigen::Vector3d& origin = Eigen::Vector3d::Zero());
+    VoxelGrid(std::string  filename, Eigen::Vector3d  origin = Eigen::Vector3d::Zero());
 
     // get voxel value at (i, j, k)
     Voxel& getVoxel(const Eigen::Vector3i& voxel_index);
@@ -35,8 +35,6 @@ public:
     Eigen::Vector3i getVoxelIndex(const Eigen::Vector3d& position);
 
     double getTotalEnergyDeposited();
-
-    Eigen::Matrix<double, Eigen::Dynamic, 2> getEnergyDepositedAlongAxis(const std::string& axis);
 
     std::unordered_map <int, double> getEnergyDepositedInMaterials();
 

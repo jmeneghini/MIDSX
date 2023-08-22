@@ -41,6 +41,15 @@ private:
     std::vector<double> primary_incident_energy_;
 };
 
+class SecondaryIncidentEnergy : public Quantity {
+public:
+    SecondaryIncidentEnergy();
+    void measure(TempTallyData& temp_tally_data) override;
+    std::vector<double> getValue() const;
+private:
+    std::vector<double> secondary_incident_energy_;
+};
+
 class NumberOfParticles : public Quantity {
 public:
     NumberOfParticles();

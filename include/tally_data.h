@@ -15,6 +15,7 @@ struct TallyData {
     Eigen::Vector<double, Eigen::Dynamic> energy_deposition;
     Eigen::Vector<double, Eigen::Dynamic> incident_energy;
     Eigen::Vector<double, Eigen::Dynamic> primary_incident_energy;
+    Eigen::Vector<double, Eigen::Dynamic> secondary_incident_energy;
     int number_of_particles = 0;
     int number_of_primary_particles = 0;
     int number_of_secondary_particles = 0;
