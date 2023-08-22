@@ -48,9 +48,6 @@ public:
     void setPrimary(bool primary_status) {
         isPrimary_ = primary_status;
     }
-
-
-
 private:
     Eigen::Vector3d position_;
     Eigen::Vector3d direction_;

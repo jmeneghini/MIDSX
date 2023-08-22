@@ -5,9 +5,9 @@
 #include <matplot/matplot.h>
 #include "voxel_grid.h"
 #include "physics_engine.h"
-#include "detector.h"
 #include "tally.h"
 #include "source.h"
+#include <numeric>
 #include <omp.h>
 
 namespace plt = matplot;
@@ -28,9 +28,45 @@ std::vector<std::shared_ptr<Tally>> initializeTallies() {
     std::vector<std::shared_ptr<Tally>> tallies;
 
     tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
-            Eigen::Vector3d(0, 0, 155),
-            Eigen::Vector3d(39.0, 0, 0),
-            Eigen::Vector3d(0, 39.0, 0),
+            Eigen::Vector3d(0, 0, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            QuantityContainerFactory::AllQuantities()));
+
+    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+            Eigen::Vector3d(19.5 - 1.5, 0, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            QuantityContainerFactory::AllQuantities()));
+
+    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+            Eigen::Vector3d(10.5 - 1.5, 10.5 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            QuantityContainerFactory::AllQuantities()));
+
+    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+            Eigen::Vector3d(19.5 - 1.5, 10.5 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            QuantityContainerFactory::AllQuantities()));
+
+    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            QuantityContainerFactory::AllQuantities()));
+
+    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+            Eigen::Vector3d(28.5 - 1.5, 28.5 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            QuantityContainerFactory::AllQuantities()));
+
+    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+            Eigen::Vector3d(39 - 3, 39 - 3, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
             QuantityContainerFactory::AllQuantities()));
 
     return tallies;
@@ -49,7 +85,7 @@ PhotonSource initializeSource() {
     MonoenergeticSpectrum mono_spectrum(56.4E3);
     std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
 
-//    std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(detector_position));
+//    std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(Eigen::Vector3d(39 - 1.5, 39 - 1.5, 155)));
     std::unique_ptr<Directionality> directionality = std::make_unique<RectangularIsotropicDirectionality>(
             RectangularIsotropicDirectionality(Eigen::Vector3d(0, 0, 180),
                                                Eigen::Vector3d(39.0, 0, 0),
@@ -66,7 +102,7 @@ PhotonSource initializeSource() {
 #pragma ide diagnostic ignored "openmp-use-default-none"
 void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_photons) {
     int j = 0;
-#pragma omp parallel for private(source)
+#pragma omp parallel for
     for (int i = 0; i < N_photons; i++) {
         Photon photon = source.generatePhoton();
         physics_engine.transportPhoton(photon);
@@ -78,7 +114,7 @@ void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_ph
 }
 #pragma clang diagnostic pop
 
-void displayResults(VoxelGrid& voxel_grid, const Detector& detector, const std::vector<std::shared_ptr<Tally>>& tallies, int N_photons, InteractionData& interaction_data) {
+void displayResults(VoxelGrid& voxel_grid, const std::vector<std::shared_ptr<Tally>>& tallies, int N_photons, InteractionData& interaction_data) {
     int i = 1;
     for (auto& tally : tallies) {
         auto quantity_container = tally->getQuantityContainer();
@@ -86,10 +122,17 @@ void displayResults(VoxelGrid& voxel_grid, const Detector& detector, const std::
         auto quantity = quantity_container->getTallyData();
 //        auto primary_air_kerma = quantity_container->getPrimaryAirKerma(interaction_data, 3, energy_spectrum.col(0));
 
-        std::cout << "Number of total photons at detector " << i << ": " << quantity.number_of_particles << std::endl;
-        std::cout << "Number of primary photons at detector " << i << ": " << quantity.number_of_primary_particles << std::endl;
-        std::cout << "Number of secondary photons at detector " << i << ": " << quantity.number_of_secondary_particles << std::endl;
-
+//        std::cout << "Number of total photons at detector " << i << ": " << quantity.number_of_particles << std::endl;
+//        std::cout << "Number of primary photons at detector " << i << ": " << quantity.number_of_primary_particles << std::endl;
+//        std::cout << "Number of secondary photons at detector " << i << ": " << quantity.number_of_secondary_particles << std::endl;
+//        std::cout << "Primary energy per incident photon (eV per photon) at detector " << i << ": " <<  std::accumulate(quantity.primary_incident_energy.begin(),
+//                                                                                                                        quantity.primary_incident_energy.end(),
+//                                                                                                                        0.0)
+//                                                                                                                        / N_photons << std::endl;
+        std::cout << "Secondary energy per incident photon (eV per photon) at detector " << i << ": " <<  std::accumulate(quantity.secondary_incident_energy.begin(),
+                                                                                                                        quantity.secondary_incident_energy.end(),
+                                                                                                                        0.0)
+                                                                                                                        / N_photons << std::endl;
         i++;
     }
 
@@ -106,9 +149,7 @@ int main() {
 
     InteractionData interaction_data(materials, data_service);
     VoxelGrid voxel_grid("data/voxels/case_2_0_degrees.nii.gz");
-    Eigen::Vector3d detector_position(2, 2, 100);
-    Detector detector(detector_position);
-    PhysicsEngine physics_engine(voxel_grid, interaction_data, detector, tallies);
+    PhysicsEngine physics_engine(voxel_grid, interaction_data, tallies);
 
 
 
@@ -116,7 +157,7 @@ int main() {
 
     runSimulation(source, physics_engine, 1000000);
 
-    displayResults(voxel_grid, detector, tallies, 1000000, interaction_data);
+    displayResults(voxel_grid, tallies, 1000000, interaction_data);
 
     return 0;
 }

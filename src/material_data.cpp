@@ -148,11 +148,3 @@ std::shared_ptr<Interpolator::Interpolator> MaterialData::getInterpolatorForElem
         throw std::runtime_error("Invalid table");
     }
 }
-
-
-
-
-
-
-
-

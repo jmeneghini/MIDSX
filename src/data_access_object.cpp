@@ -1,8 +1,9 @@
 #include "data_access_object.h"
 #include <iostream>
+#include <utility>
 #include <sqlite3.h>
 
-DatabaseException::DatabaseException(const std::string& message) : msg_(message) {}
+DatabaseException::DatabaseException(std::string  message) : msg_(std::move(message)) {}
 
 const char* DatabaseException::what() const noexcept { return msg_.c_str(); }
 

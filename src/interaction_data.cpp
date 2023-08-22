@@ -7,7 +7,6 @@ InteractionData::InteractionData(const std::vector<std::shared_ptr<Material>>& m
     initializeData();
 }
 
-
 void InteractionData::initializeData() {
     for (const auto& material : materials_) {
         material_map_[material->getProperties()->getMaterialId()] = material;
@@ -36,8 +35,6 @@ Eigen::Matrix<double, Eigen::Dynamic, 2> InteractionData::getTotalMaxCrossSectio
     return total_max_cross_sections_matrix;
 }
 
-
-
 void InteractionData::fillTotalMaxCrossSectionsMatrix(Eigen::MatrixXd& total_max_cross_sections_matrix, const Eigen::MatrixXd& merged_energy_matrix) {
     for (int i = 0; i < merged_energy_matrix.rows(); ++i) {
         double energy = merged_energy_matrix(i, 0);
@@ -50,6 +47,3 @@ void InteractionData::fillTotalMaxCrossSectionsMatrix(Eigen::MatrixXd& total_max
         total_max_cross_sections_matrix(i, 1) = max_cross_section;
     }
 }
-
-
-

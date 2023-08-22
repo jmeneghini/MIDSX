@@ -1,4 +1,5 @@
 #include "source.h"
+#include <utility>
 
 Eigen::Vector3d SourceHelpers::angleToUnitDirection(double theta, double phi) {
     Eigen::Vector3d unit_direction;
@@ -6,7 +7,7 @@ Eigen::Vector3d SourceHelpers::angleToUnitDirection(double theta, double phi) {
     return unit_direction;
 }
 
-Eigen::MatrixXd SourceHelpers::readCSV(std::string file) {
+Eigen::MatrixXd SourceHelpers::readCSV(const std::string& file) {
     std::ifstream in(file);
     std::string line;
 
@@ -58,16 +59,12 @@ Eigen::Vector3d IsotropicDirectionality::sampleDirection(const Eigen::Vector3d &
     return SourceHelpers::angleToUnitDirection(theta, phi);
 }
 
-
-
-BeamDirectionality::BeamDirectionality(const Eigen::Vector3d &pass_through_point): pass_through_point_(pass_through_point) {}
+BeamDirectionality::BeamDirectionality(Eigen::Vector3d pass_through_point): pass_through_point_(std::move(pass_through_point)) {}
 
 Eigen::Vector3d BeamDirectionality::sampleDirection(const Eigen::Vector3d &photon_initial_position) {
     Eigen::Vector3d beam_direction = pass_through_point_ - photon_initial_position;
     return beam_direction.normalized();
 }
-
-
 
 RectangularIsotropicDirectionality::RectangularIsotropicDirectionality(Eigen::Vector3d corner, Eigen::Vector3d edge1, Eigen::Vector3d edge2):
                                                                        corner_(std::move(corner)), edge1_(std::move(edge1)), edge2_(std::move(edge2)),
@@ -114,8 +111,3 @@ Photon PhotonSource::generatePhoton() {
     double energy = energy_spectrum_->sampleEnergy();
     return Photon(position, direction, energy);
 }
-
-
-
-
-

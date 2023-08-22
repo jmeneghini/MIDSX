@@ -9,7 +9,7 @@
 // Exception class for handling database errors
 class DatabaseException : public std::exception {
 public:
-    explicit DatabaseException(const std::string& message);
+    explicit DatabaseException(std::string  message);
     const char* what() const noexcept override;
 private:
     std::string msg_;

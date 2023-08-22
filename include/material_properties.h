@@ -20,8 +20,6 @@ public:
     std::unordered_map<int, double> getElementalMassDensity() const { return elemental_mass_density_; }
     std::unordered_map<int, double> getElementalNumberDensity() const { return elemental_number_density_; }
     std::unordered_map<int, double> getElementalAtomicWeight() const { return elemental_atomic_weight_; }
-
-
 private:
     std::string name_;
     std::shared_ptr<DataAccessObject> dao_;

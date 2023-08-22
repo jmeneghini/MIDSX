@@ -23,7 +23,6 @@ namespace Interpolator {
         explicit Spline(const Eigen::MatrixXd &data);
 
         double operator()(double x) const override;
-
     private:
         double scaledValue(double x) const;
 
@@ -49,7 +48,6 @@ namespace Interpolator {
     public:
         explicit Linear(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data);
         double operator()(double x) const override;
-
     private:
         Eigen::VectorXd x_vec_;
         Eigen::VectorXd y_vec_;

@@ -13,7 +13,7 @@
 
 namespace SourceHelpers {
     Eigen::Vector3d angleToUnitDirection(double theta, double phi);
-    Eigen::MatrixXd readCSV(std::string file);
+    Eigen::MatrixXd readCSV(const std::string& file);
 }
 
 
@@ -53,16 +53,14 @@ class IsotropicDirectionality : public Directionality {
 public:
     IsotropicDirectionality();
     Eigen::Vector3d sampleDirection(const Eigen::Vector3d &photon_initial_position) override;
-
 private:
     ProbabilityDist::Uniform uniform_dist_;
 };
 
 class BeamDirectionality : public Directionality {
 public:
-    explicit BeamDirectionality(const Eigen::Vector3d &pass_through_point);
+    explicit BeamDirectionality(Eigen::Vector3d pass_through_point);
     Eigen::Vector3d sampleDirection(const Eigen::Vector3d &photon_initial_position) override;
-
 private:
     Eigen::Vector3d pass_through_point_;
 };
@@ -71,7 +69,6 @@ class RectangularIsotropicDirectionality : public Directionality {
 public:
     RectangularIsotropicDirectionality(Eigen::Vector3d corner, Eigen::Vector3d edge1, Eigen::Vector3d edge2);
     Eigen::Vector3d sampleDirection(const Eigen::Vector3d &photon_initial_position) override;
-
 private:
     Eigen::Vector3d corner_;
     Eigen::Vector3d edge1_;
@@ -88,7 +85,6 @@ class SourceGeometry {
 public:
     virtual Eigen::Vector3d samplePosition() = 0;
     virtual ~SourceGeometry() = default;
-
 protected:
     explicit SourceGeometry(Eigen::Vector3d  position);
     Eigen::Vector3d position_;
@@ -108,7 +104,6 @@ public:
                  std::unique_ptr<SourceGeometry> source_geometry);
 
     Photon generatePhoton();
-
 private:
     std::unique_ptr<EnergySpectrum> energy_spectrum_;
     std::unique_ptr<Directionality> directionality_;

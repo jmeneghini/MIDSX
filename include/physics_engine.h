@@ -7,7 +7,6 @@
 #include "interaction_data.h"
 #include "interpolators.h"
 #include "photon_interactions.h"
-#include "detector.h"
 #include "tally.h"
 #include <cmath>
 
@@ -19,7 +18,7 @@ namespace PhysicsEngineHelpers {
 class PhysicsEngine {
 public:
     // default constructor
-    PhysicsEngine(VoxelGrid& voxel_grid, const InteractionData& interaction_data, Detector& detector, std::vector<std::shared_ptr<Tally>> tallies);
+    PhysicsEngine(VoxelGrid& voxel_grid, InteractionData  interaction_data, std::vector<std::shared_ptr<Tally>> tallies);
 
     // transport photon until it is absorbed or leaves the voxel grid (i.e. terminated)
     void transportPhoton(Photon& photon);
@@ -31,15 +30,12 @@ public:
     void setInteractionType(Photon& photon, Material& material, double total_cross_section);
 
     // process photon if it is outside the voxel grid
-    void processPhotonOutsideVoxelGrid(Photon& photon);
-
-
+    static void processPhotonOutsideVoxelGrid(Photon& photon);
 private:
     VoxelGrid& voxel_grid_;
     ProbabilityDist::Uniform uniform_dist_;
     InteractionData interaction_data_;
     std::vector<std::shared_ptr<Tally>> tallies_;
-    Detector& detector_;
     std::shared_ptr<PhotoelectricEffect> photoelectric_effect_;
     std::shared_ptr<IncoherentScattering> incoherent_scattering_;
     std::shared_ptr<CoherentScattering> coherent_scattering_;
@@ -51,11 +47,7 @@ private:
     // check if photon undergoes delta scattering or if it interacts
     bool isDeltaScatter(double cross_section, double max_cross_section);
 
-    // check if detector is hit by exiting photon
-    bool isDetectorHit(Photon& photon);
-
     void processTallies(TempTallyData& temp_tally_data);
-
 };
 
 #endif

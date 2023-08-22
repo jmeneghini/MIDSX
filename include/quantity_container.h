@@ -24,10 +24,9 @@ public:
     double computeCosinesSumForEnergyBin(double energy, double energy_bin_width) const;
     static bool isWithinEnergyBin(double energy, double energy_bin, double energy_bin_width) ;
 
-
+    // For iterating over quantities
     auto begin() {return quantities_.begin();}
     auto end() {return quantities_.end();}
-
 private:
     std::unordered_map<std::string, std::unique_ptr<Quantity>> quantities_;
     TallyData tally_data_;

@@ -74,13 +74,3 @@ Interpolator::LogLogLinear::LogLogLinear(const Eigen::Matrix<double, Eigen::Dyna
 double Interpolator::LogLogLinear::operator()(double x) const {
     return pow(10, Linear::operator()(log10(x)));
 }
-
-
-
-
-
-
-
-
-
-

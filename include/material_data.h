@@ -29,7 +29,6 @@ public:
     double interpolateIncoherentScatteringFunction(double energy) const { return (*incoherent_scattering_function_interpolator_)(energy); }
     double interpolateCoherentFormFactor(double energy) const { return (*coherent_form_factor_interpolator_)(energy); }
     double interpolateMassEnergyAbsorptionCoefficient(double energy) const { return (*mass_energy_absorption_coefficient_interpolator_)(energy); }
-
 private:
     std::shared_ptr<MaterialProperties> properties_;
     std::shared_ptr<DataAccessObject> dao_;

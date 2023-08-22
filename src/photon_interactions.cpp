@@ -134,7 +134,3 @@ double IncoherentScattering::getResultingEnergy(double x, double k) {
     double k_prime = 1/(1 - x + 1/k);
     return k_prime*ELECTRON_REST_MASS;
 }
-
-
-
-

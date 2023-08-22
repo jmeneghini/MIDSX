@@ -10,6 +10,7 @@ void QuantityContainer::measureAll(TempTallyData &temp_tally_data) {
     }
 }
 
+// can't seem to find a better way to do this without restructuring quantities (a future task perhaps)
 void QuantityContainer::processMeasurements() {
     for (auto &quantity : quantities_) {
         if (quantity.first == "Energy Deposition") {
@@ -66,23 +67,6 @@ double QuantityContainer::getPrimaryFluence() const {
     }
     return 1/(tally_data_.area * cosines_sum);
 }
-
-//double QuantityContainer::getPrimaryAirKerma(InteractionData &interaction_data, int MaterialID, const Eigen::VectorXd& energy_bin) const {
-//    auto material_data = interaction_data.getMaterial(MaterialID).getData();
-//    double energy_absorption = 0;
-//
-//    for (int i = 0; i < energy_bin.size() - 1; i++) {
-//        double energy = energy_bin(i);
-//        double energy_bin_width = computeBinWidth(energy_bin, i);
-//
-//        double cosines_sum = computeCosinesSumForEnergyBin(energy, energy_bin_width);
-//
-//        energy_absorption += material_data->interpolateMassEnergyAbsorptionCoefficient(energy) * energy * cosines_sum;
-//
-//    }
-//
-//    return energy_absorption / tally_data_.area;
-//} // this is much cleaner but is yielding statistically smaller results... wtf?
 
 double QuantityContainer::getPrimaryAirKerma(InteractionData &interaction_data, int MaterialID, const Eigen::VectorXd& energy_bin) const {
     auto material_data = interaction_data.getMaterial(MaterialID).getData();
@@ -158,4 +142,3 @@ std::unique_ptr<QuantityContainer> QuantityContainerFactory::AllQuantities() {
     container->addQuantity(std::make_unique<EnergyDeposition>());
     return container;
 }
-

@@ -16,7 +16,6 @@ public:
     Material& getMaterial(int id) { return *material_map_.at(id); }
     Eigen::Matrix<double, Eigen::Dynamic, 2> getMaxTotalCrossSectionsMatrix() const { return max_total_cs_matrix_; }
     double interpolateMaxTotalCrossSection(double energy) const { return (*max_total_cs_interpolator_)(energy); }
-
 private:
     std::shared_ptr<DataAccessObject> dao_;
     std::vector<std::shared_ptr<Material>> materials_;

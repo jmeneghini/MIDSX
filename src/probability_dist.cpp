@@ -35,7 +35,6 @@ void ProbabilityDist::Discrete::normalize() {
     }
 }
 
-
 Eigen::Matrix<double, Eigen::Dynamic, 2> ProbabilityDist::Discrete::generateCDF() const {
     Eigen::VectorXd probabilities = probabilities_matrix_.col(1);
     Eigen::VectorXd cdf = cumsum(probabilities);
@@ -62,5 +61,3 @@ Eigen::VectorXd ProbabilityDist::Discrete::cumsum(const Eigen::VectorXd &vector)
 
     return cumsum_vector;
 }
-
-

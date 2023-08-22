@@ -18,8 +18,6 @@ protected:
 };
 
 class SurfaceTally : public Tally {
-public:
-
 protected:
     Eigen::Vector3d norm_;
 

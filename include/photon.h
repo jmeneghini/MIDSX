@@ -22,9 +22,6 @@ public:
     void setInteractionBehavior(std::shared_ptr<ParticleInteractionBehavior> interaction_behavior) {
         interaction_behavior_ = std::move(interaction_behavior);
     }
-
-
-
 private:
     std::shared_ptr<ParticleInteractionBehavior> interaction_behavior_;
 };

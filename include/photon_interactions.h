@@ -22,7 +22,6 @@ public:
 class CoherentScattering : public ParticleInteractionBehavior {
 public:
     double interact(Particle& photon, const InteractionData& interaction_data, Material& material) override;
-
 private:
     static ProbabilityDist::Discrete createFormFactorDistribution(Eigen::MatrixXd form_factor_matrix, double x_min, double x_max);
     double sampleThetaFromCoherentScatteringDCS(const ProbabilityDist::Discrete& form_factor_dist, double x_max);
@@ -37,7 +36,5 @@ private:
     static double getAcceptanceProbability(double a, double b, double x, double k);
     static double getResultingEnergy(double x, double k);
 };
-
-
 
 #endif //MCXRAYTRANSPORT_PHOTON_INTERACTIONS_H

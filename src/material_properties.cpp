@@ -42,7 +42,7 @@ void MaterialProperties::initializeElementalProperties() {
 void MaterialProperties::initializeMaterialProperties() {
     setMassDensity();
     if (name_ == "Air, Dry (near sea level)") {
-        number_density_ = NUMBER_DENSITY_AT_STP; // only gas in database, made an exception, not proud of it
+        number_density_ = NUMBER_DENSITY_AT_STP; // only gas in database, made an exception
     }
     else {
         number_density_ = MaterialHelpers::calculateWeightedAverage(MaterialHelpers::mapElementsToVector(elemental_composition_), MaterialHelpers::mapElementsToVector(elemental_number_density_));
@@ -71,6 +71,3 @@ void MaterialProperties::setMassDensity() {
     auto output = InteractionDataHelpers::castStringVector<double>(dao_->executeQuery(query));
     mass_density_ = static_cast<double>(output[0]);
 }
-
-
-

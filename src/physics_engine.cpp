@@ -1,5 +1,7 @@
 #include "physics_engine.h"
 
+#include <utility>
+
 bool PhysicsEngineHelpers::areCollinearAndSameDirection(const Eigen::Vector3d& vec1, const Eigen::Vector3d& vec2) {
     double tolerance = 1E-6;
     // The vectors are collinear and pointing in the same direction
@@ -8,12 +10,11 @@ bool PhysicsEngineHelpers::areCollinearAndSameDirection(const Eigen::Vector3d& v
     return mag_diff < tolerance;
 }
 
-PhysicsEngine::PhysicsEngine(VoxelGrid& voxel_grid, const InteractionData& interaction_data, Detector& detector, std::vector<std::shared_ptr<Tally>> tallies) : voxel_grid_(voxel_grid), interaction_data_(interaction_data),
+PhysicsEngine::PhysicsEngine(VoxelGrid& voxel_grid, InteractionData  interaction_data, std::vector<std::shared_ptr<Tally>> tallies) : voxel_grid_(voxel_grid), interaction_data_(std::move(interaction_data)),
                                                                                                                uniform_dist_(0.0, 1.0), photoelectric_effect_(std::make_shared<PhotoelectricEffect>()),
                                                                                                                coherent_scattering_(std::make_shared<CoherentScattering>()),
                                                                                                                incoherent_scattering_(std::make_shared<IncoherentScattering>()),
-                                                                                                               detector_(detector),
-                                                                                                                tallies_(tallies) {}
+                                                                                                                tallies_(std::move(tallies)) {}
 void PhysicsEngine::transportPhoton(Photon& photon) {
     std::vector<TempTallyData> temp_tally_data_per_photon;
     while (!photon.isTerminated()) {
@@ -80,8 +81,6 @@ void PhysicsEngine::setInteractionType(Photon& photon, Material& material, doubl
     // get cross sections for current element
     double coherent_scattering_cross_section = material.getData()->interpolateCoherentScatteringCrossSection(photon_energy);
     double incoherent_scattering_cross_section = material.getData()->interpolateIncoherentScatteringCrossSection(photon_energy);
-// these values seem to small while debugging
-
 
     // sample interaction type
     double p_coherent = coherent_scattering_cross_section / total_cross_section;
@@ -110,9 +109,6 @@ double PhysicsEngine::getFreePath(double max_cross_section) {
 
 void PhysicsEngine::processPhotonOutsideVoxelGrid(Photon& photon) {
     photon.terminate();
-    if (isDetectorHit(photon)) {
-        detector_.updateTallies(photon);
-    }
 }
 
 bool PhysicsEngine::isDeltaScatter(double cross_section, double max_cross_section) {
@@ -120,16 +116,8 @@ bool PhysicsEngine::isDeltaScatter(double cross_section, double max_cross_sectio
     return uniform_dist_.sample() < p_delta_scatter;
 }
 
-bool PhysicsEngine::isDetectorHit(Photon& photon) {
-    // check if Omega is a scalar multiple of detector position - photon position
-    return PhysicsEngineHelpers::areCollinearAndSameDirection(photon.getDirection(), detector_.getPosition() - photon.getPosition());
-}
-
 void PhysicsEngine::processTallies(TempTallyData &temp_tally_data) {
     for (auto &tally: tallies_) {
-//#pragma omp critical
-        { // this is needed because tallies are shared between threads
-            tally->processMeasurements(temp_tally_data);
-        }
+        tally->processMeasurements(temp_tally_data);
     }
 }

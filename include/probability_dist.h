@@ -27,7 +27,6 @@ namespace ProbabilityDist {
         void setRange(double min, double max) {
             dist_ = std::uniform_real_distribution<double>(min, max);
         }
-
     private:
         mutable std::uniform_real_distribution<double> dist_;
         static thread_local std::mt19937 generator_;
@@ -44,7 +43,6 @@ namespace ProbabilityDist {
         double sampleInversion() const;
 
         double getExpectationValue() const;
-
     private:
         Eigen::Matrix<double, Eigen::Dynamic, 2> probabilities_matrix_;
         Eigen::Matrix<double, Eigen::Dynamic, 2> cdf_matrix_;

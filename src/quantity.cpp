@@ -133,8 +133,3 @@ std::vector<double> PrimaryEntranceCosines::getValue() const {
 int NumberOfInteractions::getValue() const {
     return number_of_interactions_;
 }
-
-
-
-
-

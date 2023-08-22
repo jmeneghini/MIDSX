@@ -18,13 +18,11 @@ public:
 
     std::shared_ptr<MaterialProperties> getProperties() const { return properties_;}
     std::shared_ptr<MaterialData> getData() const { return data_;}
-
 private:
     std::string name_;
     std::shared_ptr<DataAccessObject> dao_;
     std::shared_ptr<MaterialProperties> properties_;
     std::shared_ptr<MaterialData> data_;
-
 
     void initializeMaterial();
 };

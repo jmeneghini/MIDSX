@@ -55,8 +55,6 @@ public:
     Eigen::Vector3d getDimSpace() const {
         return dim_space_;
     }
-    
-
 private:
     Eigen::Vector3i dim_vox_;
     Eigen::Vector3d spacing_; // in cm
