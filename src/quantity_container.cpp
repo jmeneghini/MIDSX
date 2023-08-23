@@ -98,28 +98,6 @@ void QuantityContainer::setArea(double area) {
     tally_data_.area = area;
 }
 
-double QuantityContainer::computeBinWidth(const Eigen::VectorXd& energy_bin, int index) {
-    return energy_bin(index+1) - energy_bin(index);
-}
-
-double QuantityContainer::computeCosinesSumForEnergyBin(double energy, double energy_bin_width) const {
-    double cosines_sum = 0;
-    int count = 0;
-
-    for (int j = 0; j < tally_data_.primary_entrance_cosines.size(); j++) {
-        if (isWithinEnergyBin(tally_data_.primary_incident_energy(j), energy, energy_bin_width)) {
-            cosines_sum += 1/tally_data_.primary_entrance_cosines(j);
-            count++;
-        }
-    }
-
-    return (count == 0) ? 0 : cosines_sum;
-}
-
-bool QuantityContainer::isWithinEnergyBin(double incident_energy, double energy, double energy_bin_width) {
-    return (incident_energy <= energy + energy_bin_width) && (incident_energy > energy);
-}
-
 std::unique_ptr<QuantityContainer> QuantityContainerFactory::PrimaryFluence() {
 auto container = std::make_unique<QuantityContainer>();
     container->addQuantity(std::make_unique<EntranceCosines>());

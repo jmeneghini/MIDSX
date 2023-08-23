@@ -35,10 +35,12 @@ int VoxelGridHelpers::dimensionStringToIndex(const std::string& dimension) {
 }
 
 
-
 VoxelGrid::VoxelGrid(std::string  nii_filename,
-                     Eigen::Vector3d  origin):
-                     filename_(std::move(nii_filename)), origin_(std::move(origin)) {
+                     Eigen::Vector3d  origin,
+                     bool is_python_environment):
+                     filename_(std::move(nii_filename)),
+                        origin_(std::move(origin)),
+                        is_python_environment_(is_python_environment) {
     initializeVoxels();
 };
 // initialize voxels to default values
@@ -83,7 +85,10 @@ std::unordered_map<int, double> VoxelGrid::getEnergyDepositedInMaterials() {
 }
 
 void VoxelGrid::initializeVoxels() {
-    py::scoped_interpreter guard{}; // start the interpreter and keep it alive
+    std::unique_ptr<py::scoped_interpreter> guard;
+    if (!is_python_environment_) {
+        guard = std::make_unique<py::scoped_interpreter>(); // start python interpreter only if not already started
+    }
     py::module nibabel = py::module::import("nibabel"); // import nibabel
     py::object img = nibabel.attr("load")(filename_); // load the nifti file into img
     py::object data = img.attr("get_fdata")(); // get the data from img

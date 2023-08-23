@@ -20,10 +20,6 @@ public:
     double getPrimaryAirKerma(InteractionData &interaction_data, int MaterialID, const Eigen::VectorXd& energy_bin) const;
     void setArea(double area);
 
-    static double computeBinWidth(const Eigen::VectorXd& energy_bin, int index) ;
-    double computeCosinesSumForEnergyBin(double energy, double energy_bin_width) const;
-    static bool isWithinEnergyBin(double energy, double energy_bin, double energy_bin_width) ;
-
     // For iterating over quantities
     auto begin() {return quantities_.begin();}
     auto end() {return quantities_.end();}

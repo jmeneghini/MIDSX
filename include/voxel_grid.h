@@ -20,7 +20,7 @@ namespace VoxelGridHelpers {
 class VoxelGrid {
 public:
     VoxelGrid() = default;
-    VoxelGrid(std::string  filename, Eigen::Vector3d  origin = Eigen::Vector3d::Zero());
+    explicit VoxelGrid(std::string  filename, Eigen::Vector3d  origin = Eigen::Vector3d::Zero(), bool is_python_environment = false);
 
     // get voxel value at (i, j, k)
     Voxel& getVoxel(const Eigen::Vector3i& voxel_index);
@@ -55,6 +55,7 @@ public:
     Eigen::Vector3d getDimSpace() const {
         return dim_space_;
     }
+
 private:
     Eigen::Vector3i dim_vox_;
     Eigen::Vector3d spacing_; // in cm
@@ -65,6 +66,7 @@ private:
     std::vector<Voxel> voxels_;
     std::string filename_;
     double units_ = 1.0; // in cm
+    bool is_python_environment_;
 
     // initialize voxels according to the nifti file
     void initializeVoxels();

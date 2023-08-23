@@ -2,7 +2,6 @@
 #include "pybind11/embed.h"
 #include "interaction_data.h"
 #include "probability_dist.h"
-#include <matplot/matplot.h>
 #include "voxel_grid.h"
 #include "physics_engine.h"
 #include "tally.h"
@@ -10,7 +9,6 @@
 #include <numeric>
 #include <omp.h>
 
-namespace plt = matplot;
 namespace py = pybind11;
 
 std::shared_ptr<DataAccessObject> setupDataService() {
