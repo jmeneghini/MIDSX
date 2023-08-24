@@ -1,4 +1,4 @@
-#include "source.h"
+#include "Core/source.h"
 #include <utility>
 
 Eigen::Vector3d SourceHelpers::angleToUnitDirection(double theta, double phi) {

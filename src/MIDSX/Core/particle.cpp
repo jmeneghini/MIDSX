@@ -1,4 +1,4 @@
-#include "particle.h"
+#include "Core/particle.h"
 
 Eigen::Vector3d ParticleHelpers::rotateVector(const Eigen::Vector3d &vector, const double &theta, const double &phi) {
     Eigen::Vector3d rotatedVector;

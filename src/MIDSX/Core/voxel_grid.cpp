@@ -1,8 +1,4 @@
-#include <iostream>
-#include <utility>
-#include "voxel_grid.h"
-
-
+#include "Core/voxel_grid.h"
 
 template <typename T, std::size_t N>
 Eigen::Vector<T, N> VoxelGridHelpers::pyTupleToEigenVector(const py::tuple &tuple) {

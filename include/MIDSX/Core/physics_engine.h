@@ -9,6 +9,7 @@
 #include "photon_interactions.h"
 #include "tally.h"
 #include <cmath>
+#include <utility>
 
 namespace PhysicsEngineHelpers {
     bool areCollinearAndSameDirection(const Eigen::Vector3d& vec1, const Eigen::Vector3d& vec2);

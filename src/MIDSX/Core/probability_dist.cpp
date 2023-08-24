@@ -1,4 +1,4 @@
-#include "probability_dist.h"
+#include "Core/probability_dist.h"
 
 // ensures rng is thread safe
 thread_local std::mt19937 ProbabilityDist::Uniform::generator_(std::random_device{}());

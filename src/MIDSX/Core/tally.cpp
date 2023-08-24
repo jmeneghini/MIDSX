@@ -1,6 +1,4 @@
-#include "tally.h"
-
-#include <utility>
+#include "Core/tally.h"
 
 std::unique_ptr<QuantityContainer> Tally::getQuantityContainer() {
     return std::move(quantities_);

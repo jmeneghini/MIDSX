@@ -1,6 +1,5 @@
-#include "material.h"
+#include "Core/material.h"
 
-#include <utility>
 
 Material::Material(std::string  name, std::shared_ptr<DataAccessObject> dao) : name_(std::move(name)), dao_(std::move(dao)) {
     initializeMaterial();

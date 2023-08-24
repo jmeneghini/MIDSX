@@ -1,9 +1,9 @@
-#include "material_properties.h"
+#include "Core/material_properties.h"
 
-#include <utility>
-#include "data_access_object.h"
-#include "constants.h"
-#include "interaction_data.h"
+#include "Core/data_access_object.h"
+#include "Core/constants.h"
+#include "Core/interaction_data.h"
+
 
 MaterialProperties::MaterialProperties(std::string name, std::shared_ptr<DataAccessObject> dao) : name_(std::move(name)), dao_(std::move(dao)) {
     initializeProperties();

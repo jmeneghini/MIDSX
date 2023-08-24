@@ -7,6 +7,8 @@
 #include <pybind11/embed.h>
 #include <pybind11/numpy.h>
 #include <unordered_map>
+#include <iostream>
+#include <utility>
 
 namespace py = pybind11;
 

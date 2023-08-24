@@ -1,6 +1,5 @@
-#include "material_data.h"
+#include "Core/material_data.h"
 
-#include <utility>
 
 MaterialData::MaterialData(std::shared_ptr<MaterialProperties> properties, std::shared_ptr<DataAccessObject> dao) :
         properties_(std::move(properties)), dao_(std::move(dao)) {

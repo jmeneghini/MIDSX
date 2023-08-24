@@ -4,9 +4,9 @@
 #include "data_access_object.h"
 #include "interpolators.h"
 #include "material.h"
-#include "material_helpers.h"
 #include <iostream>
 #include <memory>
+#include <map>
 
 
 class InteractionData {

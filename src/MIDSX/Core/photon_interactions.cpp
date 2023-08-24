@@ -1,4 +1,4 @@
-#include "photon_interactions.h"
+#include "Core/photon_interactions.h"
 
 Eigen::MatrixXd PhotonInteractionHelpers::mergeMatrices(std::vector<Eigen::MatrixXd>& matrices) {
     std::vector<double> merged;

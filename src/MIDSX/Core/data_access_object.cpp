@@ -1,7 +1,4 @@
-#include "data_access_object.h"
-#include <iostream>
-#include <utility>
-#include <sqlite3.h>
+#include "Core/data_access_object.h"
 
 DatabaseException::DatabaseException(std::string  message) : msg_(std::move(message)) {}
 
@@ -22,7 +19,6 @@ std::vector<std::string> DataAccessObject::executeQuery(const std::string& query
     char* zErrMsg = nullptr;
     std::vector<std::string> results;
     int rc = sqlite3_exec(db, query.c_str(), callback, &results, &zErrMsg);
-
     if(rc != SQLITE_OK) {
         std::string errMsg;
         if (zErrMsg) {

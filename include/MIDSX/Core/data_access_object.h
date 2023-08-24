@@ -4,6 +4,8 @@
 #include <sqlite3.h>
 #include <string>
 #include <vector>
+#include <iostream>
+#include <utility>
 #include <exception>
 
 // Exception class for handling database errors

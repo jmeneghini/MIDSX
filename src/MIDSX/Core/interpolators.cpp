@@ -1,4 +1,4 @@
-#include "interpolators.h"
+#include "Core/interpolators.h"
 
 Interpolator::Spline::Spline(const Eigen::MatrixXd &data) :
         x_vec_(data.col(0)),
