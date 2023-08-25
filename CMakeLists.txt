@@ -54,7 +54,7 @@ find_library(SQLITE3_LIBRARY sqlite3)
 if(NOT SQLITE3_LIBRARY)
     message(FATAL_ERROR "SQLite3 not found")
 endif()
-target_link_libraries(MIDSX PRIVATE ${SQLITE3_LIBRARY})
+target_link_libraries(MIDSX PUBLIC ${SQLITE3_LIBRARY})
 
 # Find the PyBind11 libraries
 list(APPEND CMAKE_PREFIX_PATH "/home/john/Documents/MCXrayTransport/env/lib/python3.10/site-packages/pybind11/share/cmake")

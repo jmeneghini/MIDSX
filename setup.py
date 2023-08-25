@@ -69,7 +69,7 @@ setup(
     author_email='jp.meneghini412@gmail.com',
     description='Monte Carlo Interactions and Dosage Simulation of X-rays',
     # long_description=open("README.rst").read(),
-    ext_modules=[CMakeExtension('pymidsx')], # module name must match the name in CMakeLists.txt. What is imported
+    ext_modules=[CMakeExtension('pymidsx', 'python/')], # module name must match the name in CMakeLists.txt. What is imported
     packages=['pymidsx'],
     # py_modules=['interaction_data_wrapper'],  # Add your .py files here
     package_data={'pymidsx': ['*.so']}, # Include the .so files from your C / C++ compilation
