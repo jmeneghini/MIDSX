@@ -1,23 +1,25 @@
 #include "Core/interaction_data.h"
 
-InteractionData::InteractionData(const std::vector<std::shared_ptr<Material>>& materials, std::shared_ptr<DataAccessObject> dao) :
-        dao_(std::move(dao)), materials_(materials)
+InteractionData::InteractionData(std::vector<std::unique_ptr<Material>> materials, std::shared_ptr<DataAccessObject> dao) :
+        dao_(std::move(dao)), materials_(std::move(materials))
 {
     // Initialize the data as soon as the service is created
     initializeData();
 }
 
 void InteractionData::initializeData() {
-    for (const auto& material : materials_) {
-        material_map_[material->getProperties()->getMaterialId()] = material;
-    }
     setMaxTotalCrossSectionsAndInterpolator();
+    // Initialize the max cross section interpolator for each material first since this uses materials_,
+    // then move ownership of the materials to the map
+    for (auto& material : materials_) {
+        material_map_[material->getProperties()->getMaterialId()] = std::move(material);
+    }
 }
 
 
 void InteractionData::setMaxTotalCrossSectionsAndInterpolator() {
     max_total_cs_matrix_ = getTotalMaxCrossSectionsMatrixFromInteractionData();
-    max_total_cs_interpolator_ = std::make_shared<Interpolator::LogLogLinear>(max_total_cs_matrix_);
+    max_total_cs_interpolator_ = std::make_unique<Interpolator::LogLogLinear>(max_total_cs_matrix_);
 }
 
 Eigen::Matrix<double, Eigen::Dynamic, 2> InteractionData::getTotalMaxCrossSectionsMatrixFromInteractionData() {

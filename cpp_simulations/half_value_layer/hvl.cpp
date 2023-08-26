@@ -9,10 +9,10 @@ std::shared_ptr<DataAccessObject> setupDataService() {
     return std::make_shared<DataAccessObject>("data/data_sources/EPDL/EPDL.db");
 }
 
-std::vector<std::shared_ptr<Material>> initializeMaterials(const std::shared_ptr<DataAccessObject>& data_service) {
-    std::vector<std::shared_ptr<Material>> materials;
-    materials.emplace_back(std::make_shared<Material>("Tissue, Soft (ICRU-46)", data_service));
-    materials.emplace_back(std::make_shared<Material>("Air, Dry (near sea level)", data_service));
+std::vector<std::unique_ptr<Material>> initializeMaterials(const std::shared_ptr<DataAccessObject>& data_service) {
+    std::vector<std::unique_ptr<Material>> materials;
+    materials.emplace_back(std::make_unique<Material>("Tissue, Soft (ICRU-46)", data_service));
+    materials.emplace_back(std::make_unique<Material>("Air, Dry (near sea level)", data_service));
     return materials;
 }
 
@@ -139,7 +139,7 @@ int main() {
     auto materials = initializeMaterials(data_service);
     auto tallies = initializeTallies();
 
-    InteractionData interaction_data(materials, data_service);
+    InteractionData interaction_data(std::move(materials), data_service);
     VoxelGrid voxel_grid("data/voxels/case_2_0_degrees.nii.gz");
     PhysicsEngine physics_engine(voxel_grid, interaction_data, tallies);
 

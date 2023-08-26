@@ -9,11 +9,11 @@ bool PhysicsEngineHelpers::areCollinearAndSameDirection(const Eigen::Vector3d& v
     return mag_diff < tolerance;
 }
 
-PhysicsEngine::PhysicsEngine(VoxelGrid& voxel_grid, InteractionData  interaction_data, std::vector<std::shared_ptr<Tally>> tallies) : voxel_grid_(voxel_grid), interaction_data_(std::move(interaction_data)),
+PhysicsEngine::PhysicsEngine(VoxelGrid& voxel_grid, InteractionData& interaction_data, std::vector<std::shared_ptr<Tally>>& tallies) : voxel_grid_(voxel_grid), interaction_data_(interaction_data),
                                                                                                                uniform_dist_(0.0, 1.0), photoelectric_effect_(std::make_shared<PhotoelectricEffect>()),
                                                                                                                coherent_scattering_(std::make_shared<CoherentScattering>()),
                                                                                                                incoherent_scattering_(std::make_shared<IncoherentScattering>()),
-                                                                                                                tallies_(std::move(tallies)) {}
+                                                                                                                tallies_(tallies) {}
 void PhysicsEngine::transportPhoton(Photon& photon) {
     std::vector<TempTallyData> temp_tally_data_per_photon;
     while (!photon.isTerminated()) {

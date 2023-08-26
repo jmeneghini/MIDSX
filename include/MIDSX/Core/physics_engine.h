@@ -19,7 +19,7 @@ namespace PhysicsEngineHelpers {
 class PhysicsEngine {
 public:
     // default constructor
-    PhysicsEngine(VoxelGrid& voxel_grid, InteractionData  interaction_data, std::vector<std::shared_ptr<Tally>> tallies);
+    PhysicsEngine(VoxelGrid& voxel_grid, InteractionData& interaction_data, std::vector<std::shared_ptr<Tally>>& tallies);
 
     // transport photon until it is absorbed or leaves the voxel grid (i.e. terminated)
     void transportPhoton(Photon& photon);
@@ -35,8 +35,8 @@ public:
 private:
     VoxelGrid& voxel_grid_;
     ProbabilityDist::Uniform uniform_dist_;
-    InteractionData interaction_data_;
-    std::vector<std::shared_ptr<Tally>> tallies_;
+    InteractionData& interaction_data_;
+    std::vector<std::shared_ptr<Tally>>& tallies_;
     std::shared_ptr<PhotoelectricEffect> photoelectric_effect_;
     std::shared_ptr<IncoherentScattering> incoherent_scattering_;
     std::shared_ptr<CoherentScattering> coherent_scattering_;

@@ -11,17 +11,17 @@
 
 class InteractionData {
 public:
-    explicit InteractionData(const std::vector<std::shared_ptr<Material>>& materials, std::shared_ptr<DataAccessObject> dao);
+    explicit InteractionData(std::vector<std::unique_ptr<Material>> materials, std::shared_ptr<DataAccessObject> dao);
 
-    Material& getMaterial(int id) { return *material_map_.at(id); }
+    const Material& getMaterial(int id) { return *material_map_.at(id); }
     Eigen::Matrix<double, Eigen::Dynamic, 2> getMaxTotalCrossSectionsMatrix() const { return max_total_cs_matrix_; }
     double interpolateMaxTotalCrossSection(double energy) const { return (*max_total_cs_interpolator_)(energy); }
 private:
     std::shared_ptr<DataAccessObject> dao_;
-    std::vector<std::shared_ptr<Material>> materials_;
-    std::map<int, std::shared_ptr<Material>> material_map_;
+    std::vector<std::unique_ptr<Material>> materials_;
+    std::map<int, std::unique_ptr<Material>> material_map_;
     Eigen::Matrix<double, Eigen::Dynamic, 2> max_total_cs_matrix_;
-    std::shared_ptr<Interpolator::LogLogLinear> max_total_cs_interpolator_;
+    std::unique_ptr<Interpolator::LogLogLinear> max_total_cs_interpolator_;
 
     void initializeData();
 
