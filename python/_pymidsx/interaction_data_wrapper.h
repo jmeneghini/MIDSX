@@ -10,7 +10,7 @@ namespace py = pybind11;
 
 inline std::shared_ptr<DataAccessObject> setupDataService(const std::string& db_path);
 
-inline std::vector<std::shared_ptr<Material>> getMaterialsFromListOfNames(
+inline std::vector<std::unique_ptr<Material>> getMaterialsFromListOfNames(
         const py::list& materials, const std::shared_ptr<DataAccessObject>& data_service);
 
 void wrapInteractionData(py::module& m);
