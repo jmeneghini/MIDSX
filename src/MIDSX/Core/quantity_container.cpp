@@ -72,27 +72,28 @@ double QuantityContainer::getPrimaryAirKerma(InteractionData &interaction_data, 
     auto material_data = interaction_data.getMaterial(MaterialID).getData();
     double energy_absorption = 0;
 
-    for (int i = 0; i < energy_bin.size() - 1; i++) {
+    for (int i = 0; i < energy_bin.size(); i++) {
         double energy = energy_bin(i);
-        double energy_bin_width = energy_bin(i+1) - energy;
-        // get sum of entrance cosines for this energy bin
+        // check for monoenergetic case (not efficient, but doesn't necessarily need to be)
+        double energy_bin_width = (i < energy_bin.size() - 1) ? energy_bin(i + 1) - energy : 0;
+
         double cosines_sum = 0;
         int k = 0;
         for (int j = 0; j < tally_data_.primary_entrance_cosines.size(); j++) {
-            if (tally_data_.primary_incident_energy(j) <= energy + energy_bin_width && tally_data_.primary_incident_energy(j) > energy - energy_bin_width) {
+            if (tally_data_.primary_incident_energy(j) <= energy + energy_bin_width && tally_data_.primary_incident_energy(j) >= energy - energy_bin_width) {
                 cosines_sum += 1/tally_data_.primary_entrance_cosines(j);
                 k++;
             }
         }
-        if (k == 0) { // no particles in this energy bin. Avoids divide by zero
-            energy_absorption += 0;
-        }
-        else {
+
+        if (k != 0) {
             energy_absorption += material_data->interpolateMassEnergyAbsorptionCoefficient(energy) * energy * cosines_sum;
         }
     }
+
     return energy_absorption / tally_data_.area;
 }
+
 
 void QuantityContainer::setArea(double area) {
     tally_data_.area = area;

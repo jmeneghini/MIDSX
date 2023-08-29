@@ -20,15 +20,21 @@ std::vector<std::shared_ptr<Tally>> initializeTallies() {
     std::vector<std::shared_ptr<Tally>> tallies;
 
     tallies.emplace_back(std::make_shared<DiscSurfaceTally>(
-            Eigen::Vector3d(20, 20, 0),
+            Eigen::Vector3d(2, 2, 0),
             Eigen::Vector3d(0, 0, 1),
-            0.1,
+            0.01,
             QuantityContainerFactory::AllQuantities()));
 
     tallies.emplace_back(std::make_shared<DiscSurfaceTally>(
-            Eigen::Vector3d(20, 20, 0.2273),
+            Eigen::Vector3d(2, 2, 3.022),
             Eigen::Vector3d(0, 0, 1),
-            0.1,
+            0.01,
+            QuantityContainerFactory::AllQuantities()));
+
+    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+            Eigen::Vector3d(0, 0, 1),
+            Eigen::Vector3d(40, 0, 0),
+            Eigen::Vector3d(0, 40, 0),
             QuantityContainerFactory::AllQuantities()));
 
     return tallies;
@@ -44,16 +50,14 @@ PhotonSource initializeSource() {
     auto energy_spectrum = processEnergySpectrum();
 
 //    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
-    MonoenergeticSpectrum mono_spectrum(30E3);
+    MonoenergeticSpectrum mono_spectrum(100E3);
     std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
 
     std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(
-            BeamDirectionality(Eigen::Vector3d(20, 20, 1)));
-//    std::unique_ptr<Directionality> directionality = std::make_unique<RectangularIsotropicDirectionality>(
-//            RectangularIsotropicDirectionality(Eigen::Vector3d(0, 0, 180),
-//                                               Eigen::Vector3d(39.0, 0, 0),
-//                                               Eigen::Vector3d(0, 39.0, 0)));
-    std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(PointGeometry(Eigen::Vector3d(20, 20, 0)));
+            BeamDirectionality(Eigen::Vector3d(2, 2, 1)));
+
+    std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(
+            PointGeometry(Eigen::Vector3d(2, 2, 0)));
 
     PhotonSource source(std::move(spectrum), std::move(directionality), std::move(geometry));
     return source;
@@ -79,18 +83,23 @@ void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_ph
 
 void displayResults(VoxelGrid& voxel_grid, const std::vector<std::shared_ptr<Tally>>& tallies, int N_photons, InteractionData& interaction_data) {
     std::vector<double> air_kerma_values;
+    Eigen::VectorXd energy_bin(1);
+    energy_bin << 100E3;
+    std::cout << energy_bin << std::endl;
 
     int i = 1;
     for (auto& tally : tallies) {
         auto quantity_container = tally->getQuantityContainer();
         quantity_container->processMeasurements();
         auto quantity = quantity_container->getTallyData();
-        auto number_of_primary_particles = quantity.number_of_primary_particles;
-        air_kerma_values.push_back(number_of_primary_particles);
+        auto primary_air_kerma = quantity_container->getPrimaryAirKerma(interaction_data, 3, energy_bin);
+        air_kerma_values.push_back(primary_air_kerma);
 
         std::cout << "\nTally " << i << std::endl;
         std::cout << "Number of total photons at detector " << i << ": " << quantity.number_of_particles << std::endl;
         std::cout << "Number of primary photons at detector " << i << ": " << quantity.number_of_primary_particles << std::endl;
+        std::cout << "Number of secondary photons at detector " << i << ": " << quantity.number_of_secondary_particles << std::endl;
+        std::cout << "Primary air kerma at detector " << i << ": " << primary_air_kerma << std::endl;
         i++;
     }
 
@@ -104,7 +113,7 @@ int main() {
     auto tallies = initializeTallies();
 
     InteractionData interaction_data(std::move(materials), data_service);
-    VoxelGrid voxel_grid("data/voxels/al_hvl_30keV.nii.gz");
+    VoxelGrid voxel_grid("data/voxels/al_qvl_100keV.nii.gz");
     PhysicsEngine physics_engine(voxel_grid, interaction_data, tallies);
 
 
