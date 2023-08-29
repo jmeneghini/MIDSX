@@ -90,6 +90,37 @@ bool RectangularIsotropicDirectionality::areEdgesOrthogonal() {
     return std::abs(edge1_.dot(edge2_)) < EPSILON;
 }
 
+DiscIsotropicDirectionality::DiscIsotropicDirectionality(Eigen::Vector3d center, Eigen::Vector3d normal, double radius) :
+        center_(std::move(center)), normal_(std::move(normal)), radius_(radius), uniform_dist_(0, 1) {
+    setUAndV();
+}
+
+Eigen::Vector3d DiscIsotropicDirectionality::sampleDirection(const Eigen::Vector3d &photon_initial_position) {
+    uniform_dist_.setRange(0, 2*PI);
+    double theta = uniform_dist_.sample();
+    uniform_dist_.setRange(0, radius_);
+    double r = uniform_dist_.sample();
+    return Eigen::Vector3d (r*calculateNormalizedPerimeterVector(theta));
+}
+
+void DiscIsotropicDirectionality::setUAndV() {
+    double EPSILON = 1e-9;
+    // Try to set u orthogonal to normal and x hat. If parallel, set u orthogonal to normal and y hat
+    Eigen::Vector3d x_hat(1, 0, 0);
+    Eigen::Vector3d y_hat(0, 1, 0);
+    if (std::abs(normal_.dot(x_hat)) < EPSILON) {
+        u_ = normal_.cross(y_hat).normalized();
+    } else {
+        u_ = normal_.cross(x_hat).normalized();
+    }
+    // calculate v, which is orthogonal to u and normal
+    v_ = normal_.cross(u_).normalized();
+}
+
+Eigen::Vector3d DiscIsotropicDirectionality::calculateNormalizedPerimeterVector(double theta) {
+    return Eigen::Vector3d (u_ * cos(theta) + v_ * sin(theta));
+}
+
 SourceGeometry::SourceGeometry(Eigen::Vector3d position) : position_(std::move(position)) {};
 
 PointGeometry::PointGeometry(const Eigen::Vector3d &position) : SourceGeometry(position) {};

@@ -81,6 +81,22 @@ private:
     bool areEdgesOrthogonal();
 };
 
+class DiscIsotropicDirectionality : public Directionality {
+public:
+    DiscIsotropicDirectionality(Eigen::Vector3d center, Eigen::Vector3d normal, double radius);
+    Eigen::Vector3d sampleDirection(const Eigen::Vector3d &photon_initial_position) override;
+private:
+    Eigen::Vector3d center_;
+    Eigen::Vector3d normal_;
+    double radius_;
+    Eigen::Vector3d u_;
+    Eigen::Vector3d v_;
+    ProbabilityDist::Uniform uniform_dist_;
+
+    void setUAndV();
+    Eigen::Vector3d calculateNormalizedPerimeterVector(double theta);
+};
+
 class SourceGeometry {
 public:
     virtual Eigen::Vector3d samplePosition() = 0;
