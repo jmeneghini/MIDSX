@@ -100,7 +100,8 @@ Eigen::Vector3d DiscIsotropicDirectionality::sampleDirection(const Eigen::Vector
     double theta = uniform_dist_.sample();
     uniform_dist_.setRange(0, radius_);
     double r = uniform_dist_.sample();
-    return Eigen::Vector3d (r*calculateNormalizedPerimeterVector(theta));
+    Eigen::Vector3d direction = center_ + r * calculateNormalizedPerimeterVector(theta) - photon_initial_position;
+    return direction.normalized();
 }
 
 void DiscIsotropicDirectionality::setUAndV() {
