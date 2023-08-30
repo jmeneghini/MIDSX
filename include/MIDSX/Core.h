@@ -22,5 +22,6 @@
 #include "Core/tally.h"
 #include "Core/voxel_grid.h"
 #include "Core/voxel.h"
+#include "Core/computational_domain.h"
 
 #endif //MCXRAYTRANSPORT_MIDSX_H

@@ -2,7 +2,7 @@
 #define PHYSICSENGINE_H
 
 #include "photon.h"
-#include "voxel_grid.h"
+#include "computational_domain.h"
 #include "probability_dist.h"
 #include "interaction_data.h"
 #include "interpolators.h"
@@ -19,7 +19,7 @@ namespace PhysicsEngineHelpers {
 class PhysicsEngine {
 public:
     // default constructor
-    PhysicsEngine(VoxelGrid& voxel_grid, InteractionData& interaction_data, std::vector<std::shared_ptr<Tally>>& tallies);
+    PhysicsEngine(ComputationalDomain& comp_domain, InteractionData& interaction_data, std::vector<std::shared_ptr<Tally>>& tallies);
 
     // transport photon until it is absorbed or leaves the voxel grid (i.e. terminated)
     void transportPhoton(Photon& photon);
@@ -33,7 +33,7 @@ public:
     // process photon if it is outside the voxel grid
     static void processPhotonOutsideVoxelGrid(Photon& photon);
 private:
-    VoxelGrid& voxel_grid_;
+    ComputationalDomain& comp_domain_;
     ProbabilityDist::Uniform uniform_dist_;
     InteractionData& interaction_data_;
     std::vector<std::shared_ptr<Tally>>& tallies_;

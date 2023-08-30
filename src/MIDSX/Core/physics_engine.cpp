@@ -9,7 +9,7 @@ bool PhysicsEngineHelpers::areCollinearAndSameDirection(const Eigen::Vector3d& v
     return mag_diff < tolerance;
 }
 
-PhysicsEngine::PhysicsEngine(VoxelGrid& voxel_grid, InteractionData& interaction_data, std::vector<std::shared_ptr<Tally>>& tallies) : voxel_grid_(voxel_grid), interaction_data_(interaction_data),
+PhysicsEngine::PhysicsEngine(ComputationalDomain& comp_domain, InteractionData& interaction_data, std::vector<std::shared_ptr<Tally>>& tallies) : comp_domain_(comp_domain), interaction_data_(interaction_data),
                                                                                                                uniform_dist_(0.0, 1.0), photoelectric_effect_(std::make_shared<PhotoelectricEffect>()),
                                                                                                                coherent_scattering_(std::make_shared<CoherentScattering>()),
                                                                                                                incoherent_scattering_(std::make_shared<IncoherentScattering>()),
@@ -41,18 +41,15 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon, std::vector<TempTally
     temp_tally_data.free_path = free_path_length;
     photon.move(free_path_length);
 
-    // Check if photon is still in voxel grid. If no, kill photon
-    Eigen::Vector3i current_voxel_index;
-    try {
-        current_voxel_index = voxel_grid_.getVoxelIndex(photon.getPosition());
-    } catch (const std::out_of_range &e) {
+    // Check if photon is still in comp domain. If no, kill photon
+    if (!comp_domain_.isInComputationalDomain(photon.getPosition())) {
         temp_tally_data_per_photon.push_back(temp_tally_data);
         processPhotonOutsideVoxelGrid(photon);
         return;
     }
 
     // get material of new voxel
-    Voxel& current_voxel = voxel_grid_.getVoxel(current_voxel_index);
+    Voxel& current_voxel = comp_domain_.getVoxel(photon.getPosition());
     int current_material_id = current_voxel.materialID;
 
     // get total cross section for current material

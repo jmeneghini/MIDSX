@@ -54,7 +54,7 @@ Eigen::Vector3d VoxelGrid::getVoxelPosition(const Eigen::Vector3i& voxel_index) 
     return voxel_index.cast<double>().cwiseProduct(spacing_); // element-wise multiplication
 }
 
-Eigen::Vector3i VoxelGrid::getVoxelIndex(const Eigen::Vector3d& position) {
+Eigen::Vector3i VoxelGrid::getVoxelIndex(const Eigen::Vector3d& position) const {
     handleOutOfBounds(position);
     Eigen::Vector3i voxelIndex = (position.cwiseQuotient(spacing_)).cast<int>();
     return voxelIndex;

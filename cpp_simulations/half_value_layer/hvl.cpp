@@ -20,19 +20,19 @@ std::vector<std::shared_ptr<Tally>> initializeTallies() {
     std::vector<std::shared_ptr<Tally>> tallies;
 
     tallies.emplace_back(std::make_shared<DiscSurfaceTally>(
-            Eigen::Vector3d(2, 2, 0),
+            Eigen::Vector3d(2, 2, 10),
             Eigen::Vector3d(0, 0, 1),
-            0.01,
+            0.1,
             QuantityContainerFactory::AllQuantities()));
 
     tallies.emplace_back(std::make_shared<DiscSurfaceTally>(
-            Eigen::Vector3d(2, 2, 3.022),
+            Eigen::Vector3d(2, 2, 100),
             Eigen::Vector3d(0, 0, 1),
-            0.01,
+            1.0,
             QuantityContainerFactory::AllQuantities()));
 
     tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
-            Eigen::Vector3d(0, 0, 1),
+            Eigen::Vector3d(0, 0, 75),
             Eigen::Vector3d(40, 0, 0),
             Eigen::Vector3d(0, 40, 0),
             QuantityContainerFactory::AllQuantities()));
@@ -50,11 +50,13 @@ PhotonSource initializeSource() {
     auto energy_spectrum = processEnergySpectrum();
 
 //    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
-    MonoenergeticSpectrum mono_spectrum(100E3);
+    MonoenergeticSpectrum mono_spectrum(30E3);
     std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
 
-    std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(
-            BeamDirectionality(Eigen::Vector3d(2, 2, 1)));
+    std::unique_ptr<Directionality> directionality = std::make_unique<DiscIsotropicDirectionality>(
+            DiscIsotropicDirectionality(Eigen::Vector3d(2, 2, 10),
+                                        Eigen::Vector3d(0, 0, 1),
+                                        0.1));
 
     std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(
             PointGeometry(Eigen::Vector3d(2, 2, 0)));
@@ -81,10 +83,10 @@ void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_ph
 }
 #pragma clang diagnostic pop
 
-void displayResults(VoxelGrid& voxel_grid, const std::vector<std::shared_ptr<Tally>>& tallies, int N_photons, InteractionData& interaction_data) {
+void displayResults(const std::vector<std::shared_ptr<Tally>>& tallies, int N_photons, InteractionData& interaction_data) {
     std::vector<double> air_kerma_values;
     Eigen::VectorXd energy_bin(1);
-    energy_bin << 100E3;
+    energy_bin << 30E3;
     std::cout << energy_bin << std::endl;
 
     int i = 1;
@@ -113,8 +115,8 @@ int main() {
     auto tallies = initializeTallies();
 
     InteractionData interaction_data(std::move(materials), data_service);
-    VoxelGrid voxel_grid("data/voxels/al_qvl_100keV.nii.gz");
-    PhysicsEngine physics_engine(voxel_grid, interaction_data, tallies);
+    ComputationalDomain comp_domain("data/comp_domains/al_hvl_30keV.json");
+    PhysicsEngine physics_engine(comp_domain, interaction_data, tallies);
 
 
 
@@ -122,7 +124,7 @@ int main() {
 
     runSimulation(source, physics_engine, 1000000);
 
-    displayResults(voxel_grid, tallies, 1000000, interaction_data);
+    displayResults(tallies, 1000000, interaction_data);
 
     return 0;
 }

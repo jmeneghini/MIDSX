@@ -33,8 +33,11 @@ public:
     // get spatial position of voxel at (x, y, z)
     Eigen::Vector3d getVoxelPosition(const Eigen::Vector3i& voxel_index);
 
+    // check if (x, y, z) is within the voxel grid
+    bool withinGrid(const Eigen::Vector3d& position) const;
+
     // get voxel index from spatial position
-    Eigen::Vector3i getVoxelIndex(const Eigen::Vector3d& position);
+    Eigen::Vector3i getVoxelIndex(const Eigen::Vector3d& position) const;
 
     double getTotalEnergyDeposited();
 
@@ -75,9 +78,6 @@ private:
 
     // calculate the index of the voxel at (i, j, k)
     int voxelNumber(const Eigen::Vector3i& voxel_index) const;
-
-    // check if (i, j, k) is within the voxel grid
-    bool withinGrid(const Eigen::Vector3d& position) const;
 
     void handleOutOfBounds(const Eigen::Vector3d& position) const;
 
