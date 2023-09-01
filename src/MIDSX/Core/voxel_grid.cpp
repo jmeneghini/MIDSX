@@ -32,10 +32,8 @@ int VoxelGridHelpers::dimensionStringToIndex(const std::string& dimension) {
 
 
 VoxelGrid::VoxelGrid(std::string  nii_filename,
-                     Eigen::Vector3d  origin,
                      bool is_python_environment):
                      filename_(std::move(nii_filename)),
-                        origin_(std::move(origin)),
                         is_python_environment_(is_python_environment) {
     initializeVoxels();
 };
@@ -99,8 +97,8 @@ int VoxelGrid::voxelNumber(const Eigen::Vector3i& voxel_index) const {
 }
 
 bool VoxelGrid::withinGrid(const Eigen::Vector3d& position) const {
-    Eigen::Vector3d minPosition = origin_;
-    Eigen::Vector3d maxPosition = origin_ + dim_space_;
+    Eigen::Vector3d minPosition = Eigen::Vector3d::Zero();
+    Eigen::Vector3d maxPosition = dim_space_;
     return (position.array() >= minPosition.array()).all()
            && (position.array() <= maxPosition.array()).all();
 }

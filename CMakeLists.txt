@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.10)
 project(MIDSX VERSION 0.1.0 LANGUAGES CXX)
 
 include(CMakePackageConfigHelpers)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp") # turn on OpenMP
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3") # turn on optimization
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 

@@ -13,7 +13,7 @@ using json = nlohmann::json;
 class ComputationalDomain {
 public:
     ComputationalDomain() = default;
-    explicit ComputationalDomain(const std::string &json_file_path);
+    explicit ComputationalDomain(const std::string &json_file_path, bool is_python_environment = false);
 
     bool isInComputationalDomain(const Eigen::Vector3d &position) const;
     Voxel& getVoxel(const Eigen::Vector3d &position);
@@ -22,6 +22,7 @@ public:
 private:
     std::vector<std::pair<VoxelGrid, Eigen::Vector3d>> voxel_grids_;
     Eigen::Vector3d dim_space_;
+    bool is_python_environment_;
 
     // related public functions
 

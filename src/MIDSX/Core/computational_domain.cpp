@@ -2,7 +2,9 @@
 
 using json = nlohmann::json;
 
-ComputationalDomain::ComputationalDomain(const std::string &json_file_path) {
+ComputationalDomain::ComputationalDomain(const std::string &json_file_path,
+                                         bool is_python_environment):
+                                         is_python_environment_(is_python_environment) {
     initializeCompDomain(json_file_path);
 }
 
@@ -56,7 +58,7 @@ void ComputationalDomain::setVoxelGrids(const json &json_object, const std::stri
         getOrigins(voxel_grid_json, origins);
     }
     for (int i = 0; i < nifti_file_paths.size(); i++) {
-        voxel_grids_.emplace_back(VoxelGrid(nifti_file_paths[i]), origins[i]);
+        voxel_grids_.emplace_back(VoxelGrid(nifti_file_paths[i], is_python_environment_), origins[i]);
     }
 
 }

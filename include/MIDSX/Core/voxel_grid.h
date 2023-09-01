@@ -22,7 +22,7 @@ namespace VoxelGridHelpers {
 class VoxelGrid {
 public:
     VoxelGrid() = default;
-    explicit VoxelGrid(std::string  filename, Eigen::Vector3d  origin = Eigen::Vector3d::Zero(), bool is_python_environment = false);
+    explicit VoxelGrid(std::string  filename, bool is_python_environment = false);
 
     // get voxel value at (i, j, k)
     Voxel& getVoxel(const Eigen::Vector3i& voxel_index);
@@ -53,9 +53,6 @@ public:
         return numExits_;
     }
 
-    Eigen::Vector3d getOrigin() const {
-        return origin_;
-    }
 
     Eigen::Vector3d getDimSpace() const {
         return dim_space_;
@@ -65,7 +62,6 @@ private:
     Eigen::Vector3i dim_vox_;
     Eigen::Vector3d spacing_; // in cm
     Eigen::Vector3d dim_space_; // in cm
-    Eigen::Vector3d origin_; // in cm
     int numOfVoxels_ = 0;
     int numExits_ = 0;
     std::vector<Voxel> voxels_;
