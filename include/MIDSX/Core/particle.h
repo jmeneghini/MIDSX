@@ -5,7 +5,7 @@
 #include <Eigen/Dense>
 
 namespace ParticleHelpers{
-    Eigen::Vector3d rotateVector(const Eigen::Vector3d& vector, const double& theta, const double& phi);
+    Eigen::Vector3d rotateDirection(const Eigen::Vector3d& vector, const double& theta, const double& phi);
 }
 
 
@@ -26,7 +26,7 @@ public:
     }
 
     void rotate(const double& theta, const double& phi) {
-        direction_ = ParticleHelpers::rotateVector(direction_, theta, phi);
+        direction_ = ParticleHelpers::rotateDirection(direction_, theta, phi);
     }
 
     void setEnergy(const double& newEnergy) {
