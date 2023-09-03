@@ -1,0 +1,10 @@
+{
+  "dim_space": [4, 4, 3.431],
+  "background_material_id": 3,
+  "voxel_grids": [
+    {
+      "file_path": "/home/john/Documents/MCXrayTransport/data/voxels/al_hvl_30kVp_Mo.nii.gz",
+      "origin": [0, 0, 0]
+    }
+  ]
+}

@@ -12,7 +12,7 @@ std::shared_ptr<DataAccessObject> setupDataService() {
 
 std::vector<std::unique_ptr<Material>> initializeMaterials(const std::shared_ptr<DataAccessObject>& data_service) {
     std::vector<std::unique_ptr<Material>> materials;
-//    materials.emplace_back(std::make_unique<Material>("Al", data_service));
+    materials.emplace_back(std::make_unique<Material>("Al", data_service));
     materials.emplace_back(std::make_unique<Material>("Air, Dry (near sea level)", data_service));
     return materials;
 }
@@ -27,7 +27,7 @@ std::vector<std::shared_ptr<Tally>> initializeTallies() {
 //            QuantityContainerFactory::AllQuantities()));
 //
     tallies.emplace_back(std::make_shared<DiscSurfaceTally>(
-            Eigen::Vector3d(2, 2, 100),
+            Eigen::Vector3d(2, 2, 3.431),
             Eigen::Vector3d(0, 0, 1),
             1.0,
             QuantityContainerFactory::AllQuantities()));

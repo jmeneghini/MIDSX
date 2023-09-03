@@ -12,6 +12,7 @@ std::shared_ptr<DataAccessObject> setupDataService() {
 std::vector<std::unique_ptr<Material>> initializeMaterials(const std::shared_ptr<DataAccessObject>& data_service) {
     std::vector<std::unique_ptr<Material>> materials;
     materials.emplace_back(std::make_unique<Material>("Tissue, Soft (ICRU-46)", data_service));
+//    materials.emplace_back(std::make_unique<Material>("Al", data_service));
     materials.emplace_back(std::make_unique<Material>("Air, Dry (near sea level)", data_service));
     return materials;
 }
@@ -106,7 +107,7 @@ void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_ph
 }
 #pragma clang diagnostic pop
 
-void displayResults(VoxelGrid& voxel_grid, const std::vector<std::shared_ptr<Tally>>& tallies, int N_photons, InteractionData& interaction_data) {
+void displayResults(const std::vector<std::shared_ptr<Tally>>& tallies, int N_photons, InteractionData& interaction_data) {
     int i = 1;
     for (auto& tally : tallies) {
         auto quantity_container = tally->getQuantityContainer();
@@ -114,13 +115,13 @@ void displayResults(VoxelGrid& voxel_grid, const std::vector<std::shared_ptr<Tal
         auto quantity = quantity_container->getTallyData();
 //        auto primary_air_kerma = quantity_container->getPrimaryAirKerma(interaction_data, 3, energy_spectrum.col(0));
 
-//        std::cout << "Number of total photons at detector " << i << ": " << quantity.number_of_particles << std::endl;
-//        std::cout << "Number of primary photons at detector " << i << ": " << quantity.number_of_primary_particles << std::endl;
-//        std::cout << "Number of secondary photons at detector " << i << ": " << quantity.number_of_secondary_particles << std::endl;
-//        std::cout << "Primary energy per incident photon (eV per photon) at detector " << i << ": " <<  std::accumulate(quantity.primary_incident_energy.begin(),
-//                                                                                                                        quantity.primary_incident_energy.end(),
-//                                                                                                                        0.0)
-//                                                                                                                        / N_photons << std::endl;
+        std::cout << "Number of total photons at detector " << i << ": " << quantity.number_of_particles << std::endl;
+        std::cout << "Number of primary photons at detector " << i << ": " << quantity.number_of_primary_particles << std::endl;
+        std::cout << "Number of secondary photons at detector " << i << ": " << quantity.number_of_secondary_particles << std::endl;
+        std::cout << "Primary energy per incident photon (eV per photon) at detector " << i << ": " <<  std::accumulate(quantity.primary_incident_energy.begin(),
+                                                                                                                        quantity.primary_incident_energy.end(),
+                                                                                                                        0.0)
+                                                                                                                        / N_photons << std::endl;
         std::cout << "Secondary energy per incident photon (eV per photon) at detector " << i << ": " <<  std::accumulate(quantity.secondary_incident_energy.begin(),
                                                                                                                           quantity.secondary_incident_energy.end(),
                                                                                                                           0.0)
@@ -128,10 +129,10 @@ void displayResults(VoxelGrid& voxel_grid, const std::vector<std::shared_ptr<Tal
         i++;
     }
 
-    auto materials_dose = voxel_grid.getEnergyDepositedInMaterials();
-    for (auto& material_dose : materials_dose) {
-        std::cout << material_dose.first << ": " << material_dose.second / N_photons << std::endl;
-    }
+//    auto materials_dose = voxel_grid.getEnergyDepositedInMaterials();
+//    for (auto& material_dose : materials_dose) {
+//        std::cout << material_dose.first << ": " << material_dose.second / N_photons << std::endl;
+//    }
 }
 
 int main() {
@@ -140,8 +141,8 @@ int main() {
     auto tallies = initializeTallies();
 
     InteractionData interaction_data(std::move(materials), data_service);
-    VoxelGrid voxel_grid("data/voxels/case_2_0_degrees.nii.gz");
-    PhysicsEngine physics_engine(voxel_grid, interaction_data, tallies);
+    ComputationalDomain comp_domain("/home/john/Documents/MCXrayTransport/cpp_simulations/radiography/radiography_0_degrees.json");
+    PhysicsEngine physics_engine(comp_domain, interaction_data, tallies);
 
 
 
@@ -149,7 +150,7 @@ int main() {
 
     runSimulation(source, physics_engine, 10000000);
 
-    displayResults(voxel_grid, tallies, 10000000, interaction_data);
+    displayResults(tallies, 10000000, interaction_data);
 
     return 0;
 }

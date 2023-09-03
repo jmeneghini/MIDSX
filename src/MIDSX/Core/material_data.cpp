@@ -41,20 +41,20 @@ void MaterialData::setMassEnergyAbsorptionCoefficientsAndInterpolator() {
 }
 
 void MaterialData::setIncoherentScatteringCrossSectionAndInterpolator() {
-    incoherent_cs_matrix_ = calculateWeightedAverageOfColumns("IncoherentScatteringCrossSections", "CrossSection");
-    incoherent_cs_matrix_.col(1) *= 1E-24 * properties_->getNumberDensity(); // Convert from barns to cm^2 then to the macroscopic cross section
+    incoherent_cs_matrix_ = calculateWeightedAverageOfColumns("IncoherentScatteringCrossSections", "CrossSection", true);
+    coherent_cs_matrix_.col(1) *= 1E-24;
     incoherent_cs_interpolator_ = std::make_shared<Interpolator::LogLogSpline>(incoherent_cs_matrix_);
 }
 
 void MaterialData::setCoherentScatteringCrossSectionAndInterpolator() {
-    coherent_cs_matrix_ = calculateWeightedAverageOfColumns("CoherentScatteringCrossSections", "CrossSection");
-    coherent_cs_matrix_.col(1) *= 1E-24 * properties_->getNumberDensity();
+    coherent_cs_matrix_ = calculateWeightedAverageOfColumns("CoherentScatteringCrossSections", "CrossSection", true);
+    coherent_cs_matrix_.col(1) *= 1E-24;
     coherent_cs_interpolator_ = std::make_shared<Interpolator::LogLogSpline>(coherent_cs_matrix_);
 }
 
 void MaterialData::setPhotoelectricCrossSectionAndInterpolator() {
-    photoelectric_cs_matrix_ = calculateWeightedAverageOfColumns("TotalPhotoIonizationCrossSections", "CrossSection");
-    photoelectric_cs_matrix_.col(1) *= 1E-24 * properties_->getNumberDensity();
+    photoelectric_cs_matrix_ = calculateWeightedAverageOfColumns("TotalPhotoIonizationCrossSections", "CrossSection", true);
+    photoelectric_cs_matrix_.col(1) *= 1E-24;
     photoelectric_cs_interpolator_ = std::make_shared<Interpolator::LogLogLinear>(photoelectric_cs_matrix_);
 }
 
@@ -70,7 +70,8 @@ Eigen::Matrix<double, Eigen::Dynamic, 2> MaterialData::getTotalCrossSectionsMatr
     return total_cross_sections_matrix;
 }
 
-Eigen::Matrix<double, Eigen::Dynamic, 2> MaterialData::calculateWeightedAverageOfColumns(const std::string &tableName, const std::string &dataColumnName) {
+Eigen::Matrix<double, Eigen::Dynamic, 2> MaterialData::calculateWeightedAverageOfColumns(const std::string &tableName, const std::string &dataColumnName,
+                                                                                         bool scale_to_macro) {
     auto matrices_map = getTableMatrixForAllElements(tableName, dataColumnName);
     std::vector<Eigen::MatrixXd> all_energies;
     for (const auto& element : matrices_map) {
@@ -80,11 +81,15 @@ Eigen::Matrix<double, Eigen::Dynamic, 2> MaterialData::calculateWeightedAverageO
     Eigen::MatrixXd weighted_average_matrix = Eigen::MatrixXd::Zero(merged_energy_matrix.rows(), 2);
     std::unordered_map<int, std::shared_ptr<Interpolator::Interpolator>> interpolators_map = getInterpolatorsForAllElements(tableName, matrices_map);
     std::unordered_map<int, double> elemental_composition = properties_->getElementalComposition();
+    std::unordered_map<int, double> elemental_number_density = properties_->getElementalNumberDensity();
     for (int i = 0; i < merged_energy_matrix.rows(); ++i) {
             double energy = merged_energy_matrix(i, 0);
             double weighted_average = 0;
             for (const auto& element_interpolator : interpolators_map) {
                 weighted_average += elemental_composition[element_interpolator.first] * (*element_interpolator.second)(energy);
+                if (scale_to_macro) {
+                    weighted_average *= elemental_number_density[element_interpolator.first] * 1E-24;
+                }
             }
             weighted_average_matrix(i, 0) = energy;
             weighted_average_matrix(i, 1) = weighted_average;
