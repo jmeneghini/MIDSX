@@ -12,7 +12,6 @@ MaterialProperties::MaterialProperties(std::string name, std::shared_ptr<DataAcc
 void MaterialProperties::initializeProperties() {
     setMaterialId();
     setElementalComposition();
-    initializeElementalProperties();
     initializeMaterialProperties();
 }
 
@@ -33,23 +32,14 @@ void MaterialProperties::setElementalComposition() {
     }
 }
 
-void MaterialProperties::initializeElementalProperties() {
+void MaterialProperties::initializeMaterialProperties() {
     setElementalDataForTableAndColumn("Elements", "Mass", elemental_atomic_weight_);
     setElementalDataForTableAndColumn("Elements", "Density", elemental_mass_density_);
-    setElementalDataForTableAndColumn("Elements", "NumberDensity", elemental_number_density_);
-}
-
-void MaterialProperties::initializeMaterialProperties() {
+    setElementalDataForTableAndColumn("Elements", "MassNumber", elemental_mass_number_);
     setMassDensity();
-    if (name_ == "Air, Dry (near sea level)") {
-        number_density_ = NUMBER_DENSITY_AT_STP; // only gas in database, made an exception
-    }
-    else {
-        number_density_ = MaterialHelpers::calculateWeightedAverage(MaterialHelpers::mapElementsToVector(elemental_composition_), MaterialHelpers::mapElementsToVector(elemental_number_density_));
-    }
-    atomic_weight_ = MaterialHelpers::calculateWeightedAverage(MaterialHelpers::mapElementsToVector(elemental_composition_), MaterialHelpers::mapElementsToVector(elemental_atomic_weight_));
+    setAtomicWeight();
+    setNumberDensity();
 }
-
 
 void MaterialProperties::setElementalDataForTableAndColumn(const std::string& table_name, const std::string& column_name, std::unordered_map<int, double>& map) {
     std::vector<int> element_ids = MaterialHelpers::mapKeysToVector(elemental_composition_);
@@ -70,4 +60,18 @@ void MaterialProperties::setMassDensity() {
                         "WHERE Name = '" + name_ + "';";
     auto output = InteractionDataHelpers::castStringVector<double>(dao_->executeQuery(query));
     mass_density_ = static_cast<double>(output[0]);
+}
+
+void MaterialProperties::setNumberDensity() {
+    double number_density = 0;
+    for (const auto& mass_number : elemental_mass_number_) {
+         elemental_number_density_[mass_number.first] = AVOGADRO_CONSTANT * mass_density_ * elemental_composition_[mass_number.first] / mass_number.second;
+         number_density += elemental_number_density_[mass_number.first];
+    }
+    number_density_ = number_density;
+}
+
+void MaterialProperties::setAtomicWeight() {
+    atomic_weight_ = MaterialHelpers::calculateWeightedAverage(MaterialHelpers::mapElementsToVector(elemental_composition_),
+                                                               MaterialHelpers::mapElementsToVector(elemental_atomic_weight_));
 }

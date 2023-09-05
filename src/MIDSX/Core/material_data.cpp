@@ -42,7 +42,7 @@ void MaterialData::setMassEnergyAbsorptionCoefficientsAndInterpolator() {
 
 void MaterialData::setIncoherentScatteringCrossSectionAndInterpolator() {
     incoherent_cs_matrix_ = calculateWeightedAverageOfColumns("IncoherentScatteringCrossSections", "CrossSection", true);
-    coherent_cs_matrix_.col(1) *= 1E-24;
+    incoherent_cs_matrix_.col(1) *= 1E-24; // convert from barns to cm^2
     incoherent_cs_interpolator_ = std::make_shared<Interpolator::LogLogSpline>(incoherent_cs_matrix_);
 }
 
@@ -71,7 +71,7 @@ Eigen::Matrix<double, Eigen::Dynamic, 2> MaterialData::getTotalCrossSectionsMatr
 }
 
 Eigen::Matrix<double, Eigen::Dynamic, 2> MaterialData::calculateWeightedAverageOfColumns(const std::string &tableName, const std::string &dataColumnName,
-                                                                                         bool scale_to_macro) {
+                                                                                         bool convert_to_macroscopic) {
     auto matrices_map = getTableMatrixForAllElements(tableName, dataColumnName);
     std::vector<Eigen::MatrixXd> all_energies;
     for (const auto& element : matrices_map) {
@@ -86,9 +86,11 @@ Eigen::Matrix<double, Eigen::Dynamic, 2> MaterialData::calculateWeightedAverageO
             double energy = merged_energy_matrix(i, 0);
             double weighted_average = 0;
             for (const auto& element_interpolator : interpolators_map) {
-                weighted_average += elemental_composition[element_interpolator.first] * (*element_interpolator.second)(energy);
-                if (scale_to_macro) {
-                    weighted_average *= elemental_number_density[element_interpolator.first] * 1E-24;
+                if (!convert_to_macroscopic) {
+                    weighted_average += elemental_composition[element_interpolator.first] * (*element_interpolator.second)(energy);
+                }
+                else {
+                    weighted_average += elemental_number_density[element_interpolator.first] * (*element_interpolator.second)(energy);
                 }
             }
             weighted_average_matrix(i, 0) = energy;

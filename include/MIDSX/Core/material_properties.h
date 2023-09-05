@@ -20,6 +20,7 @@ public:
     std::unordered_map<int, double> getElementalMassDensity() const { return elemental_mass_density_; }
     std::unordered_map<int, double> getElementalNumberDensity() const { return elemental_number_density_; }
     std::unordered_map<int, double> getElementalAtomicWeight() const { return elemental_atomic_weight_; }
+    std::unordered_map<int, double> getElementalMassNumber() const { return elemental_mass_number_; }
 private:
     std::string name_;
     std::shared_ptr<DataAccessObject> dao_;
@@ -31,20 +32,23 @@ private:
     std::unordered_map<int, double> elemental_mass_density_;
     std::unordered_map<int, double> elemental_number_density_;
     std::unordered_map<int, double> elemental_atomic_weight_;
+    std::unordered_map<int, double> elemental_mass_number_;
 
 
     void initializeProperties();
 
     void setMaterialId();
     void setElementalComposition();
-    void initializeElementalProperties();
     void initializeMaterialProperties();
 
 
 
-    void setMassDensity();
     void setElementalDataForTableAndColumn(const std::string &table_name, const std::string &column_name,
                                            std::unordered_map<int, double> &map);
+
+    void setMassDensity();
+    void setNumberDensity();
+    void setAtomicWeight();
 };
 
 #endif //MCXRAYTRANSPORT_MATERIAL_PROPERTIES_H

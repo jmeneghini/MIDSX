@@ -61,8 +61,8 @@ private:
     void setPhotoelectricCrossSectionAndInterpolator();
 
     Eigen::Matrix<double, Eigen::Dynamic, 2> getTotalCrossSectionsMatrixFromInteractionData();
-    Eigen::Matrix<double, Eigen::Dynamic, 2> calculateWeightedAverageOfColumns(const std::string &tableName,
-                                                                               const std::string &dataColumnName, bool scale_to_macro = false);
+    Eigen::Matrix<double, Eigen::Dynamic, 2> calculateWeightedAverageOfColumns(const std::string &tableName, const std::string &dataColumnName,
+                                                                               bool scale_to_macroscopic = false);
 
     void fillTotalCrossSectionsMatrix(Eigen::MatrixXd& total_cross_sections_matrix, const Eigen::MatrixXd& merged_energy_matrix);
     std::unordered_map<int, Eigen::Matrix<double, Eigen::Dynamic, 2>> getTableMatrixForAllElements(const std::string &tableName, const std::string &dataColumnName);
