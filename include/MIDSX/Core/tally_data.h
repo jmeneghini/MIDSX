@@ -8,6 +8,7 @@ struct TempTallyData {
     double free_path = 0.0;
     bool isInteract = false;
     double entrance_cosine = 0.0;
+    bool already_counted = false;
     Photon initial_photon;
 };
 

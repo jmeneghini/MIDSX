@@ -4,12 +4,96 @@ std::unique_ptr<QuantityContainer> Tally::getQuantityContainer() {
     return std::move(quantities_);
 }
 
-void Tally::processMeasurements(TempTallyData& temp_tally_data) {
+void SurfaceTally::processMeasurements(TempTallyData& temp_tally_data) {
     temp_tally_data_ = temp_tally_data;
     if (willPassThrough()) {
         quantities_->measureAll(temp_tally_data_);
     }
 }
+
+AACuboidVolumeTally::AACuboidVolumeTally(Eigen::Vector3d min_corner, Eigen::Vector3d max_corner, std::unique_ptr<QuantityContainer> quantities):
+min_corner_(std::move(min_corner)), max_corner_(std::move(max_corner)) {
+    quantities_ = std::move(quantities);
+}
+
+void AACuboidVolumeTally::processMeasurements(TempTallyData& temp_tally_data) {
+    temp_tally_data_ = temp_tally_data;
+    VolumeTraversal volume_traversal = determineVolumeTraversal();
+    switch (volume_traversal) {
+        case VolumeTraversal::MISSES:
+            break;
+        case VolumeTraversal::LANDS_INSIDE:
+            quantities_->measureAll(temp_tally_data_);
+            break;
+        case VolumeTraversal::PASSES_THROUGH:
+            temp_tally_data_.energy_deposited = 0;
+            quantities_->measureAll(temp_tally_data_);
+            break;
+        case VolumeTraversal::STARTS_INSIDE_EXITS:
+            temp_tally_data_.energy_deposited = 0;
+            temp_tally_data_.already_counted = true;
+            quantities_->measureAll(temp_tally_data_);
+            break;
+        case VolumeTraversal::STARTS_INSIDE_STAYS:
+            temp_tally_data_.already_counted = true;
+            quantities_->measureAll(temp_tally_data_);
+            break;
+    }
+}
+
+VolumeTraversal AACuboidVolumeTally::determineVolumeTraversal() {
+    std::pair<double, double> entering_and_exiting_lengths = getEnteringAndExitingLengths();
+    double entering_length = entering_and_exiting_lengths.first;
+    double exiting_length = entering_and_exiting_lengths.second;
+    double photon_free_path = temp_tally_data_.free_path;
+
+    // exits before entering (i.e. misses), behind the photon, or too far away
+    if (entering_length > exiting_length || exiting_length <= 0 || entering_length > photon_free_path) {
+        return VolumeTraversal::MISSES;
+    }
+    // starts inside
+    else if (entering_length < 0) {
+        if (exiting_length > photon_free_path) {
+            return VolumeTraversal::STARTS_INSIDE_STAYS;
+        } else {
+            return VolumeTraversal::STARTS_INSIDE_EXITS;
+        }
+    } else if (exiting_length < photon_free_path) {
+        return VolumeTraversal::PASSES_THROUGH;
+    } else {
+        return VolumeTraversal::LANDS_INSIDE;
+    }
+}
+
+std::pair<double, double> AACuboidVolumeTally::getEnteringAndExitingLengths() {
+    std::pair<Eigen::Vector3d, Eigen::Vector3d> min_max = getLengthsToSurfacePlanes();
+    double entering_length = min_max.first.maxCoeff();
+    double exiting_length = min_max.second.minCoeff();
+    return {entering_length, exiting_length};
+}
+
+std::pair<Eigen::Vector3d, Eigen::Vector3d> AACuboidVolumeTally::getLengthsToSurfacePlanes() {
+    Photon& photon = temp_tally_data_.initial_photon;
+    Eigen::Vector3d photon_position = photon.getPosition();
+    Eigen::Vector3d photon_direction = photon.getDirection();
+    Eigen::Vector3d min_length_to_surface;
+    Eigen::Vector3d max_length_to_surface;
+
+    for (int i = 0; i < 3; i++) {
+        if (std::abs(photon_direction(i)) < EPSILON_) {
+            min_length_to_surface(i) = -1;
+            max_length_to_surface(i) = -1;
+        } else {
+            min_length_to_surface(i) = (min_corner_(i) - photon_position(i)) / photon_direction(i);
+            max_length_to_surface(i) = (max_corner_(i) - photon_position(i)) / photon_direction(i);
+        }
+        if (min_length_to_surface(i) > max_length_to_surface(i)) {
+            std::swap(min_length_to_surface(i), max_length_to_surface(i));
+        }
+    }
+    return {min_length_to_surface, max_length_to_surface};
+}
+
 
 bool SurfaceTally::willPassThrough() {
     double entrance_cosine = calculateEntranceCosine();
@@ -109,3 +193,4 @@ bool RectangularSurfaceTally::isOutsideOfSurface(const Eigen::Vector3d& intersec
     return edge1_dot_corner_to_intersection_point < 0 || edge1_dot_corner_to_intersection_point > edge1_dot_edge1_ ||
            edge2_dot_corner_to_intersection_point < 0 || edge2_dot_corner_to_intersection_point > edge2_dot_edge2_;
 }
+

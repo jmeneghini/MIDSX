@@ -25,6 +25,10 @@ Voxel& ComputationalDomain::getVoxel(const Eigen::Vector3d &position) {
     return background_voxel;
 }
 
+VoxelGrid& ComputationalDomain::getVoxelGridN(int N) {
+    return voxel_grids_[N].first;
+}
+
 void ComputationalDomain::initializeCompDomain(const std::string &json_file_path) {
     json json_object;
     std::string json_directory_path = std::filesystem::path(json_file_path).parent_path();

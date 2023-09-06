@@ -18,6 +18,8 @@ public:
     bool isInComputationalDomain(const Eigen::Vector3d &position) const;
     Voxel& getVoxel(const Eigen::Vector3d &position);
 
+    VoxelGrid& getVoxelGridN(int N);
+
     Voxel background_voxel;
 private:
     std::vector<std::pair<VoxelGrid, Eigen::Vector3d>> voxel_grids_;

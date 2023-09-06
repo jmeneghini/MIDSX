@@ -9,20 +9,51 @@
 
 class Tally {
 public:
-    virtual void processMeasurements(TempTallyData& temp_tally_data);
+    virtual void processMeasurements(TempTallyData& temp_tally_data) = 0;
     std::unique_ptr<QuantityContainer> getQuantityContainer();
 protected:
     TempTallyData temp_tally_data_;
     std::unique_ptr<QuantityContainer> quantities_;
-
-    virtual bool willPassThrough() = 0;
+    double EPSILON_ = 1E-9;
 };
 
+enum class VolumeTraversal {
+    MISSES,
+    STARTS_INSIDE_EXITS,
+    STARTS_INSIDE_STAYS,
+    PASSES_THROUGH,
+    LANDS_INSIDE
+};
+
+class VolumeTally : public Tally {
+protected:
+    virtual VolumeTraversal determineVolumeTraversal() = 0;
+};
+
+class AACuboidVolumeTally : public VolumeTally {
+public:
+    AACuboidVolumeTally(Eigen::Vector3d min_corner, Eigen::Vector3d max_corner, std::unique_ptr<QuantityContainer> quantities);
+    void processMeasurements(TempTallyData& temp_tally_data) override;
+private:
+    Eigen::Vector3d min_corner_;
+    Eigen::Vector3d max_corner_;
+
+    VolumeTraversal determineVolumeTraversal() override;
+
+    std::pair<double, double> getEnteringAndExitingLengths();
+
+    std::pair<Eigen::Vector3d, Eigen::Vector3d> getLengthsToSurfacePlanes();
+};
+
+
+
 class SurfaceTally : public Tally {
+public:
+    void processMeasurements(TempTallyData& temp_tally_data) override;
 protected:
     Eigen::Vector3d norm_;
 
-    bool willPassThrough() override;
+    bool willPassThrough();
 
     double calculateEntranceCosine();
     virtual double calculateIntersectionParameter(double entrance_cosine) = 0;

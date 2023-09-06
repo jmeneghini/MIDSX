@@ -65,17 +65,18 @@ void SecondaryIncidentEnergy::measure(TempTallyData &temp_tally_data) {
 }
 
 void NumberOfParticles::measure(TempTallyData &temp_tally_data) {
+    if (!temp_tally_data.already_counted)
     number_of_particles_++;
 }
 
 void NumberOfPrimaryParticles::measure(TempTallyData &temp_tally_data) {
-    if (temp_tally_data.initial_photon.isPrimary()) {
+    if (temp_tally_data.initial_photon.isPrimary() && !temp_tally_data.already_counted) {
         number_of_primary_particles_++;
     }
 }
 
 void NumberOfSecondaryParticles::measure(TempTallyData &temp_tally_data) {
-    if (!temp_tally_data.initial_photon.isPrimary()) {
+    if (!temp_tally_data.initial_photon.isPrimary() && !temp_tally_data.already_counted) {
         number_of_secondary_particles_++;
     }
 }
@@ -91,7 +92,9 @@ void PrimaryEntranceCosines::measure(TempTallyData &temp_tally_data) {
 }
 
 void NumberOfInteractions::measure(TempTallyData &temp_tally_data) {
-    if (temp_tally_data.isInteract) { number_of_interactions_++; }
+    if (temp_tally_data.isInteract && !temp_tally_data.already_counted) {
+        number_of_interactions_++;
+    }
 }
 
 std::vector<double> EnergyDeposition::getValue() const {
