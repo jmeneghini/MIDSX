@@ -17,7 +17,8 @@ min_corner_(std::move(min_corner)), max_corner_(std::move(max_corner)) {
 }
 
 void AACuboidVolumeTally::processMeasurements(TempTallyData& temp_tally_data) {
-    temp_tally_data_ = temp_tally_data;
+    // copy temp_tally_data to avoid modifying the original
+    temp_tally_data_ = TempTallyData(temp_tally_data);
     VolumeTraversal volume_traversal = determineVolumeTraversal();
     switch (volume_traversal) {
         case VolumeTraversal::MISSES:
@@ -48,12 +49,12 @@ VolumeTraversal AACuboidVolumeTally::determineVolumeTraversal() {
     double photon_free_path = temp_tally_data_.free_path;
 
     // exits before entering (i.e. misses), behind the photon, or too far away
-    if (entering_length > exiting_length || exiting_length <= 0 || entering_length > photon_free_path) {
+    if (entering_length > exiting_length || exiting_length < 0 || entering_length > photon_free_path) {
         return VolumeTraversal::MISSES;
     }
     // starts inside
-    else if (entering_length < 0) {
-        if (exiting_length > photon_free_path) {
+    else if (entering_length <= 0) {
+        if (exiting_length >= photon_free_path) {
             return VolumeTraversal::STARTS_INSIDE_STAYS;
         } else {
             return VolumeTraversal::STARTS_INSIDE_EXITS;
@@ -79,14 +80,16 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> AACuboidVolumeTally::getLengthsToSur
     Eigen::Vector3d min_length_to_surface;
     Eigen::Vector3d max_length_to_surface;
 
+
     for (int i = 0; i < 3; i++) {
         if (std::abs(photon_direction(i)) < EPSILON_) {
-            min_length_to_surface(i) = -1;
-            max_length_to_surface(i) = -1;
-        } else {
-            min_length_to_surface(i) = (min_corner_(i) - photon_position(i)) / photon_direction(i);
-            max_length_to_surface(i) = (max_corner_(i) - photon_position(i)) / photon_direction(i);
+            min_length_to_surface(i) = -std::numeric_limits<double>::infinity();
+            max_length_to_surface(i) = std::numeric_limits<double>::infinity();
+            continue;
         }
+        min_length_to_surface(i) = (min_corner_(i) - photon_position(i)) / photon_direction(i);
+        max_length_to_surface(i) = (max_corner_(i) - photon_position(i)) / photon_direction(i);
+
         if (min_length_to_surface(i) > max_length_to_surface(i)) {
             std::swap(min_length_to_surface(i), max_length_to_surface(i));
         }
