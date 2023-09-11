@@ -20,47 +20,107 @@ std::vector<std::unique_ptr<Material>> initializeMaterials(const std::shared_ptr
 std::vector<std::shared_ptr<Tally>> initializeTallies() {
     std::vector<std::shared_ptr<Tally>> tallies;
 
-    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
-            Eigen::Vector3d(0, 0, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
+//    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+//            Eigen::Vector3d(0, 0, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            QuantityContainerFactory::AllQuantities()));
+
+//    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+//            Eigen::Vector3d(19.5 - 1.5, 0, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+//            Eigen::Vector3d(10.5 - 1.5, 10.5 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+//            Eigen::Vector3d(19.5 - 1.5, 10.5 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+//            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+//            Eigen::Vector3d(28.5 - 1.5, 28.5 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
+//            Eigen::Vector3d(39 - 3, 39 - 3, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<AACuboidVolumeTally>(
+//            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 155 + 1.5),
+//            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 155 + 1.5 + 3),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<AACuboidVolumeTally>(
+//            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 155 + 9 - 1.5),
+//            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 155 + 9 + 1.5),
+//            QuantityContainerFactory::AllQuantities()));
+
+    tallies.emplace_back(std::make_shared<AACuboidVolumeTally>(
+            Eigen::Vector3d(28.7309, 28.7309, 155),
+            Eigen::Vector3d(28.7309 + 39.0, 28.7309 + 39.0, 175),
             QuantityContainerFactory::AllQuantities()));
 
-    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
-            Eigen::Vector3d(19.5 - 1.5, 0, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            QuantityContainerFactory::AllQuantities()));
-
-    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
-            Eigen::Vector3d(10.5 - 1.5, 10.5 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            QuantityContainerFactory::AllQuantities()));
-
-    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
-            Eigen::Vector3d(19.5 - 1.5, 10.5 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            QuantityContainerFactory::AllQuantities()));
-
-    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
-            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            QuantityContainerFactory::AllQuantities()));
-
-    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
-            Eigen::Vector3d(28.5 - 1.5, 28.5 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            QuantityContainerFactory::AllQuantities()));
-
-    tallies.emplace_back(std::make_shared<RectangularSurfaceTally>(
-            Eigen::Vector3d(39 - 3, 39 - 3, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            QuantityContainerFactory::AllQuantities()));
+//    tallies.emplace_back(std::make_shared<AACuboidVolumeTally>(
+//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 15 - 1.5, 155 + 10 - 1.5),
+//            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 - 15 + 1.5, 155 + 10 + 1.5),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<AACuboidVolumeTally>(
+//            Eigen::Vector3d(39.0/2 - 15 - 1.5, 39.0/2 - 1.5, 155 + 10 - 1.5),
+//            Eigen::Vector3d(39.0/2 - 15 + 1.5, 39.0/2 + 1.5, 155 + 10 + 1.5),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<AACuboidVolumeTally>(
+//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 - 1.5),
+//            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 + 1.5),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<AACuboidVolumeTally>(
+//            Eigen::Vector3d(39.0/2 + 15 - 1.5, 39.0/2 - 1.5, 155 + 10 - 1.5),
+//            Eigen::Vector3d(39.0/2 + 15 + 1.5, 39.0/2 + 1.5, 155 + 10 + 1.5),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<AACuboidVolumeTally>(
+//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 + 15 - 1.5, 155 + 10 - 1.5),
+//            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 15 + 1.5, 155 + 10 + 1.5),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<AACuboidVolumeTally>(
+//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 - 6 - 1.5),
+//            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 - 6 + 1.5),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<AACuboidVolumeTally>(
+//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 - 3 - 1.5),
+//            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 - 3 + 1.5),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<AACuboidVolumeTally>(
+//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 + 3 - 1.5),
+//            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 + 3 + 1.5),
+//            QuantityContainerFactory::AllQuantities()));
+//
+//    tallies.emplace_back(std::make_shared<AACuboidVolumeTally>(
+//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 + 6 - 1.5),
+//            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 + 6 + 1.5),
+//            QuantityContainerFactory::AllQuantities()));
 
     return tallies;
 }
@@ -80,10 +140,10 @@ PhotonSource initializeSource() {
 
 //    std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(Eigen::Vector3d(39 - 1.5, 39 - 1.5, 155)));
     std::unique_ptr<Directionality> directionality = std::make_unique<RectangularIsotropicDirectionality>(
-            RectangularIsotropicDirectionality(Eigen::Vector3d(0, 0, 180),
+            RectangularIsotropicDirectionality(Eigen::Vector3d(28.7309, 28.7309, 180),
                                                Eigen::Vector3d(39.0, 0, 0),
                                                Eigen::Vector3d(0, 39.0, 0)));
-    std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(PointGeometry(Eigen::Vector3d(39.0/2, 39.0/2, 0)));
+    std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(PointGeometry(Eigen::Vector3d(28.7309 + 39.0/2, 0, 0)));
 
     PhotonSource source(std::move(spectrum), std::move(directionality), std::move(geometry));
     return source;
@@ -107,7 +167,7 @@ void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_ph
 }
 #pragma clang diagnostic pop
 
-void displayResults(const std::vector<std::shared_ptr<Tally>>& tallies, int N_photons, InteractionData& interaction_data) {
+void displayResults(const std::vector<std::shared_ptr<Tally>>& tallies, int N_photons, InteractionData& interaction_data, ComputationalDomain& comp_domain) {
     int i = 1;
     for (auto& tally : tallies) {
         auto quantity_container = tally->getQuantityContainer();
@@ -126,13 +186,18 @@ void displayResults(const std::vector<std::shared_ptr<Tally>>& tallies, int N_ph
                                                                                                                           quantity.secondary_incident_energy.end(),
                                                                                                                           0.0)
                                                                                                           / N_photons << std::endl;
+        std::cout << "Energy deposited per incident photon (eV per photon) at detector " << i << ": " <<  std::accumulate(quantity.energy_deposition.begin(),
+                                                                                                                          quantity.energy_deposition.end(),
+                                                                                                                          0.0)
+                                                                                                          / N_photons << std::endl;
         i++;
     }
-
-//    auto materials_dose = voxel_grid.getEnergyDepositedInMaterials();
-//    for (auto& material_dose : materials_dose) {
-//        std::cout << material_dose.first << ": " << material_dose.second / N_photons << std::endl;
-//    }
+    VoxelGrid& voxel_grid = comp_domain.getVoxelGridN(0);
+    auto materials_dose = voxel_grid.getEnergyDepositedInMaterials();
+    for (auto& material_dose : materials_dose) {
+        std::cout << material_dose.first << ": " << material_dose.second / N_photons << std::endl;
+    }
+    std::cout << "Total dose: " << voxel_grid.getTotalEnergyDeposited() / N_photons << std::endl;
 }
 
 int main() {
@@ -141,7 +206,7 @@ int main() {
     auto tallies = initializeTallies();
 
     InteractionData interaction_data(std::move(materials), data_service);
-    ComputationalDomain comp_domain("/home/john/Documents/MCXrayTransport/cpp_simulations/radiography/radiography_0_degrees.json");
+    ComputationalDomain comp_domain("/home/john/Documents/MCXrayTransport/cpp_simulations/radiography/radiography_15_degrees.json");
     PhysicsEngine physics_engine(comp_domain, interaction_data, tallies);
 
 
@@ -150,7 +215,7 @@ int main() {
 
     runSimulation(source, physics_engine, 10000000);
 
-    displayResults(tallies, 10000000, interaction_data);
+    displayResults(tallies, 10000000, interaction_data, comp_domain);
 
     return 0;
 }

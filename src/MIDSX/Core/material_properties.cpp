@@ -64,9 +64,9 @@ void MaterialProperties::setMassDensity() {
 
 void MaterialProperties::setNumberDensity() {
     double number_density = 0;
-    for (const auto& mass_number : elemental_mass_number_) {
-         elemental_number_density_[mass_number.first] = AVOGADRO_CONSTANT * mass_density_ * elemental_composition_[mass_number.first] / mass_number.second;
-         number_density += elemental_number_density_[mass_number.first];
+    for (const auto& atomic_weight : elemental_atomic_weight_) {
+         elemental_number_density_[atomic_weight.first] = AVOGADRO_CONSTANT * mass_density_ * elemental_composition_[atomic_weight.first] / atomic_weight.second;
+         number_density += elemental_number_density_[atomic_weight.first];
     }
     number_density_ = number_density;
 }

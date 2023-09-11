@@ -1,0 +1,10 @@
+{
+  "dim_space": [96.4617, 96.4617, 180],
+  "background_material_id": 3,
+  "voxel_grids": [
+    {
+      "file_path": "../../data/voxels/radiography_body.nii.gz",
+      "origin": [28.7309, 28.7309, 155]
+    }
+  ]
+}
