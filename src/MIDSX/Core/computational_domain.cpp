@@ -29,6 +29,19 @@ VoxelGrid& ComputationalDomain::getVoxelGridN(int N) {
     return voxel_grids_[N].first;
 }
 
+Eigen::Vector3d ComputationalDomain::getVoxelGridOriginN(int N) {
+    return voxel_grids_[N].second;
+}
+
+Eigen::Vector3d ComputationalDomain::getVoxelGridDimSpaceN(int N) {
+    return voxel_grids_[N].first.getDimSpace();
+}
+
+int ComputationalDomain::getNumVoxelGrids() const {
+    return voxel_grids_.size();
+}
+
+
 void ComputationalDomain::initializeCompDomain(const std::string &json_file_path) {
     json json_object;
     std::string json_directory_path = std::filesystem::path(json_file_path).parent_path();

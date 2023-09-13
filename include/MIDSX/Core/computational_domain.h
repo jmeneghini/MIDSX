@@ -19,6 +19,9 @@ public:
     Voxel& getVoxel(const Eigen::Vector3d &position);
 
     VoxelGrid& getVoxelGridN(int N);
+    Eigen::Vector3d getVoxelGridOriginN(int N);
+    Eigen::Vector3d getVoxelGridDimSpaceN(int N);
+    int getNumVoxelGrids() const;
 
     Voxel background_voxel;
 private:

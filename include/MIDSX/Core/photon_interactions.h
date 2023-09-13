@@ -31,10 +31,11 @@ class IncoherentScattering : public ParticleInteractionBehavior {
 public:
     double interact(Particle& photon, const InteractionData& interaction_data, Material& material) override;
 private:
-    double changeTrajectoryAndReturnEnergyForCoherentScattering(Particle& photon, double x, double k);
-    double sampleXFromH(double b, double c_0);
-    static double getAcceptanceProbability(double a, double b, double x, double k);
-    static double getResultingEnergy(double x, double k);
+    double changeTrajectoryAndReturnEnergyForCoherentScattering(Particle& photon, double mu, double k);
+    double sampleMuFromH(double b, double c_0);
+    static double getKNAcceptanceProbability(double a, double b, double mu, double k);
+    static double getSFAcceptanceProbability(double x, double k, Material& material);
+    static double getResultingEnergy(double mu, double k);
 };
 
 #endif //MCXRAYTRANSPORT_PHOTON_INTERACTIONS_H

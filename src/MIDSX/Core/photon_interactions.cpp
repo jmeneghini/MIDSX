@@ -1,5 +1,10 @@
 #include "Core/photon_interactions.h"
 
+namespace {
+    // constants
+    const double ALPHA = ELECTRON_REST_MASS/(sqrt(2)*PLANCK_CONSTANT*SPEED_OF_LIGHT*1E8); // in inverse angstroms
+}
+
 Eigen::MatrixXd PhotonInteractionHelpers::mergeMatrices(std::vector<Eigen::MatrixXd>& matrices) {
     std::vector<double> merged;
 
@@ -52,10 +57,9 @@ double CoherentScattering::interact(Particle& photon, const InteractionData& int
     Eigen::MatrixXd form_factor_matrix = material.getData()->getCoherentFormFactorMatrix();
 
     double k = photon.getEnergy()/ELECTRON_REST_MASS; // unitless
-    double a = ELECTRON_REST_MASS/(sqrt(2)*PLANCK_CONSTANT*SPEED_OF_LIGHT*1E8); // in inverse angstroms
 
     double x_min = 0;
-    double x_max = a*k*sqrt(2);
+    double x_max = ALPHA*k*sqrt(2);
 
     ProbabilityDist::Discrete form_factor_dist = createFormFactorDistribution(form_factor_matrix, x_min, x_max);
     double theta = sampleThetaFromCoherentScatteringDCS(form_factor_dist, x_max);
@@ -74,11 +78,17 @@ double IncoherentScattering::interact(Particle& photon, const InteractionData& i
     double a = 2*(b-1);
 
     while (true) {
-        double x = sampleXFromH(b, c_0);
-        double accept_prob = getAcceptanceProbability(a, b, x, k);
+        double mu = sampleMuFromH(b, c_0);
+        double kn_accept_prob = getKNAcceptanceProbability(a, b, mu, k);
 
         double random_number_2 = uniform_dist_.sample();
-        if (random_number_2 < accept_prob) return changeTrajectoryAndReturnEnergyForCoherentScattering(photon, x, k);
+        if (random_number_2 < kn_accept_prob) {
+            double sf_accept_prob = getSFAcceptanceProbability(mu, k, material);
+            double random_number_3 = uniform_dist_.sample();
+            if (random_number_3 < sf_accept_prob) {
+                return changeTrajectoryAndReturnEnergyForCoherentScattering(photon, mu, k);
+            }
+        }
     }
 }
 
@@ -105,32 +115,39 @@ double CoherentScattering::sampleThetaFromCoherentScatteringDCS(const Probabilit
     return theta;
 }
 
-double IncoherentScattering::changeTrajectoryAndReturnEnergyForCoherentScattering(Particle& photon, double x, double k) {
-    double theta = acos(x);
+double IncoherentScattering::changeTrajectoryAndReturnEnergyForCoherentScattering(Particle& photon, double mu, double k) {
+    double theta = acos(mu);
     double phi = 2*PI*uniform_dist_.sample();
     photon.rotate(theta, phi);
 
     double initial_energy = photon.getEnergy();
-    double resulting_energy = getResultingEnergy(x, k);
+    double resulting_energy = getResultingEnergy(mu, k);
     photon.setEnergy(resulting_energy);
     return initial_energy - resulting_energy;
 }
 
-double IncoherentScattering::sampleXFromH(double b, double c_0) {
+double IncoherentScattering::sampleMuFromH(double b, double c_0) {
     // sample h(k, x) = a/(b-x), where x = cos(theta)
     double random_number = uniform_dist_.sample();
     double x = b - (b + 1) * pow(c_0 / 2, random_number);
     return x;
 }
 
-double IncoherentScattering::getAcceptanceProbability(double a, double b, double x, double k) {
+double IncoherentScattering::getKNAcceptanceProbability(double a, double b, double mu, double k) {
     // calculate DCS(x) and h(x)
-    double f = (1 + x * x + (k * k * (1 - x) * (1 - x)) / (1 + k * (1 - x))) / pow(1 + k * (1 - x), 2);
-    double h = a / (b - x);
+    double f = (1 + mu * mu + (k * k * (1 - mu) * (1 - mu)) / (1 + k * (1 - mu))) / pow(1 + k * (1 - mu), 2);
+    double h = a / (b - mu);
     return f/h;
 }
 
-double IncoherentScattering::getResultingEnergy(double x, double k) {
-    double k_prime = 1/(1 - x + 1/k);
+double IncoherentScattering::getSFAcceptanceProbability(double mu, double k, Material& material) {
+    double x = ALPHA*k*sqrt(1-mu);
+    double max_x = ALPHA*k*sqrt(2);
+    // S(x, Z)/S(max_x, Z)
+    return material.getData()->interpolateIncoherentScatteringFunction(x)/material.getData()->interpolateIncoherentScatteringFunction(max_x);
+}
+
+double IncoherentScattering::getResultingEnergy(double mu, double k) {
+    double k_prime = 1/(1 - mu + 1/k);
     return k_prime*ELECTRON_REST_MASS;
 }
