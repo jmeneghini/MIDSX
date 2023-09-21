@@ -1,138 +1,84 @@
 #include "Core/quantity.h"
 
-std::string Quantity::getName() {
-    return name_;
+
+
+void VectorValue::addValue(double value) {
+    values_.push_back(value);
 }
 
-EnergyDeposition::EnergyDeposition() {
-    name_ = "Energy Deposition";
+std::vector<double> VectorValue::getVector() const {
+    return values_;
 }
 
-IncidentEnergy::IncidentEnergy() {
-    name_ = "Incident Energy";
-}
-
-PrimaryIncidentEnergy::PrimaryIncidentEnergy() {
-    name_ = "Primary Incident Energy";
-}
-
-SecondaryIncidentEnergy::SecondaryIncidentEnergy() {
-    name_ = "Secondary Incident Energy";
-}
-
-NumberOfParticles::NumberOfParticles() {
-    name_ = "Number of Particles";
-}
-
-NumberOfPrimaryParticles::NumberOfPrimaryParticles() {
-    name_ = "Number of Primary Particles";
-}
-
-NumberOfSecondaryParticles::NumberOfSecondaryParticles() {
-    name_ = "Number of Secondary Particles";
-}
-
-EntranceCosines::EntranceCosines() {
-    name_ = "Entrance Cosines";
-}
-
-PrimaryEntranceCosines::PrimaryEntranceCosines() {
-    name_ = "Primary Entrance Cosines";
-}
-
-NumberOfInteractions::NumberOfInteractions() {
-    name_ = "Number of Interactions";
-}
-
-void EnergyDeposition::measure(TempTallyData &temp_tally_data) {
-    energy_deposition_.push_back(temp_tally_data.energy_deposited);
-}
-
-void IncidentEnergy::measure(TempTallyData &temp_tally_data) {
-    incident_energy_.push_back(temp_tally_data.initial_photon.getEnergy());
-}
-
-void PrimaryIncidentEnergy::measure(TempTallyData &temp_tally_data) {
-    if (temp_tally_data.initial_photon.isPrimary()) {
-        primary_incident_energy_.push_back(temp_tally_data.initial_photon.getEnergy());
+double VectorValue::getSum() {
+    double sum = 0;
+    for (auto& value : values_) {
+        sum += value;
     }
+    sum_ = sum;
+    summed_ = true;
+    return sum;
 }
 
-void SecondaryIncidentEnergy::measure(TempTallyData &temp_tally_data) {
-    if (!temp_tally_data.initial_photon.isPrimary()) {
-        secondary_incident_energy_.push_back(temp_tally_data.initial_photon.getEnergy());
+double VectorValue::getSumSTD() {
+    double var = 0;
+    if (!var_calculated_) {
+        var = getVariance();
+    } else {
+        var = var_;
     }
+    return sqrt(values_.size() * var);
 }
 
-void NumberOfParticles::measure(TempTallyData &temp_tally_data) {
-    if (!temp_tally_data.already_counted)
-    number_of_particles_++;
-}
-
-void NumberOfPrimaryParticles::measure(TempTallyData &temp_tally_data) {
-    if (temp_tally_data.initial_photon.isPrimary() && !temp_tally_data.already_counted) {
-        number_of_primary_particles_++;
+double VectorValue::getMean() {
+    double sum = 0;
+    if (!summed_) {
+        sum = getSum();
+    } else {
+        sum = sum_;
     }
+    double mean = sum / values_.size();
+    return mean;
 }
 
-void NumberOfSecondaryParticles::measure(TempTallyData &temp_tally_data) {
-    if (!temp_tally_data.initial_photon.isPrimary() && !temp_tally_data.already_counted) {
-        number_of_secondary_particles_++;
+double VectorValue::getMeanSTD() {
+    // sample standard deviation
+    double var = 0;
+    if (!var_calculated_) {
+        var = getVariance();
+    } else {
+        var = var_;
     }
+    return sqrt(var / values_.size());
 }
 
-void EntranceCosines::measure(TempTallyData &temp_tally_data) {
-    entrance_cosine_.push_back(temp_tally_data.entrance_cosine);
-}
-
-void PrimaryEntranceCosines::measure(TempTallyData &temp_tally_data) {
-    if (temp_tally_data.initial_photon.isPrimary()) {
-        primary_entrance_cosine_.push_back(temp_tally_data.entrance_cosine);
+double VectorValue::getVariance() {
+    // sample variance
+    double sum = 0;
+    if (!summed_) {
+        sum = getSum();
+    } else {
+        sum = sum_;
     }
-}
-
-void NumberOfInteractions::measure(TempTallyData &temp_tally_data) {
-    if (temp_tally_data.isInteract && !temp_tally_data.already_counted) {
-        number_of_interactions_++;
+    double mean = sum / values_.size();
+    double var = 0;
+    for (auto& value : values_) {
+        var += (value - mean) * (value - mean);
     }
+    var /= (values_.size() - 1);
+    var_ = var;
+    var_calculated_ = true;
+    return var;
 }
 
-std::vector<double> EnergyDeposition::getValue() const {
-    return energy_deposition_;
+void CountValue::addCount() {
+    count_++;
 }
 
-std::vector<double> IncidentEnergy::getValue() const {
-    return incident_energy_;
+int CountValue::getCount() const {
+    return count_;
 }
 
-std::vector<double> PrimaryIncidentEnergy::getValue() const {
-    return primary_incident_energy_;
-}
-
-std::vector<double> SecondaryIncidentEnergy::getValue() const {
-    return secondary_incident_energy_;
-}
-
-int NumberOfParticles::getValue() const {
-    return number_of_particles_;
-}
-
-int NumberOfPrimaryParticles::getValue() const {
-    return number_of_primary_particles_;
-}
-
-int NumberOfSecondaryParticles::getValue() const {
-    return number_of_secondary_particles_;
-}
-
-std::vector<double> EntranceCosines::getValue() const {
-    return entrance_cosine_;
-}
-
-std::vector<double> PrimaryEntranceCosines::getValue() const {
-    return primary_entrance_cosine_;
-}
-
-int NumberOfInteractions::getValue() const {
-    return number_of_interactions_;
+double CountValue::getCountSTD() const {
+    return sqrt(count_);
 }

@@ -1,0 +1,44 @@
+Number of total photons at detector 1: 160836
+Number of primary photons at detector 1: 73630
+Number of secondary photons at detector 1: 87206
+Primary energy per incident photon (eV per photon) at detector 1: 4.15273
+Secondary energy per incident photon (eV per photon) at detector 1: 4.30892
+Energy deposited per incident photon (eV per photon) at detector 1: 0
+Number of total photons at detector 2: 242136
+Number of primary photons at detector 2: 75472
+Number of secondary photons at detector 2: 166664
+Primary energy per incident photon (eV per photon) at detector 2: 4.25662
+Secondary energy per incident photon (eV per photon) at detector 2: 8.0743
+Energy deposited per incident photon (eV per photon) at detector 2: 0
+Number of total photons at detector 3: 342802
+Number of primary photons at detector 3: 75596
+Number of secondary photons at detector 3: 267206
+Primary energy per incident photon (eV per photon) at detector 3: 4.26361
+Secondary energy per incident photon (eV per photon) at detector 3: 12.8168
+Energy deposited per incident photon (eV per photon) at detector 3: 0
+Number of total photons at detector 4: 375659
+Number of primary photons at detector 4: 76248
+Number of secondary photons at detector 4: 299411
+Primary energy per incident photon (eV per photon) at detector 4: 4.30039
+Secondary energy per incident photon (eV per photon) at detector 4: 14.2853
+Energy deposited per incident photon (eV per photon) at detector 4: 0
+Number of total photons at detector 5: 411419
+Number of primary photons at detector 5: 77104
+Number of secondary photons at detector 5: 334315
+Primary energy per incident photon (eV per photon) at detector 5: 4.34867
+Secondary energy per incident photon (eV per photon) at detector 5: 15.8645
+Energy deposited per incident photon (eV per photon) at detector 5: 0
+Number of total photons at detector 6: 344682
+Number of primary photons at detector 6: 75989
+Number of secondary photons at detector 6: 268693
+Primary energy per incident photon (eV per photon) at detector 6: 4.28578
+Secondary energy per incident photon (eV per photon) at detector 6: 12.8956
+Energy deposited per incident photon (eV per photon) at detector 6: 0
+Number of total photons at detector 7: 160144
+Number of primary photons at detector 7: 73455
+Number of secondary photons at detector 7: 86689
+Primary energy per incident photon (eV per photon) at detector 7: 4.14286
+Secondary energy per incident photon (eV per photon) at detector 7: 4.27717
+Energy deposited per incident photon (eV per photon) at detector 7: 0
+149: 33015.2
+Total dose: 33015.2

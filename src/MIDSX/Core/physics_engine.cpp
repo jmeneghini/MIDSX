@@ -2,48 +2,53 @@
 
 
 bool PhysicsEngineHelpers::areCollinearAndSameDirection(const Eigen::Vector3d& vec1, const Eigen::Vector3d& vec2) {
-    double tolerance = 1E-6;
     // The vectors are collinear and pointing in the same direction
     // if their normalized forms are approximately equal
     double mag_diff = (vec1.normalized() - vec2.normalized()).norm();
-    return mag_diff < tolerance;
+    return mag_diff < EPSILON;
 }
 
-PhysicsEngine::PhysicsEngine(ComputationalDomain& comp_domain, InteractionData& interaction_data, std::vector<std::shared_ptr<Tally>>& tallies) : comp_domain_(comp_domain), interaction_data_(interaction_data),
-                                                                                                               uniform_dist_(0.0, 1.0), photoelectric_effect_(std::make_shared<PhotoelectricEffect>()),
-                                                                                                               coherent_scattering_(std::make_shared<CoherentScattering>()),
-                                                                                                               incoherent_scattering_(std::make_shared<IncoherentScattering>()),
-                                                                                                                tallies_(tallies) {}
+PhysicsEngine::PhysicsEngine(ComputationalDomain& comp_domain, InteractionData& interaction_data,
+                             std::vector<std::unique_ptr<VolumeTally>>&& volume_tallies,
+                             std::vector<std::unique_ptr<SurfaceTally>>&& surface_tallies) :
+                             comp_domain_(comp_domain), interaction_data_(interaction_data),
+                             uniform_dist_(0.0, 1.0), photoelectric_effect_(std::make_shared<PhotoelectricEffect>()),
+                             coherent_scattering_(std::make_shared<CoherentScattering>()),
+                             incoherent_scattering_(std::make_shared<IncoherentScattering>()),
+                             volume_tallies_(std::move(volume_tallies)), surface_tallies_(std::move(surface_tallies)) {}
+
 void PhysicsEngine::transportPhoton(Photon& photon) {
-    std::vector<TempTallyData> temp_tally_data_per_photon;
+    std::vector<TempSurfaceTallyData> temp_surface_tally_data_per_photon;
+    std::vector<TempVolumeTallyData> temp_volume_tally_data_per_photon;
     while (!photon.isTerminated()) {
-        transportPhotonOneStep(photon, temp_tally_data_per_photon);
+        transportPhotonOneStep(photon, temp_surface_tally_data_per_photon, temp_volume_tally_data_per_photon);
     }
 #pragma omp critical
     {
-    for (auto &temp_tally_data: temp_tally_data_per_photon) {
-        processTallies(temp_tally_data);
-    }
+        processTallies(temp_surface_tally_data_per_photon, temp_volume_tally_data_per_photon);
 }
 }
 
-void PhysicsEngine::transportPhotonOneStep(Photon& photon, std::vector<TempTallyData>& temp_tally_data_per_photon) {
-    TempTallyData temp_tally_data;
+void PhysicsEngine::transportPhotonOneStep(Photon& photon, std::vector<TempSurfaceTallyData>& temp_surface_tally_data_per_photon,
+                                           std::vector<TempVolumeTallyData>& temp_volume_tally_data_per_photon) {
 
+    TempSurfaceTallyData temp_surface_tally_data;
+    TempVolumeTallyData temp_volume_tally_data;
     // delta tracking algorithm
-    temp_tally_data.initial_photon = photon;
+    temp_surface_tally_data.initial_photon = temp_volume_tally_data.initial_photon = photon;
     double photon_energy = photon.getEnergy();
     double max_cross_section = interaction_data_.interpolateMaxTotalCrossSection(photon_energy);
 
     // move photon to distance of free path length
     Eigen::Vector3d initial_position = photon.getPosition();
     double free_path_length = getFreePath(max_cross_section);
-    temp_tally_data.free_path = free_path_length;
+    temp_surface_tally_data.free_path = temp_volume_tally_data.free_path = free_path_length;
     photon.move(free_path_length);
 
     // Check if photon is still in comp domain. If no, kill photon
     if (!comp_domain_.isInComputationalDomain(photon.getPosition())) {
-        temp_tally_data_per_photon.push_back(temp_tally_data);
+        updateTempTallyPerPhoton(temp_surface_tally_data_per_photon, temp_volume_tally_data_per_photon,
+                                 temp_surface_tally_data, temp_volume_tally_data);
         processPhotonOutsideVoxelGrid(photon);
         return;
     }
@@ -59,14 +64,16 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon, std::vector<TempTally
     // sample delta scattering
     bool delta_scattering = isDeltaScatter(total_cross_section, max_cross_section);
     if (!delta_scattering) {
-        temp_tally_data.isInteract = true;
+        temp_surface_tally_data.isInteract = temp_volume_tally_data.isInteract = true;
         setInteractionType(photon, current_material, total_cross_section);
         photon.setPrimary(false); // photon has interacted
         double energy_deposited = photon.interact(interaction_data_, current_material);
         current_voxel.dose += energy_deposited;
-        temp_tally_data.energy_deposited = energy_deposited;
+        temp_volume_tally_data.energy_deposited = energy_deposited;
+        temp_volume_tally_data.final_photon = photon;
     }
-    temp_tally_data_per_photon.push_back(temp_tally_data);
+    updateTempTallyPerPhoton(temp_surface_tally_data_per_photon, temp_volume_tally_data_per_photon,
+                             temp_surface_tally_data, temp_volume_tally_data);
 }
 
 
@@ -87,14 +94,24 @@ void PhysicsEngine::setInteractionType(Photon& photon, Material& material, doubl
     double random_number = uniform_dist_.sample();
 
     if (random_number < p_coherent) {
+        photon.addCoherentScatter();
         photon.setInteractionBehavior(coherent_scattering_);
     }
     else if (random_number < p_coherent + p_incoherent) {
+        photon.addIncoherentScatter();
         photon.setInteractionBehavior(incoherent_scattering_);
     }
     else {
         photon.setInteractionBehavior(photoelectric_effect_);
     }
+}
+
+std::vector<std::unique_ptr<VolumeTally>>& PhysicsEngine::getVolumeTallies() {
+    return volume_tallies_;
+}
+
+std::vector<std::unique_ptr<SurfaceTally>>& PhysicsEngine::getSurfaceTallies() {
+    return surface_tallies_;
 }
 
 double PhysicsEngine::getFreePath(double max_cross_section) {
@@ -112,8 +129,23 @@ bool PhysicsEngine::isDeltaScatter(double cross_section, double max_cross_sectio
     return uniform_dist_.sample() < p_delta_scatter;
 }
 
-void PhysicsEngine::processTallies(TempTallyData &temp_tally_data) {
-    for (auto &tally: tallies_) {
-        tally->processMeasurements(temp_tally_data);
+void PhysicsEngine::updateTempTallyPerPhoton(std::vector<TempSurfaceTallyData>& temp_surface_tally_data_per_photon,
+                              std::vector<TempVolumeTallyData>& temp_volume_tally_data_per_photon,
+                              TempSurfaceTallyData& temp_surface_tally_data, TempVolumeTallyData& temp_volume_tally_data) {
+    temp_surface_tally_data_per_photon.push_back(temp_surface_tally_data);
+    temp_volume_tally_data_per_photon.push_back(temp_volume_tally_data);
+}
+
+void PhysicsEngine::processTallies(std::vector<TempSurfaceTallyData> temp_surface_tally_data_per_photon,
+                                   std::vector<TempVolumeTallyData> temp_volume_tally_data_per_photon) {
+    for (auto &surface_tally: surface_tallies_) {
+        for (auto &temp_surface_tally_data: temp_surface_tally_data_per_photon) {
+            surface_tally->processMeasurements(temp_surface_tally_data);
+        }
+    }
+    for (auto &volume_tally: volume_tallies_) {
+        for (auto &temp_volume_tally_data: temp_volume_tally_data_per_photon) {
+            volume_tally->processMeasurements(temp_volume_tally_data);
+        }
     }
 }
