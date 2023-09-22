@@ -1,5 +1,24 @@
 #include "Core/surface_quantity.h"
 
+namespace {
+    std::unordered_map<VectorSurfaceQuantityType, std::string> vectorTypeToString = {
+            {VectorSurfaceQuantityType::IncidentEnergy, "IncidentEnergy"},
+            {VectorSurfaceQuantityType::EntranceCosine, "EntranceCosine"}
+    };
+
+    std::unordered_map<CountSurfaceQuantityType, std::string> countTypeToString = {
+            {CountSurfaceQuantityType::NumberOfPhotons, "NumberOfPhotons"}
+    };
+}
+
+std::string VectorSurfaceQuantityHelper::toString(VectorSurfaceQuantityType type) {
+    return vectorTypeToString[type];
+}
+
+std::string CountSurfaceQuantityHelper::toString(CountSurfaceQuantityType type) {
+    return countTypeToString[type];
+}
+
 VectorSurfaceQuantity::VectorSurfaceQuantity(VectorSurfaceQuantityType type) {
     type_ = type;
     if (type == VectorSurfaceQuantityType::IncidentEnergy) {

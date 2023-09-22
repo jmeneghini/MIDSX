@@ -9,7 +9,7 @@
 
 class MaterialProperties {
 public:
-    MaterialProperties(std::string  name, std::shared_ptr<DataAccessObject> dao);
+    MaterialProperties(std::string  name, DataAccessObject& dao);
 
     std::string getName() const { return name_; }
     int getMaterialId() const { return material_id_; }
@@ -23,7 +23,7 @@ public:
     std::unordered_map<int, double> getElementalMassNumber() const { return elemental_mass_number_; }
 private:
     std::string name_;
-    std::shared_ptr<DataAccessObject> dao_;
+    DataAccessObject& dao_;
     int material_id_;
     double mass_density_;
     double number_density_;

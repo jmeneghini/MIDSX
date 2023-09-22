@@ -1,32 +1,34 @@
 #include "Core/interaction_data.h"
 
-InteractionData::InteractionData(std::vector<std::unique_ptr<Material>> materials, std::shared_ptr<DataAccessObject> dao) :
-        dao_(std::move(dao)), materials_(std::move(materials))
-{
-    // Initialize the data as soon as the service is created
+InteractionData::InteractionData(const std::vector<std::string>& material_names, const DataAccessObject& dao) :
+        dao_(dao), material_names_(material_names) {
     initializeData();
 }
 
-void InteractionData::initializeData() {
+
+void InteractionData::initializeData() {\
+    setMaterialMap();
     setMaxTotalCrossSectionsAndInterpolator();
-    // Initialize the max cross section interpolator for each material first since this uses materials_,
-    // then move ownership of the materials to the map
-    for (auto& material : materials_) {
-        material_map_[material->getProperties()->getMaterialId()] = std::move(material);
+}
+
+void InteractionData::setMaterialMap() {
+    for (const auto& material_name : material_names_) {
+        Material temp_material(material_name, dao_);
+        material_map_.emplace(temp_material.getProperties().getMaterialId(), temp_material);
     }
 }
 
 
 void InteractionData::setMaxTotalCrossSectionsAndInterpolator() {
     max_total_cs_matrix_ = getTotalMaxCrossSectionsMatrixFromInteractionData();
-    max_total_cs_interpolator_ = std::make_unique<Interpolator::LogLogLinear>(max_total_cs_matrix_);
+    max_total_cs_interpolator_ = Interpolator::LogLogLinear(max_total_cs_matrix_);
 }
 
 Eigen::Matrix<double, Eigen::Dynamic, 2> InteractionData::getTotalMaxCrossSectionsMatrixFromInteractionData() {
     // create a vector of all energy matrices for each element
     std::vector<Eigen::MatrixXd> all_energies;
-    for (const auto& material : materials_) {
-        all_energies.emplace_back(material->getData()->getTotalCrossSectionMatrix().col(0));
+    for (auto& material : material_map_) {
+        all_energies.emplace_back(material.second.getData().getTotalCrossSectionMatrix().col(0));
     }
     // merge the energy column vectors into a single matrix
     Eigen::MatrixXd merged_energy_matrix = InteractionDataHelpers::mergeMatrices(all_energies);
@@ -41,8 +43,8 @@ void InteractionData::fillTotalMaxCrossSectionsMatrix(Eigen::MatrixXd& total_max
     for (int i = 0; i < merged_energy_matrix.rows(); ++i) {
         double energy = merged_energy_matrix(i, 0);
         std::vector<double> total_cross_section_for_each_element;
-        for (const auto& material : materials_) {
-            total_cross_section_for_each_element.emplace_back(material->getData()->interpolateTotalCrossSection(energy));
+        for (auto& material : material_map_) {
+            total_cross_section_for_each_element.emplace_back(material.second.getData().interpolateTotalCrossSection(energy));
         }
         double max_cross_section = *std::max_element(total_cross_section_for_each_element.begin(), total_cross_section_for_each_element.end());
         total_max_cross_sections_matrix(i, 0) = energy;

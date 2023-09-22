@@ -16,12 +16,12 @@ namespace PhotonInteractionHelpers {
 
 class PhotoelectricEffect : public ParticleInteractionBehavior {
 public:
-    double interact(Particle& photon, const InteractionData& interaction_data, Material& material) override;
+    double interact(Particle& photon, Material& material) override;
 };
 
 class CoherentScattering : public ParticleInteractionBehavior {
 public:
-    double interact(Particle& photon, const InteractionData& interaction_data, Material& material) override;
+    double interact(Particle& photon, Material& material) override;
 private:
     static ProbabilityDist::Discrete createFormFactorDistribution(Eigen::MatrixXd form_factor_matrix, double x_min, double x_max);
     double sampleThetaFromCoherentScatteringDCS(const ProbabilityDist::Discrete& form_factor_dist, double x_max);
@@ -29,7 +29,7 @@ private:
 
 class IncoherentScattering : public ParticleInteractionBehavior {
 public:
-    double interact(Particle& photon, const InteractionData& interaction_data, Material& material) override;
+    double interact(Particle& photon, Material& material) override;
 private:
     double changeTrajectoryAndReturnEnergyForCoherentScattering(Particle& photon, double mu, double k);
     double sampleMuFromH(double b, double c_0);

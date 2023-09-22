@@ -45,16 +45,16 @@ Eigen::MatrixXd PhotonInteractionHelpers::getBlockByRowValue(Eigen::MatrixXd& ma
     return block;
 }
 
-double PhotoelectricEffect::interact(Particle& photon, const InteractionData& interaction_data, Material& material) {
+double PhotoelectricEffect::interact(Particle& photon, Material& material) {
     photon.terminate();
     return photon.getEnergy();
     // A decent approximation for the photoelectric effect is to terminate the photon and return its energy,
     // neglecting lower energy secondary particles
 }
 
-double CoherentScattering::interact(Particle& photon, const InteractionData& interaction_data, Material& material) {
+double CoherentScattering::interact(Particle& photon, Material& material) {
     // get coherent scattering form factor
-    Eigen::MatrixXd form_factor_matrix = material.getData()->getCoherentFormFactorMatrix();
+    Eigen::MatrixXd form_factor_matrix = material.getData().getCoherentFormFactorMatrix();
 
     double k = photon.getEnergy()/ELECTRON_REST_MASS; // unitless
 
@@ -70,7 +70,7 @@ double CoherentScattering::interact(Particle& photon, const InteractionData& int
     return 0;
 }
 
-double IncoherentScattering::interact(Particle& photon, const InteractionData& interaction_data, Material& material) {
+double IncoherentScattering::interact(Particle& photon, Material& material) {
     double k = photon.getEnergy()/ELECTRON_REST_MASS; // unitless
 
     double c_0 = 2*(2*k*k + 2*k + 1)/pow(2*k + 1, 3);
@@ -144,7 +144,7 @@ double IncoherentScattering::getSFAcceptanceProbability(double mu, double k, Mat
     double x = ALPHA*k*sqrt(1-mu);
     double max_x = ALPHA*k*sqrt(2);
     // S(x, Z)/S(max_x, Z)
-    return material.getData()->interpolateIncoherentScatteringFunction(x)/material.getData()->interpolateIncoherentScatteringFunction(max_x);
+    return material.getData().interpolateIncoherentScatteringFunction(x)/material.getData().interpolateIncoherentScatteringFunction(max_x);
 }
 
 double IncoherentScattering::getResultingEnergy(double mu, double k) {

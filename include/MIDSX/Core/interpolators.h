@@ -4,41 +4,34 @@
 #include <Eigen/Core>
 #include <unsupported/Eigen/Splines>
 
-// https://stackoverflow.com/a/29825204/14452091
-
-#include <iostream>
-
 namespace Interpolator {
 
-    // Base class
     class Interpolator {
     public:
         virtual ~Interpolator() = default;
-
         virtual double operator()(double x) const = 0;
     };
 
     class Spline : public Interpolator{
     public:
+        Spline() = default;  // Default constructor
         explicit Spline(const Eigen::MatrixXd &data);
 
         double operator()(double x) const override;
     private:
         double scaledValue(double x) const;
-
         Eigen::RowVectorXd scaledValues(Eigen::VectorXd const &x_vec) const;
 
         Eigen::VectorXd x_vec_;
         Eigen::VectorXd y_vec_;
-
-        double x_min_;
-        double x_max_;
-
+        double x_min_ = 0.0;
+        double x_max_ = 0.0;
         Eigen::Spline<double, 1> spline_;
     };
 
     class LogLogSpline : public Spline {
     public:
+        LogLogSpline() = default;  // Default constructor
         explicit LogLogSpline(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data);
 
         double operator()(double x) const override;
@@ -46,6 +39,7 @@ namespace Interpolator {
 
     class Linear : public Interpolator {
     public:
+        Linear() = default;  // Default constructor
         explicit Linear(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data);
         double operator()(double x) const override;
     private:
@@ -60,7 +54,7 @@ namespace Interpolator {
 
     class LogLogLinear : public Linear {
     public:
-        // convert data to log-log space
+        LogLogLinear() = default;  // Default constructor
         explicit LogLogLinear(const Eigen::Matrix<double, Eigen::Dynamic, 2> &data);
 
         double operator()(double x) const override;

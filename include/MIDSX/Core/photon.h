@@ -21,8 +21,8 @@ public:
         interaction_behavior_ = std::make_shared<PhotoelectricEffect>();
     }
 
-    double interact(const InteractionData& interaction_data, Material& material) {
-        return interaction_behavior_->interact(*this, interaction_data, material);
+    double interact(Material& material) {
+        return interaction_behavior_->interact(*this, material);
     }
 
     void setInteractionBehavior(std::shared_ptr<ParticleInteractionBehavior> interaction_behavior) {

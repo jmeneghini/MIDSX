@@ -7,7 +7,7 @@
 class ParticleInteractionBehavior {
 public:
     virtual ~ParticleInteractionBehavior() = default;
-    virtual double interact(Particle& particle, const InteractionData& interaction_data, Material& material) = 0;
+    virtual double interact(Particle& particle, Material& material) = 0;
 protected:
     ProbabilityDist::Uniform uniform_dist_{0.0, 1.0};
 };

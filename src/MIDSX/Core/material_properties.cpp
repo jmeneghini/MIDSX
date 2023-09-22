@@ -1,11 +1,13 @@
 #include "Core/material_properties.h"
 
+#include <utility>
+
 #include "Core/data_access_object.h"
 #include "Core/constants.h"
 #include "Core/interaction_data.h"
 
 
-MaterialProperties::MaterialProperties(std::string name, std::shared_ptr<DataAccessObject> dao) : name_(std::move(name)), dao_(std::move(dao)) {
+MaterialProperties::MaterialProperties(std::string name, DataAccessObject& dao) : name_(std::move(name)), dao_(dao) {
     initializeProperties();
 }
 
@@ -17,7 +19,7 @@ void MaterialProperties::initializeProperties() {
 
 void MaterialProperties::setMaterialId() {
     std::string query = "SELECT MaterialID FROM Materials WHERE Name = '" + name_ + "';";
-    material_id_ = InteractionDataHelpers::castStringVector<int>(dao_->executeQuery(query))[0];
+    material_id_ = InteractionDataHelpers::castStringVector<int>(dao_.executeQuery(query))[0];
 }
 
 void MaterialProperties::setElementalComposition() {
@@ -25,7 +27,7 @@ void MaterialProperties::setElementalComposition() {
                         "FROM Materials "
                         "INNER JOIN MaterialCompositions ON Materials.MaterialID = MaterialCompositions.MaterialID "
                         "WHERE Materials.Name = '" + name_ + "';";
-    auto output = InteractionDataHelpers::castStringVector<double>(dao_->executeQuery(query));
+    auto output = InteractionDataHelpers::castStringVector<double>(dao_.executeQuery(query));
     auto output_distributed = InteractionDataHelpers::distributeNTimes(output, 2);
     for (int i = 0; i < output_distributed[0].size(); ++i) {
         elemental_composition_[static_cast<int>(output_distributed[0][i])] = output_distributed[1][i];
@@ -47,7 +49,7 @@ void MaterialProperties::setElementalDataForTableAndColumn(const std::string& ta
     std::string query = "SELECT AtomicNumber, " + column_name + " "
                         "FROM " + table_name + " "
                         "WHERE ID IN (" + element_ids_str + ");";
-    auto output = InteractionDataHelpers::castStringVector<double>(dao_->executeQuery(query));
+    auto output = InteractionDataHelpers::castStringVector<double>(dao_.executeQuery(query));
     auto output_distributed = InteractionDataHelpers::distributeNTimes(output, 2);
     for (int i = 0; i < output_distributed[0].size(); ++i) {
         map[static_cast<int>(output_distributed[0][i])] = output_distributed[1][i];
@@ -58,7 +60,7 @@ void MaterialProperties::setMassDensity() {
     std::string query = "SELECT Density "
                         "FROM Materials "
                         "WHERE Name = '" + name_ + "';";
-    auto output = InteractionDataHelpers::castStringVector<double>(dao_->executeQuery(query));
+    auto output = InteractionDataHelpers::castStringVector<double>(dao_.executeQuery(query));
     mass_density_ = static_cast<double>(output[0]);
 }
 

@@ -1,5 +1,25 @@
 #include "Core/volume_quantity.h"
 
+namespace {
+    std::unordered_map<VectorVolumeQuantityType, std::string> vectorTypeToString = {
+            {VectorVolumeQuantityType::EnergyDeposition, "EnergyDeposition"},
+            {VectorVolumeQuantityType::IncidentEnergy, "IncidentEnergy"}
+    };
+
+    std::unordered_map<CountVolumeQuantityType, std::string> countTypeToString = {
+            {CountVolumeQuantityType::NumberOfPhotons, "NumberOfPhotons"},
+            {CountVolumeQuantityType::NumberOfInteractions, "NumberOfInteractions"}
+    };
+}
+
+std::string VectorVolumeQuantityHelper::toString(VectorVolumeQuantityType type) {
+    return vectorTypeToString[type];
+}
+
+std::string CountVolumeQuantityHelper::toString(CountVolumeQuantityType type) {
+    return countTypeToString[type];
+}
+
 VectorVolumeQuantity::VectorVolumeQuantity(VectorVolumeQuantityType type) {
     type_ = type;
     if (type == VectorVolumeQuantityType::EnergyDeposition) {

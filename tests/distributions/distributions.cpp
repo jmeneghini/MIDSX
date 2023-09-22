@@ -1,5 +1,6 @@
 #include <MIDSX/Core.h>
 
+
 int main() {
     auto data_service = std::make_shared<DataAccessObject>("data/data_sources/EPDL/EPDL.db");
     auto mat = std::make_unique<Material>("Tissue, Soft (ICRU-46)", data_service);
@@ -9,7 +10,7 @@ int main() {
     auto interaction_data = InteractionData(std::move(mat_vec), data_service);
 
     const int N_PHOTONS = 100000000;
-    const double ENERGY = 20E3;
+    const double ENERGY = 120E3;
     Eigen::Vector3d position(0, 0, 0);
     Eigen::Vector3d direction(0, 0, 1);
     IncoherentScattering scattering;

@@ -46,7 +46,7 @@ double DerivedQuantity::getPrimaryAirKerma(SurfaceQuantityContainer &surface_qua
     // AK(E +- delta E / 2) = E * fluence(E +- delta E / 2) * (mu_en(E)/rho)  [units: eV/g]
     int AIR_INDEX = 3;
     auto air_data = interaction_data.getMaterial(AIR_INDEX).getData();
-    double mu_en = air_data->interpolateMassEnergyAbsorptionCoefficient(energy); // [units: cm^2/g]
+    double mu_en = air_data.interpolateMassEnergyAbsorptionCoefficient(energy); // [units: cm^2/g]
     double fluence = getPrimaryFluence(surface_quantity_container, energy, energy_width, is_cosine_weighted); // [units: 1/cm^2]
     return energy * fluence * mu_en; // [units: eV/g]
 }

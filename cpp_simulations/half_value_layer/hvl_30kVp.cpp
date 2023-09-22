@@ -6,25 +6,26 @@
 
 namespace py = pybind11;
 
-std::shared_ptr<DataAccessObject> setupDataService() {
-    return std::make_shared<DataAccessObject>("data/data_sources/EPDL/EPDL.db");
+DataAccessObject setupDataService() {
+    return DataAccessObject("data/data_sources/EPDL/EPDL.db");
 }
 
-std::vector<std::unique_ptr<Material>> initializeMaterials(const std::shared_ptr<DataAccessObject>& data_service) {
-    std::vector<std::unique_ptr<Material>> materials;
-//    materials.emplace_back(std::make_unique<Material>("Al", data_service));
-    materials.emplace_back(std::make_unique<Material>("Air, Dry (near sea level)", data_service));
+std::vector<std::string> initializeMaterials() {
+    std::vector<std::string> materials = {};
+//    materials.emplace_back("Tissue, Soft (ICRU-46)");
+//    materials.emplace_back("Al");
+    materials.emplace_back("Air, Dry (near sea level)");
     return materials;
 }
 
-std::vector<std::shared_ptr<Tally>> initializeTallies() {
-    std::vector<std::shared_ptr<Tally>> tallies;
+std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
+    std::vector<std::unique_ptr<SurfaceTally>> tallies = {};
 
-    tallies.emplace_back(std::make_shared<DiscSurfaceTally>(
+    tallies.emplace_back(std::make_unique<DiscSurfaceTally>(
             Eigen::Vector3d(2, 2, 100),
             Eigen::Vector3d(0, 0, 1),
             1.0,
-            QuantityContainerFactory::AllQuantities()));
+            SurfaceQuantityContainerFactory::AllQuantities()));
     return tallies;
 }
 
@@ -39,7 +40,10 @@ PhotonSource initializeSource() {
 
     PolyenergeticSpectrum poly_spectrum(energy_spectrum);
     std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<PolyenergeticSpectrum>(poly_spectrum);
-\
+
+//    MonoenergeticSpectrum mono_spectrum(30E3);
+//    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
+
     std::unique_ptr<Directionality> directionality = std::make_unique<DiscIsotropicDirectionality>(
             DiscIsotropicDirectionality(Eigen::Vector3d(2, 2, 10),
                                         Eigen::Vector3d(0, 0, 1),
@@ -63,57 +67,44 @@ void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_ph
         Photon photon = source.generatePhoton();
         physics_engine.transportPhoton(photon);
         if (i % (N_photons / 20) == 0) {
-//            std::cout << "Progress: " << j << "%" << std::flush << "\r";
+            std::cout << "Progress: " << j << "%" << std::flush << "\r";
             j += 5;
         }
     }
 }
 #pragma clang diagnostic pop
 
-void displayResults(const std::vector<std::shared_ptr<Tally>>& tallies, int N_photons, InteractionData& interaction_data) {
-    std::vector<double> air_kerma_values;
-//    Eigen::VectorXd energy_bin(1);
-//    energy_bin << 30E3;
-//    std::cout << energy_bin << std::endl;
+void displayResults(const std::vector<std::unique_ptr<SurfaceTally>>& surface_tallies, int N_photons, InteractionData& interaction_data) {
+    auto quantity_container = surface_tallies[0]->getSurfaceQuantityContainer();
+    auto vector_quantities = quantity_container.getVectorQuantities();
+    auto count_quantities = quantity_container.getCountQuantities();
+
+    // if mono
+//    double primary_air_kerma = DerivedQuantity::getPrimaryAirKerma(quantity_container, interaction_data, 30E3, 0, false);
+    // if poly
     Eigen::VectorXd energy_bin = processEnergySpectrum().col(0);
+    double primary_air_kerma = DerivedQuantity::getPrimarySpectrumAirKerma(quantity_container, interaction_data, energy_bin, false);
 
-    int i = 1;
-    for (auto& tally : tallies) {
-        auto quantity_container = tally->getQuantityContainer();
-        quantity_container->processMeasurements();
-        auto quantity = quantity_container->getTallyData();
-        auto primary_air_kerma = quantity_container->getPrimaryAirKerma(interaction_data, 3, energy_bin);
-        air_kerma_values.push_back(primary_air_kerma);
-
-//        std::cout << "\nTally " << i << std::endl;
-//        std::cout << "Number of total photons at detector " << i << ": " << quantity.number_of_particles << std::endl;
-//        std::cout << "Number of primary photons at detector " << i << ": " << quantity.number_of_primary_particles << std::endl;
-//        std::cout << "Number of secondary photons at detector " << i << ": " << quantity.number_of_secondary_particles << std::endl;
-//        std::cout << "Primary air kerma at detector " << i << ": " << primary_air_kerma << std::endl;
-        std::cout << std::setprecision(15) << primary_air_kerma << std::endl;
-        i++;
-    }
-
-//    std::cout << "\nPrimary air kerma ratio: " << air_kerma_values[1] / air_kerma_values[0] << std::endl;
-
+    std::cout << "Number of Primary Photons: " << count_quantities.at(CountSurfaceQuantityType::NumberOfPhotons).getPrimaryValues().getCount() << std::endl;
+    std::cout << "Primary Air Kerma: " << primary_air_kerma << std::endl;
 }
 
 int main() {
     auto data_service = setupDataService();
-    auto materials = initializeMaterials(data_service);
-    auto tallies = initializeTallies();
+    auto materials = initializeMaterials();
+    auto surface_tallies = initializeSurfaceTallies();
 
-    InteractionData interaction_data(std::move(materials), data_service);
+    InteractionData interaction_data(materials, data_service);
     ComputationalDomain comp_domain("cpp_simulations/half_value_layer/hvl.json");
-    PhysicsEngine physics_engine(comp_domain, interaction_data, tallies);
+    PhysicsEngine physics_engine(comp_domain, interaction_data, {}, std::move(surface_tallies));
 
 
 
     PhotonSource source = initializeSource();
 
-    runSimulation(source, physics_engine, 10000000);
+    runSimulation(source, physics_engine, 1000000);
 
-    displayResults(tallies, 10000000, interaction_data);
+    displayResults(physics_engine.getSurfaceTallies(), 1000000, interaction_data);
 
     return 0;
 }

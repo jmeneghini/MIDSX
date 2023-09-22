@@ -9,9 +9,18 @@ enum class VectorSurfaceQuantityType {
     EntranceCosine,
 };
 
+
+namespace VectorSurfaceQuantityHelper {
+    std::string toString(VectorSurfaceQuantityType type);
+}
+
 enum class CountSurfaceQuantityType {
     NumberOfPhotons
 };
+
+namespace CountSurfaceQuantityHelper {
+    std::string toString(CountSurfaceQuantityType type);
+}
 
 class VectorSurfaceQuantity {
 public:

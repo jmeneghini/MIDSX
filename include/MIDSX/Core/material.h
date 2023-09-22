@@ -13,18 +13,15 @@
 
 class Material {
 public:
-    Material() = default;
-    Material(std::string name, std::shared_ptr<DataAccessObject> dao);
+    Material(std::string name, DataAccessObject& dao);
 
-    std::shared_ptr<MaterialProperties> getProperties() const { return properties_;}
-    std::shared_ptr<MaterialData> getData() const { return data_;}
+    const MaterialProperties& getProperties() { return properties_;}
+    const MaterialData& getData() { return data_;}
 private:
     std::string name_;
-    std::shared_ptr<DataAccessObject> dao_;
-    std::shared_ptr<MaterialProperties> properties_;
-    std::shared_ptr<MaterialData> data_;
-
-    void initializeMaterial();
+    DataAccessObject& dao_;
+    MaterialProperties properties_;
+    MaterialData data_;
 };
 
 #endif //MCXRAYTRANSPORT_MATERIAL_H

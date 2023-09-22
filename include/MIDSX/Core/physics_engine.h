@@ -61,8 +61,8 @@ private:
                                   std::vector<TempVolumeTallyData>& temp_volume_tally_data_per_photon,
                                     TempSurfaceTallyData& temp_surface_tally_data, TempVolumeTallyData& temp_volume_tally_data);
 
-    void processTallies(std::vector<TempSurfaceTallyData> temp_surface_tally_data_per_photon,
-                                       std::vector<TempVolumeTallyData> temp_volume_tally_data_per_photon);
+    void processTallies(std::vector<TempSurfaceTallyData>& temp_surface_tally_data_per_photon,
+                                       std::vector<TempVolumeTallyData>& temp_volume_tally_data_per_photon);
 };
 
 #endif

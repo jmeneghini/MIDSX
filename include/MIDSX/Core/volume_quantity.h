@@ -12,10 +12,18 @@ enum class VectorVolumeQuantityType {
     IncidentEnergy
 };
 
+namespace VectorVolumeQuantityHelper {
+    std::string toString(VectorVolumeQuantityType type);
+}
+
 enum class CountVolumeQuantityType {
     NumberOfPhotons,
     NumberOfInteractions
 };
+
+namespace CountVolumeQuantityHelper {
+    std::string toString(CountVolumeQuantityType type);
+}
 
 class VectorVolumeQuantity {
 public:

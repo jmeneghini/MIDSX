@@ -58,8 +58,8 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon, std::vector<TempSurfa
     int current_material_id = current_voxel.materialID;
 
     // get total cross section for current material
-    Material current_material = interaction_data_.getMaterial(current_material_id);
-    double total_cross_section = (current_material.getData()->interpolateTotalCrossSection(photon_energy));
+    Material& current_material = interaction_data_.getMaterial(current_material_id);
+    double total_cross_section = (current_material.getData().interpolateTotalCrossSection(photon_energy));
 
     // sample delta scattering
     bool delta_scattering = isDeltaScatter(total_cross_section, max_cross_section);
@@ -67,7 +67,7 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon, std::vector<TempSurfa
         temp_surface_tally_data.isInteract = temp_volume_tally_data.isInteract = true;
         setInteractionType(photon, current_material, total_cross_section);
         photon.setPrimary(false); // photon has interacted
-        double energy_deposited = photon.interact(interaction_data_, current_material);
+        double energy_deposited = photon.interact(current_material);
         current_voxel.dose += energy_deposited;
         temp_volume_tally_data.energy_deposited = energy_deposited;
         temp_volume_tally_data.final_photon = photon;
@@ -82,8 +82,8 @@ void PhysicsEngine::setInteractionType(Photon& photon, Material& material, doubl
     double photon_energy = photon.getEnergy();
 
     // get cross sections for current element
-    double coherent_scattering_cross_section = material.getData()->interpolateCoherentScatteringCrossSection(photon_energy);
-    double incoherent_scattering_cross_section = material.getData()->interpolateIncoherentScatteringCrossSection(photon_energy);
+    double coherent_scattering_cross_section = material.getData().interpolateCoherentScatteringCrossSection(photon_energy);
+    double incoherent_scattering_cross_section = material.getData().interpolateIncoherentScatteringCrossSection(photon_energy);
 
     // sample interaction type
     double p_coherent = coherent_scattering_cross_section / total_cross_section;
@@ -136,8 +136,8 @@ void PhysicsEngine::updateTempTallyPerPhoton(std::vector<TempSurfaceTallyData>& 
     temp_volume_tally_data_per_photon.push_back(temp_volume_tally_data);
 }
 
-void PhysicsEngine::processTallies(std::vector<TempSurfaceTallyData> temp_surface_tally_data_per_photon,
-                                   std::vector<TempVolumeTallyData> temp_volume_tally_data_per_photon) {
+void PhysicsEngine::processTallies(std::vector<TempSurfaceTallyData>& temp_surface_tally_data_per_photon,
+                                   std::vector<TempVolumeTallyData>& temp_volume_tally_data_per_photon) {
     for (auto &surface_tally: surface_tallies_) {
         for (auto &temp_surface_tally_data: temp_surface_tally_data_per_photon) {
             surface_tally->processMeasurements(temp_surface_tally_data);
