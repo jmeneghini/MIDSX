@@ -59,6 +59,17 @@ VectorVolumeQuantityType VectorVolumeQuantity::getType() const {
     return type_;
 }
 
+VectorValue VectorVolumeQuantity::getTotalValues() {
+    if (!totaled_) {
+        total_values_.addValues(primary_values_.getVector());
+        total_values_.addValues(single_incoherent_scatter_values_.getVector());
+        total_values_.addValues(single_coherent_scatter_values_.getVector());
+        total_values_.addValues(multiple_scatter_values_.getVector());
+        totaled_ = true;
+    }
+    return total_values_;
+}
+
 VectorValue VectorVolumeQuantity::getPrimaryValues() const {
     return primary_values_;
 }
@@ -111,6 +122,17 @@ void CountVolumeQuantity::measure(TempVolumeTallyData &temp_volume_tally_data) {
 
 CountVolumeQuantityType CountVolumeQuantity::getType() const {
     return type_;
+}
+
+CountValue CountVolumeQuantity::getTotalValues() {
+    if (!totaled_) {
+        total_values_.addCounts(primary_values_.getCount());
+        total_values_.addCounts(single_incoherent_scatter_values_.getCount());
+        total_values_.addCounts(single_coherent_scatter_values_.getCount());
+        total_values_.addCounts(multiple_scatter_values_.getCount());
+        totaled_ = true;
+    }
+    return total_values_;
 }
 
 CountValue CountVolumeQuantity::getPrimaryValues() const {

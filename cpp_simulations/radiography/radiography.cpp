@@ -20,6 +20,9 @@ std::vector<std::string> initializeMaterials() {
 std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
     std::vector<std::unique_ptr<SurfaceTally>> tallies = {};
 
+    auto surface_container = SurfaceQuantityContainer();
+    surface_container.addVectorQuantity(VectorSurfaceQuantity(VectorSurfaceQuantityType::IncidentEnergy));
+
     // TEST
 //    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
 //            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 0),
@@ -30,53 +33,49 @@ std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
 
     // FULL FIELD ROIS:
 
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(0, 0, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            SurfaceQuantityContainerFactory::AllQuantities()));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(19.5 - 1.5, 0, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            SurfaceQuantityContainerFactory::AllQuantities()));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(10.5 - 1.5, 10.5 - 1.5, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            SurfaceQuantityContainerFactory::AllQuantities()));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(19.5 - 1.5, 10.5 - 1.5, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            SurfaceQuantityContainerFactory::AllQuantities()));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            SurfaceQuantityContainerFactory::AllQuantities()));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(28.5 - 1.5, 28.5 - 1.5, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            SurfaceQuantityContainerFactory::AllQuantities()));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(39 - 3, 39 - 3, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            SurfaceQuantityContainerFactory::AllQuantities()));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 155 + 1.5),
-//            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 155 + 1.5 + 3),
-//            VolumeQuantityContainerFactory::AllQuantities()));
-//
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(0, 0, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(19.5 - 1.5, 0, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(10.5 - 1.5, 10.5 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(19.5 - 1.5, 10.5 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(28.5 - 1.5, 28.5 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(39 - 3, 39 - 3, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+
 
 // PENCIL BEAM ROIS:
 
@@ -128,12 +127,15 @@ std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
 std::vector<std::unique_ptr<VolumeTally>> initializeVolumeTallies() {
     std::vector<std::unique_ptr<VolumeTally>> tallies = {};
 
+    auto volume_container = VolumeQuantityContainer();
+    volume_container.addVectorQuantity(VectorVolumeQuantity(VectorVolumeQuantityType::EnergyDeposition));
+
     // WHOLE BODY VOI:
 
-    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-            Eigen::Vector3d(0, 0, 155),
-            Eigen::Vector3d(39.0, 39.0, 175),
-            VolumeQuantityContainerFactory::AllQuantities()));
+//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+//            Eigen::Vector3d(0, 0, 155),
+//            Eigen::Vector3d(39.0, 39.0, 175),
+//            VolumeQuantityContainerFactory::AllQuantities()));
 
 
     // BODY VOIS:
@@ -141,47 +143,47 @@ std::vector<std::unique_ptr<VolumeTally>> initializeVolumeTallies() {
 //    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
 //            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 15 - 1.5, 155 + 10 - 1.5),
 //            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 - 15 + 1.5, 155 + 10 + 1.5),
-//            VolumeQuantityContainerFactory::AllQuantities()));
+//            volume_container));
 //
 //    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
 //            Eigen::Vector3d(39.0/2 - 15 - 1.5, 39.0/2 - 1.5, 155 + 10 - 1.5),
 //            Eigen::Vector3d(39.0/2 - 15 + 1.5, 39.0/2 + 1.5, 155 + 10 + 1.5),
-//            VolumeQuantityContainerFactory::AllQuantities()));
+//            volume_container));
 //
 //    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
 //            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 - 1.5),
 //            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 + 1.5),
-//            VolumeQuantityContainerFactory::AllQuantities()));
+//            volume_container));
 //
 //    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
 //            Eigen::Vector3d(39.0/2 + 15 - 1.5, 39.0/2 - 1.5, 155 + 10 - 1.5),
 //            Eigen::Vector3d(39.0/2 + 15 + 1.5, 39.0/2 + 1.5, 155 + 10 + 1.5),
-//            VolumeQuantityContainerFactory::AllQuantities()));
+//            volume_container));
 //
 //    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
 //            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 + 15 - 1.5, 155 + 10 - 1.5),
 //            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 15 + 1.5, 155 + 10 + 1.5),
-//            VolumeQuantityContainerFactory::AllQuantities()));
+//            volume_container));
 //
 //    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
 //            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 - 6 - 1.5),
 //            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 - 6 + 1.5),
-//            VolumeQuantityContainerFactory::AllQuantities()));
+//            volume_container));
 //
 //    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
 //            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 - 3 - 1.5),
 //            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 - 3 + 1.5),
-//            VolumeQuantityContainerFactory::AllQuantities()));
+//            volume_container));
 //
 //    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
 //            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 + 3 - 1.5),
 //            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 + 3 + 1.5),
-//            VolumeQuantityContainerFactory::AllQuantities()));
+//            volume_container));
 //
 //    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
 //            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 + 6 - 1.5),
 //            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 + 6 + 1.5),
-//            VolumeQuantityContainerFactory::AllQuantities()));
+//            volume_container));
 
         return tallies;
 }
@@ -239,6 +241,8 @@ void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& 
         auto count_quantities = quantity_container.getCountQuantities();
         for (auto &vector_quantity: vector_quantities) {
             std::cout << VectorVolumeQuantityHelper::toString(vector_quantity.first) << ":" << std::endl;
+            std::cout << "  Total: " << vector_quantity.second.getTotalValues().getSum() / N_photons << " +- "
+                      << vector_quantity.second.getTotalValues().getSumSTD() / N_photons << std::endl;
             std::cout << "  Primary: " << vector_quantity.second.getPrimaryValues().getSum() / N_photons << " +- "
                       << vector_quantity.second.getPrimaryValues().getSumSTD() / N_photons << std::endl;
             std::cout << "  Single Coherent: "
@@ -254,6 +258,8 @@ void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& 
 
         for (auto &count_quantity: count_quantities) {
             std::cout << CountVolumeQuantityHelper::toString(count_quantity.first) << ":" << std::endl;
+            std::cout << " Total: " << count_quantity.second.getTotalValues().getCount() << " +- "
+                      << count_quantity.second.getTotalValues().getCountSTD() << std::endl;
             std::cout << "  Primary: " << count_quantity.second.getPrimaryValues().getCount() << " +- "
                       << count_quantity.second.getPrimaryValues().getCountSTD() << std::endl;
             std::cout << "  Single Coherent: "
@@ -266,6 +272,7 @@ void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& 
                         << count_quantity.second.getMultipleScatterValues().getCount() << " +- "
                         << count_quantity.second.getMultipleScatterValues().getCountSTD() << std::endl;
         }
+        i++;
     }
 }
 
@@ -281,6 +288,8 @@ void displaySurfaceTallyResults(const std::vector<std::unique_ptr<SurfaceTally>>
         auto count_quantities = quantity_container.getCountQuantities();
         for (auto &vector_quantity: vector_quantities) {
             std::cout << VectorSurfaceQuantityHelper::toString(vector_quantity.first) << ":" << std::endl;
+            std::cout << "  Total: " << vector_quantity.second.getTotalValues().getSum() / N_photons << " +- "
+                      << vector_quantity.second.getTotalValues().getSumSTD() / N_photons << std::endl;
             std::cout << "  Primary: " << vector_quantity.second.getPrimaryValues().getSum() / N_photons << " +- "
                       << vector_quantity.second.getPrimaryValues().getSumSTD() / N_photons << std::endl;
             std::cout << "  Single Coherent: "
@@ -296,6 +305,8 @@ void displaySurfaceTallyResults(const std::vector<std::unique_ptr<SurfaceTally>>
         }
         for (auto &count_quantity: count_quantities) {
             std::cout << CountSurfaceQuantityHelper::toString(count_quantity.first) << ":" << std::endl;
+            std::cout << " Total: " << count_quantity.second.getTotalValues().getCount() << " +- "
+                      << count_quantity.second.getTotalValues().getCountSTD() / N_photons << std::endl;
             std::cout << "  Primary: " << count_quantity.second.getPrimaryValues().getCount() << " +- "
                       << count_quantity.second.getPrimaryValues().getCountSTD() / N_photons << std::endl;
             std::cout << "  Single Coherent: "
@@ -369,7 +380,7 @@ int main() {
 
     PhotonSource source = initializeSource();
 
-    const int NUM_OF_PHOTONS = 10000000;
+    const int NUM_OF_PHOTONS = 100000000;
 
     runSimulation(source, physics_engine, NUM_OF_PHOTONS);
 

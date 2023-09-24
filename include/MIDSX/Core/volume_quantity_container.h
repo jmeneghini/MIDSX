@@ -25,6 +25,7 @@ private:
 
 namespace VolumeQuantityContainerFactory {
     VolumeQuantityContainer AllQuantities();
+    VolumeQuantityContainer EnergyDeposition();
 }
 
 #endif //MIDSX_VOLUME_QUANTITY_CONTAINER_H

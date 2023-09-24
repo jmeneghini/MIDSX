@@ -28,12 +28,15 @@ public:
     explicit VectorSurfaceQuantity(VectorSurfaceQuantityType type);
     void measure(TempSurfaceTallyData& temp_surface_tally_data);
     VectorSurfaceQuantityType getType() const;
+    VectorValue getTotalValues();
     VectorValue getPrimaryValues() const;
     VectorValue getSingleIncoherentScatterValues() const;
     VectorValue getSingleCoherentScatterValues() const;
     VectorValue getMultipleScatterValues() const;
 private:
     VectorSurfaceQuantityType type_;
+    bool totaled_ = false;
+    VectorValue total_values_;
     VectorValue primary_values_;
     VectorValue single_incoherent_scatter_values_;
     VectorValue single_coherent_scatter_values_;
@@ -47,12 +50,15 @@ public:
     explicit CountSurfaceQuantity(CountSurfaceQuantityType type);
     void measure(TempSurfaceTallyData& temp_surface_tally_data);
     CountSurfaceQuantityType getType() const;
+    CountValue getTotalValues();
     CountValue getPrimaryValues() const;
     CountValue getSingleIncoherentScatterValues() const;
     CountValue getSingleCoherentScatterValues() const;
     CountValue getMultipleScatterValues() const;
 private:
     CountSurfaceQuantityType type_;
+    bool totaled_ = false;
+    CountValue total_values_;
     CountValue primary_values_;
     CountValue single_incoherent_scatter_values_;
     CountValue single_coherent_scatter_values_;

@@ -54,6 +54,17 @@ VectorSurfaceQuantityType VectorSurfaceQuantity::getType() const {
     return type_;
 }
 
+VectorValue VectorSurfaceQuantity::getTotalValues() {
+    if (!totaled_) {
+        total_values_.addValues(primary_values_.getVector());
+        total_values_.addValues(single_incoherent_scatter_values_.getVector());
+        total_values_.addValues(single_coherent_scatter_values_.getVector());
+        total_values_.addValues(multiple_scatter_values_.getVector());
+        totaled_ = true;
+    }
+    return total_values_;
+}
+
 VectorValue VectorSurfaceQuantity::getPrimaryValues() const {
     return primary_values_;
 }
@@ -102,6 +113,17 @@ void CountSurfaceQuantity::measure(TempSurfaceTallyData &temp_surface_tally_data
 
 CountSurfaceQuantityType CountSurfaceQuantity::getType() const {
     return type_;
+}
+
+CountValue CountSurfaceQuantity::getTotalValues() {
+    if (!totaled_) {
+        total_values_.addCounts(primary_values_.getCount());
+        total_values_.addCounts(single_incoherent_scatter_values_.getCount());
+        total_values_.addCounts(single_coherent_scatter_values_.getCount());
+        total_values_.addCounts(multiple_scatter_values_.getCount());
+        totaled_ = true;
+    }
+    return total_values_;
 }
 
 CountValue CountSurfaceQuantity::getPrimaryValues() const {

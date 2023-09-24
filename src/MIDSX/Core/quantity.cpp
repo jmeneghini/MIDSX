@@ -6,6 +6,10 @@ void VectorValue::addValue(double value) {
     values_.push_back(value);
 }
 
+void VectorValue::addValues(const std::vector<double>& values) {
+    values_.insert(values_.end(), values.begin(), values.end());
+}
+
 std::vector<double> VectorValue::getVector() const {
     return values_;
 }
@@ -73,6 +77,10 @@ double VectorValue::getVariance() {
 
 void CountValue::addCount() {
     count_++;
+}
+
+void CountValue::addCounts(int count) {
+    count_ += count;
 }
 
 int CountValue::getCount() const {

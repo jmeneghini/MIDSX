@@ -8,6 +8,7 @@
 class VectorValue {
 public:
     void addValue(double value);
+    void addValues(const std::vector<double>& values);
     std::vector<double> getVector() const;
     double getSum();
     double getSumSTD();
@@ -25,6 +26,7 @@ private:
 class CountValue {
 public:
     void addCount();
+    void addCounts(int count);
     int getCount() const;
     double getCountSTD() const;
 public:

@@ -32,12 +32,15 @@ public:
     explicit VectorVolumeQuantity(VectorVolumeQuantityType type);
     void measure(TempVolumeTallyData& temp_volume_tally_data);
     VectorVolumeQuantityType getType() const;
+    VectorValue getTotalValues();
     VectorValue getPrimaryValues() const;
     VectorValue getSingleIncoherentScatterValues() const;
     VectorValue getSingleCoherentScatterValues() const;
     VectorValue getMultipleScatterValues() const;
 private:
     VectorVolumeQuantityType type_;
+    bool totaled_ = false;
+    VectorValue total_values_;
     VectorValue primary_values_;
     VectorValue single_incoherent_scatter_values_;
     VectorValue single_coherent_scatter_values_;
@@ -52,12 +55,15 @@ public:
     explicit CountVolumeQuantity(CountVolumeQuantityType type);
     void measure(TempVolumeTallyData& temp_volume_tally_data);
     CountVolumeQuantityType getType() const;
+    CountValue getTotalValues();
     CountValue getPrimaryValues() const;
     CountValue getSingleIncoherentScatterValues() const;
     CountValue getSingleCoherentScatterValues() const;
     CountValue getMultipleScatterValues() const;
 private:
     CountVolumeQuantityType type_;
+    bool totaled_ = false;
+    CountValue total_values_;
     CountValue primary_values_;
     CountValue single_incoherent_scatter_values_;
     CountValue single_coherent_scatter_values_;
