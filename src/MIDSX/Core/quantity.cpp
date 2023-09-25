@@ -56,6 +56,14 @@ double VectorValue::getMeanSTD() {
     return sqrt(var / values_.size());
 }
 
+double VectorValue::getCount() {
+    return values_.size();
+}
+
+double VectorValue::getCountSTD() {
+    return sqrt(values_.size());
+}
+
 double VectorValue::getVariance() {
     // sample variance
     double sum = 0;

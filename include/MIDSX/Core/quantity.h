@@ -14,6 +14,8 @@ public:
     double getSumSTD();
     double getMean();
     double getMeanSTD();
+    double getCount();
+    double getCountSTD();
     double getVariance();
 private:
     std::vector<double> values_ = {};
