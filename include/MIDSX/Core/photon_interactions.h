@@ -23,8 +23,8 @@ class CoherentScattering : public ParticleInteractionBehavior {
 public:
     double interact(Particle& photon, Material& material) override;
 private:
-    static ProbabilityDist::Discrete createFormFactorDistribution(Eigen::MatrixXd form_factor_matrix, double x_min, double x_max);
-    double sampleThetaFromCoherentScatteringDCS(const ProbabilityDist::Discrete& form_factor_dist, double x_max);
+    static ProbabilityDist::DiscreteInversion createFormFactorDistribution(Eigen::MatrixXd form_factor_matrix, double x_max);
+    double sampleThetaFromCoherentScatteringDCS(const ProbabilityDist::DiscreteInversion& form_factor_dist, double x_max);
 };
 
 class IncoherentScattering : public ParticleInteractionBehavior {

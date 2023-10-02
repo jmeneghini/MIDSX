@@ -5,6 +5,8 @@
 #include "material_properties.h"
 #include "material_helpers.h"
 #include "interpolators.h"
+#include "probability_dist.h"
+#include "constants.h"
 #include <string>
 #include <memory>
 #include <Eigen/Dense>
@@ -29,6 +31,9 @@ public:
     double interpolateIncoherentScatteringFunction(double energy) const { return (incoherent_scattering_function_interpolator_)(energy); }
     double interpolateCoherentFormFactor(double energy) const { return (coherent_form_factor_interpolator_)(energy); }
     double interpolateMassEnergyAbsorptionCoefficient(double energy) const { return (mass_energy_absorption_coefficient_interpolator_)(energy); }
+
+    double sampleCoherentScatteringDCS(double energy) const { return coherent_scattering_dcs_dist_.sample(energy); }
+
 private:
     MaterialProperties& properties_;
     DataAccessObject& dao_;
@@ -47,6 +52,7 @@ private:
     Interpolator::LogLogLinear coherent_form_factor_interpolator_;
     Eigen::Matrix<double, Eigen::Dynamic, 2> mass_energy_absorption_coefficient_matrix_;
     Interpolator::LogLogLinear mass_energy_absorption_coefficient_interpolator_;
+    ProbabilityDist::ContinuousInversion coherent_scattering_dcs_dist_;
 
     void initializeData();
 
@@ -59,6 +65,8 @@ private:
     void setIncoherentScatteringCrossSectionAndInterpolator();
     void setCoherentScatteringCrossSectionAndInterpolator();
     void setPhotoelectricCrossSectionAndInterpolator();
+
+    void setCoherentScatteringDCSDistribution();
 
     Eigen::Matrix<double, Eigen::Dynamic, 2> getTotalCrossSectionsMatrixFromInteractionData();
     Eigen::Matrix<double, Eigen::Dynamic, 2> calculateWeightedAverageOfColumns(const std::string &tableName, const std::string &dataColumnName,

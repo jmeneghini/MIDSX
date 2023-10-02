@@ -2,6 +2,7 @@
 #define MCXRAYTRANSPORT_CONSTANTS_H
 
 #include <limits>
+#include <cmath>
 
 // cgs units (except for energy, which is in eV, because I'm not a complete monster)
 
@@ -15,5 +16,6 @@ const double SPEED_OF_LIGHT = 299792458E2; // cm/s
 const double PLANCK_CONSTANT = 4.135667662e-15; // eV*s
 const double NUMBER_DENSITY_AT_STP = 0.02504E21; // cm^-3
 const double AVOGADRO_CONSTANT = 6.022140857e23; // mol^-1
+const double ALPHA = ELECTRON_REST_MASS/(sqrt(2)*PLANCK_CONSTANT*SPEED_OF_LIGHT*1E8); // in angstroms
 
 #endif //MCXRAYTRANSPORT_CONSTANTS_H

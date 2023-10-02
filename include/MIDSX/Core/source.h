@@ -40,7 +40,7 @@ public:
 
 private:
     Eigen::Matrix<double, Eigen::Dynamic, 2> probabilities_matrix_;
-    ProbabilityDist::Discrete energy_dist_;
+    ProbabilityDist::DiscreteInversion energy_dist_;
 };
 
 class Directionality {

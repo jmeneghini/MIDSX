@@ -12,6 +12,7 @@ void MaterialData::initializeData() {
     setIncoherentScatteringFunctionAndInterpolator();
     setCoherentScatteringFormFactorAndInterpolator();
     setMassEnergyAbsorptionCoefficientsAndInterpolator();
+    setCoherentScatteringDCSDistribution();
 }
 
 void MaterialData::setInteractionCrossSectionsAndInterpolators() {
@@ -47,7 +48,7 @@ void MaterialData::setIncoherentScatteringCrossSectionAndInterpolator() {
 }
 
 void MaterialData::setCoherentScatteringCrossSectionAndInterpolator() {
-    coherent_cs_matrix_ = calculateWeightedAverageOfColumns("CoherentScatteringCrossSections", "CrossSection", true);
+    coherent_cs_matrix_ = calculateWeightedAverageOfColumns("CoherentScatteringCrossSections", "CrossSection", false);
     coherent_cs_matrix_.col(1) *= 1E-24;
     coherent_cs_interpolator_ = Interpolator::LogLogSpline(coherent_cs_matrix_);
 }
@@ -56,6 +57,19 @@ void MaterialData::setPhotoelectricCrossSectionAndInterpolator() {
     photoelectric_cs_matrix_ = calculateWeightedAverageOfColumns("TotalPhotoIonizationCrossSections", "CrossSection", true);
     photoelectric_cs_matrix_.col(1) *= 1E-24;
     photoelectric_cs_interpolator_ = Interpolator::LogLogLinear(photoelectric_cs_matrix_);
+}
+
+void MaterialData::setCoherentScatteringDCSDistribution() {
+    // define PDF lambda
+    auto PDF = [this](double mu, double E) {
+        double k = E/ELECTRON_REST_MASS;
+        double x = ALPHA*k*sqrt(1 - mu);
+        return (PI*ELECTRON_RADIUS*ELECTRON_RADIUS/interpolateCoherentScatteringCrossSection(E))*(1 + mu*mu)*pow(interpolateCoherentFormFactor(x), 2);
+    };
+    // get energy array
+    Eigen::VectorXd energy_values = getCoherentFormFactorMatrix().col(0);
+    std::function<double(double, double)> PDF_function = PDF;
+    coherent_scattering_dcs_dist_ = ProbabilityDist::ContinuousInversion(PDF_function, energy_values, -1, 1);
 }
 
 Eigen::Matrix<double, Eigen::Dynamic, 2> MaterialData::getTotalCrossSectionsMatrixFromInteractionData() {

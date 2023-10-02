@@ -6,21 +6,23 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <functional>
 #include <stdexcept>
 #include <Eigen/Core>
+#include <unsupported/Eigen/CXX11/Tensor>
 
-class ProbabilityDistribution {
-public:
-    virtual double sample() const = 0;
-};
+namespace ProbabilityDistHelpers {
+    int findIndexOfNextSmallestValue(double x, const Eigen::VectorXd &vector);
+}
 
 namespace ProbabilityDist {
 
-    class Uniform : public ProbabilityDistribution {
+    class Uniform {
     public:
+        Uniform() = default;
         Uniform(double min, double max) : dist_(min, max) {}
 
-        double sample() const override {
+        double sample() const {
             return dist_(generator_);
         }
 
@@ -33,14 +35,11 @@ namespace ProbabilityDist {
     };
 
 
-    class Discrete : public ProbabilityDistribution {
+    class DiscreteInversion {
     public:
-        explicit Discrete(const Eigen::Matrix<double, Eigen::Dynamic, 2> &probabilities_matrix,
-                              std::string sampling_algorithm = "inversion");
+        explicit DiscreteInversion(const Eigen::Matrix<double, Eigen::Dynamic, 2> &probabilities_matrix);
 
-        double sample() const override;
-
-        double sampleInversion() const;
+        double sample() const;
 
         double getExpectationValue() const;
     private:
@@ -58,7 +57,51 @@ namespace ProbabilityDist {
         // generate cdf for sampling
         Eigen::Matrix<double, Eigen::Dynamic, 2> generateCDF() const;
 
-        int findIndexOfNextSmallestValue(double x) const;
+    };
+
+    struct IntervalData {
+        double x_i;
+        double x_i_1;
+        double y_i;
+        double y_i_1;
+        double a_i;
+        double b_i;
+    };
+
+    class ContinuousInversion {
+    public:
+        ContinuousInversion() = default;
+        explicit ContinuousInversion(std::function<double(double, double)> &PDF, Eigen::VectorXd &energies, double x_min, double x_max);
+
+        double sample(double E) const;
+
+    private:
+        std::function<double(double, double)> PDF_;
+        std::vector<Eigen::Array<double, Eigen::Dynamic, 2>> CDF_;
+        Eigen::VectorXd energies_;
+        std::vector<Eigen::Array<double, Eigen::Dynamic, 2>> interp_parameters_;
+        double x_min_;
+        double x_max_;
+        ProbabilityDist::Uniform uniform_dist_;
+
+        void normalizePDF();
+
+        double getXFromY(int energy_index, double y) const;
+
+        void initializeCDFAndInterpolationParameters();
+
+        Eigen::Array<double, Eigen::Dynamic, 2> calculateInterpolationParametersPerEnergy(
+                double E, Eigen::Array<double, Eigen::Dynamic, 2> CDF_RITA_PER_ENERGY);
+
+        Eigen::Array<double, Eigen::Dynamic, 2> getMinimizedErrorCDFPerEnergy(double E, double err_thresh);
+
+        Eigen::Array<double, Eigen::Dynamic, 2> generateCDFPerEnergy(double E, Eigen::VectorXd x_grid);
+
+        double getInterpErrorOverInterval(double E, IntervalData id) const;
+
+        double getPDFFromCDFOverInterval(double E, double x, IntervalData id) const;
+
+        double getEta(double x, IntervalData id) const;
     };
 }
 #endif

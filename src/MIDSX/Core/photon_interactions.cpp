@@ -1,10 +1,5 @@
 #include "Core/photon_interactions.h"
 
-namespace {
-    // constants
-    const double ALPHA = ELECTRON_REST_MASS/(sqrt(2)*PLANCK_CONSTANT*SPEED_OF_LIGHT*1E8); // in inverse angstroms
-}
-
 Eigen::MatrixXd PhotonInteractionHelpers::mergeMatrices(std::vector<Eigen::MatrixXd>& matrices) {
     std::vector<double> merged;
 
@@ -53,16 +48,10 @@ double PhotoelectricEffect::interact(Particle& photon, Material& material) {
 }
 
 double CoherentScattering::interact(Particle& photon, Material& material) {
-    // get coherent scattering form factor
-    Eigen::MatrixXd form_factor_matrix = material.getData().getCoherentFormFactorMatrix();
 
-    double k = photon.getEnergy()/ELECTRON_REST_MASS; // unitless
+    double mu = material.getData().sampleCoherentScatteringDCS(photon.getEnergy());
 
-    double x_min = 0;
-    double x_max = ALPHA*k*sqrt(2);
-
-    ProbabilityDist::Discrete form_factor_dist = createFormFactorDistribution(form_factor_matrix, x_min, x_max);
-    double theta = sampleThetaFromCoherentScatteringDCS(form_factor_dist, x_max);
+    double theta = acos(mu);
     // sample phi (0, 2pi)
     double phi = 2*PI*uniform_dist_.sample();
     // rotate photon direction
@@ -92,13 +81,17 @@ double IncoherentScattering::interact(Particle& photon, Material& material) {
     }
 }
 
-ProbabilityDist::Discrete CoherentScattering::createFormFactorDistribution(Eigen::MatrixXd form_factor_matrix, double x_min, double x_max) {
-    Eigen::MatrixXd restricted_form_factor_matrix = PhotonInteractionHelpers::getBlockByRowValue(form_factor_matrix, x_min, x_max*x_max, 0);
-    ProbabilityDist::Discrete form_factor_dist(restricted_form_factor_matrix);
+ProbabilityDist::DiscreteInversion CoherentScattering::createFormFactorDistribution(Eigen::MatrixXd form_factor_matrix, double x_max) {
+    // get CDF = int F(x, Z)^2 dx^2 from 0 to x_max^2
+    // square first column of form factor matrix
+    form_factor_matrix.col(1) = form_factor_matrix.col(1).array().square();
+
+    Eigen::MatrixXd restricted_form_factor_matrix = PhotonInteractionHelpers::getBlockByRowValue(form_factor_matrix, 0, x_max, 0);
+    ProbabilityDist::DiscreteInversion form_factor_dist(restricted_form_factor_matrix);
     return form_factor_dist;
 }
 
-double CoherentScattering::sampleThetaFromCoherentScatteringDCS(const ProbabilityDist::Discrete& form_factor_dist, double x_max) {
+double CoherentScattering::sampleThetaFromCoherentScatteringDCS(const ProbabilityDist::DiscreteInversion& form_factor_dist, double x_max) {
     double theta;
     while (true) {
         double sampled_x_squared = form_factor_dist.sample();
