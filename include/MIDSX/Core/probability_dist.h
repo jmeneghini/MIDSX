@@ -77,6 +77,7 @@ namespace ProbabilityDist {
 
     private:
         std::function<double(double, double)> PDF_;
+        std::function<double(double, double)> normalized_PDF_;
         std::vector<Eigen::Array<double, Eigen::Dynamic, 2>> CDF_;
         Eigen::VectorXd energies_;
         std::vector<Eigen::Array<double, Eigen::Dynamic, 2>> interp_parameters_;
@@ -84,7 +85,7 @@ namespace ProbabilityDist {
         double x_max_;
         ProbabilityDist::Uniform uniform_dist_;
 
-        void normalizePDF();
+        void normalizePDF(double E);
 
         double getXFromY(int energy_index, double y) const;
 

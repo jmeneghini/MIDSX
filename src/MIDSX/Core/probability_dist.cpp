@@ -5,7 +5,7 @@ thread_local std::mt19937 ProbabilityDist::Uniform::generator_(std::random_devic
 
 int ProbabilityDistHelpers::findIndexOfNextSmallestValue(double x, const Eigen::VectorXd &vector) {
     auto lower_bound_it = std::lower_bound(vector.data(), vector.data() + vector.size(), x);
-    return lower_bound_it - vector.data();
+    return lower_bound_it - vector.data() - 1;
 }
 
 ProbabilityDist::DiscreteInversion::DiscreteInversion(const Eigen::Matrix<double, Eigen::Dynamic, 2> &probabilities_matrix)
@@ -19,6 +19,9 @@ double ProbabilityDist::DiscreteInversion::sample() const {
     double sample = uniform_dist_.sample();
     Eigen::VectorXd cdf = cdf_matrix_.col(1);
     int index = ProbabilityDistHelpers::findIndexOfNextSmallestValue(sample, cdf);
+    if (index < 0) {
+        return cdf_matrix_(0, 0);
+    }
     return cdf_matrix_(index, 0);
 }
 
@@ -65,6 +68,7 @@ ProbabilityDist::ContinuousInversion::ContinuousInversion(std::function<double(d
 
 double ProbabilityDist::ContinuousInversion::sample(double E) const {
     // get CDF and interpolation parameters for E
+    // wil cause issues if E is not in energies_
     int lower_index = ProbabilityDistHelpers::findIndexOfNextSmallestValue(E, energies_);
     int upper_index = lower_index + 1;
 
@@ -91,7 +95,7 @@ double ProbabilityDist::ContinuousInversion::getXFromY(int energy_index, double 
         // y is greater than max y
         return x_max_;
     }
-    else if (y_i_index == 0) {
+    else if (y_i_index < 0) {
         // y is less than min y
         return x_min_;
     }
@@ -112,11 +116,12 @@ double ProbabilityDist::ContinuousInversion::getXFromY(int energy_index, double 
 }
 
 void ProbabilityDist::ContinuousInversion::initializeCDFAndInterpolationParameters() {
+
     for (int i = 0; i < energies_.size(); ++i) {
+        // normalize PDF for each energy
+        normalizePDF(energies_(i));
         // generate CDF for each energy
-        Eigen::Array<double, Eigen::Dynamic, 2> CDF_PER_ENERGY = getMinimizedErrorCDFPerEnergy(energies_(i), 1E-5);
-        // normalize CDF
-        CDF_PER_ENERGY.col(1) /= CDF_PER_ENERGY(CDF_PER_ENERGY.rows() - 1, 1);
+        Eigen::Array<double, Eigen::Dynamic, 2> CDF_PER_ENERGY = getMinimizedErrorCDFPerEnergy(energies_(i), 1E-4);
 
         // calculate interpolation parameters for each energy
         Eigen::Array<double, Eigen::Dynamic, 2> interp_parameters_per_energy = calculateInterpolationParametersPerEnergy(
@@ -174,12 +179,12 @@ double ProbabilityDist::ContinuousInversion::getInterpErrorOverInterval(double E
     double sum = 0;
     for (int i = 1; i < N; ++i) {
         double x_k = id.x_i + i * delta_x;
-        double p = PDF_(x_k, E);
+        double p = normalized_PDF_(x_k, E);
         double p_num = getPDFFromCDFOverInterval(E, x_k, id);
         sum += abs(p - p_num);
     }
-    double eps_i = delta_x * (sum + (abs(PDF_(id.x_i_1, E) - getPDFFromCDFOverInterval(E, id.x_i_1, id))
-            + abs(PDF_(id.x_i, E) - getPDFFromCDFOverInterval(E, id.x_i, id))) / 2);
+    double eps_i = delta_x * (sum + (abs(normalized_PDF_(id.x_i_1, E) - getPDFFromCDFOverInterval(E, id.x_i_1, id))
+            + abs(normalized_PDF_(id.x_i, E) - getPDFFromCDFOverInterval(E, id.x_i, id))) / 2);
     return eps_i;
 }
 
@@ -200,9 +205,6 @@ double ProbabilityDist::ContinuousInversion::getEta(double x, IntervalData id) c
     return eta;
 }
 
-
-
-
 Eigen::Array<double, Eigen::Dynamic, 2> ProbabilityDist::ContinuousInversion::calculateInterpolationParametersPerEnergy(
         double E, Eigen::Array<double, Eigen::Dynamic, 2> CDF_RITA_PER_ENERGY) {
     // calculate a_i and b_i for E
@@ -215,8 +217,8 @@ Eigen::Array<double, Eigen::Dynamic, 2> ProbabilityDist::ContinuousInversion::ca
         double x_i_1 = CDF_RITA_PER_ENERGY(i + 1, 0);
         double y_i = CDF_RITA_PER_ENERGY(i, 1);
         double y_i_1 = CDF_RITA_PER_ENERGY(i + 1, 1);
-        double b_i = 1 - pow((y_i_1 - y_i) / (x_i_1 - x_i), 2) * (1 / (PDF_(x_i, E) * PDF_(x_i_1, E)));
-        double a_i = (y_i_1 - y_i) / (x_i_1 - x_i) * (1 / PDF_(x_i, E)) - b_i - 1;
+        double b_i = 1 - pow((y_i_1 - y_i) / (x_i_1 - x_i), 2) * (1 / (normalized_PDF_(x_i, E) * normalized_PDF_(x_i_1, E)));
+        double a_i = (y_i_1 - y_i) / (x_i_1 - x_i) * (1 / normalized_PDF_(x_i, E)) - b_i - 1;
         interp_parameters_per_energy_RITA(i, 0) = a_i;
         interp_parameters_per_energy_RITA(i, 1) = b_i;
     }
@@ -244,7 +246,7 @@ Eigen::Array<double, Eigen::Dynamic, 2> ProbabilityDist::ContinuousInversion::ge
         double sum = 0;
         for (int k = 0; k < NUM_POINTS; ++k) {
             double x_k = x + k * h;
-            double f = PDF_(x_k, E);
+            double f = normalized_PDF_(x_k, E);
             if (k == 0 || k == NUM_POINTS - 1) {
                 sum += f;
             } else if (k % 2 == 0) {
@@ -257,6 +259,28 @@ Eigen::Array<double, Eigen::Dynamic, 2> ProbabilityDist::ContinuousInversion::ge
         CDF_RITA_PER_ENERGY(j + 1, 1) = CDF_RITA_PER_ENERGY(j, 1) + h / 3 * sum;
     }
     return CDF_RITA_PER_ENERGY;
+}
+
+void ProbabilityDist::ContinuousInversion::normalizePDF(double E) {
+    // normalize PDF using simpson's rule
+    const int NUM_POINTS = 1001;
+    double h = (x_max_ - x_min_) / (NUM_POINTS - 1);
+    double sum = 0;
+    for (int k = 0; k < NUM_POINTS; ++k) {
+        double x_k = x_min_ + k * h;
+        double f = PDF_(x_k, E);
+        if (k == 0 || k == NUM_POINTS - 1) {
+            sum += f;
+        } else if (k % 2 == 0) {
+            sum += 2 * f;
+        } else {
+            sum += 4 * f;
+        }
+    }
+    double integral = h / 3 * sum;
+    normalized_PDF_ = [this, integral](double x, double E) {
+        return PDF_(x, E) / integral;
+    };
 }
 
 
