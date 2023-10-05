@@ -71,7 +71,7 @@ namespace ProbabilityDist {
     class ContinuousInversion {
     public:
         ContinuousInversion() = default;
-        explicit ContinuousInversion(std::function<double(double, double)> &PDF, Eigen::VectorXd &energies, double x_min, double x_max);
+        explicit ContinuousInversion(std::function<double(double, double)> &PDF, Eigen::VectorXd &energies, double x_min, double x_max, double err_thresh = 1E-4);
 
         double sample(double E) const;
 
@@ -83,6 +83,7 @@ namespace ProbabilityDist {
         std::vector<Eigen::Array<double, Eigen::Dynamic, 2>> interp_parameters_;
         double x_min_;
         double x_max_;
+        double err_thresh_;
         ProbabilityDist::Uniform uniform_dist_;
 
         void normalizePDF(double E);

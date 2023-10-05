@@ -57,11 +57,13 @@ Eigen::VectorXd ProbabilityDist::DiscreteInversion::cumsum(const Eigen::VectorXd
     return cumsum_vector;
 }
 
-ProbabilityDist::ContinuousInversion::ContinuousInversion(std::function<double(double, double)> &PDF, Eigen::VectorXd& energies, double x_min, double x_max) :
+ProbabilityDist::ContinuousInversion::ContinuousInversion(std::function<double(double, double)> &PDF, Eigen::VectorXd& energies,
+                                                          double x_min, double x_max, double err_thresh) :
         PDF_(PDF),
         energies_(std::move(energies)),
         x_min_(x_min),
         x_max_(x_max),
+        err_thresh_(err_thresh),
         uniform_dist_(Uniform(0.0, 1.0)) {
     initializeCDFAndInterpolationParameters();
 }
@@ -78,9 +80,8 @@ double ProbabilityDist::ContinuousInversion::sample(double E) const {
     double x_lower = getXFromY(lower_index, y);
     double x_upper = getXFromY(upper_index, y);
 
-    // interpolate x for E
-    double x = x_lower + (x_upper - x_lower) / (energies_(upper_index) - energies_(lower_index)) * (E - energies_(lower_index));
-
+    // log-log interpolate x accounting for the fact that x ranges [-1, 1], so add 1 to x
+    double x = exp(log(x_lower + 1) + (log(x_upper + 1) - log(x_lower + 1)) * (log(E) - log(energies_(lower_index))) / (log(energies_(upper_index)) - log(energies_(lower_index)))) - 1.0;
     return x;
 }
 
@@ -121,7 +122,7 @@ void ProbabilityDist::ContinuousInversion::initializeCDFAndInterpolationParamete
         // normalize PDF for each energy
         normalizePDF(energies_(i));
         // generate CDF for each energy
-        Eigen::Array<double, Eigen::Dynamic, 2> CDF_PER_ENERGY = getMinimizedErrorCDFPerEnergy(energies_(i), 1E-4);
+        Eigen::Array<double, Eigen::Dynamic, 2> CDF_PER_ENERGY = getMinimizedErrorCDFPerEnergy(energies_(i), err_thresh_);
 
         // calculate interpolation parameters for each energy
         Eigen::Array<double, Eigen::Dynamic, 2> interp_parameters_per_energy = calculateInterpolationParametersPerEnergy(

@@ -1,5 +1,6 @@
 #include <MIDSX/Core.h>
 #include <fstream>
+#include <chrono>
 
 // constants
 double x_min_RITA = 0;
@@ -17,7 +18,7 @@ int main() {
     auto data_service = DataAccessObject("data/data_sources/EPDL/EPDL.db");
     auto interaction_data = InteractionData({"Al"}, data_service);
 
-    const int N_PHOTONS = 10000000;
+    const int N_PHOTONS = 100000000;
     const double ENERGY = 60E3;
     Eigen::Vector3d position(0, 0, 0);
     Eigen::Vector3d direction(0, 0, 1);
@@ -43,18 +44,31 @@ int main() {
 
 
 
-//#pragma clang diagnostic push
-//#pragma ide diagnostic ignored "openmp-use-default-none"
-//#pragma omp parallel for
-    for (int i = 0; i < N_PHOTONS; ++i) {
-        Photon photon(position, direction, ENERGY);
-        scattering.interact(photon, material);
-        double cos_theta = photon.getDirection().dot(direction);
-        // output to .csv file
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "openmp-use-default-none"
+    auto start = std::chrono::high_resolution_clock::now();
+#pragma omp parallel
+    {
+        std::vector<double> sampled_cos_values;
         std::ofstream file;
-        file.open("/home/john/Documents/MIDSXData/experiments/interaction_validation/data_files/coherent_scattering_dist_al_60keV_RITA_2.csv", std::ios_base::app);
-        file << cos_theta << "\n";
-        file.close();
-    }
+        file.open("/home/john/Documents/MIDSXData/experiments/interaction_validation/data_files/coherent_scattering_dist_al_60keV_RITA_4.csv", std::ios_base::app);
 
+#pragma omp for
+        for (int i = 0; i < N_PHOTONS; ++i) {
+            Photon photon(position, direction, ENERGY);
+            scattering.interact(photon, material);
+            double cos_theta = photon.getDirection().dot(direction);
+
+            sampled_cos_values.push_back(cos_theta);
+        }
+#pragma omp critical
+        {
+            for(auto &val : sampled_cos_values)
+                file << val << std::endl;
+        }
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    std::cout << "Duration: " << duration << " ns" << std::endl;
+    std::cout << "Duration per photon: " << duration/N_PHOTONS << " ns" << std::endl;
 }
