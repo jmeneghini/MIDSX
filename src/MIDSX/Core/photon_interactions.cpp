@@ -60,110 +60,83 @@ double CoherentScattering::interact(Particle& photon, Material& material) {
 }
 
 double IncoherentScattering::interact(Particle& photon, Material& material) {
-    double k = photon.getEnergy()/ELECTRON_REST_MASS; // unitless
-
-    double rejection_constant = getRejectionConstant(k);
-
-    double x_max = ALPHA*k*sqrt(2);
-    double SFMax = material.getData().interpolateIncoherentScatteringFunction(x_max);
+    // Kahn's rejection method
+    double k = photon.getEnergy() / ELECTRON_REST_MASS; // unitless
+    double chi, mu, k_prime;
 
     while (true) {
         double random_number_1 = uniform_dist_.sample();
-        double x = getX(k, random_number_1);
-        double beta = x*x/(ALPHA*ALPHA*k);
-        double mu = 1 - pow(x/(ALPHA*k), 2);
-        double rejection_prob = getRejectionProb(mu, beta);
         double random_number_2 = uniform_dist_.sample();
-        double SF_value = material.getData().interpolateIncoherentScatteringFunction(x);
-        if ((SF_value * rejection_prob) >= (random_number_2 * rejection_constant * SFMax)) {
-            double theta = acos(mu);
-            double phi = 2*PI*uniform_dist_.sample();
-            photon.rotate(theta, phi);
-            double initial_energy = photon.getEnergy();
-            double resulting_energy = getResultingEnergy(mu, k);
-            photon.setEnergy(resulting_energy);
-            return initial_energy - resulting_energy;
+        double random_number_3 = uniform_dist_.sample();
+
+        if (isR1Accepted(k, random_number_1)) {
+            chi = getChiIfR1Accepted(k, random_number_2);
+            if (!isR3AcceptedIfR1Accepted(chi, random_number_3)) continue;
+        } else {
+            chi = getChiIfR1Rejected(k, random_number_2);
+            if (!isR3AcceptedIfR1Rejected(k, chi, random_number_3)) continue;
+        }
+
+        // accept/reject with scattering function
+
+        k_prime = getKPrime(k, chi);
+        mu = getMu(k, k_prime);
+        if (isAcceptedByScatteringFunction(mu, k, material)) {
+            return changeTrajectoryAndReturnEnergyForCoherentScattering(photon, mu, k, k_prime);
         }
     }
 }
 
-ProbabilityDist::DiscreteInversion CoherentScattering::createFormFactorDistribution(Eigen::MatrixXd form_factor_matrix, double x_max) {
-    // get CDF = int F(x, Z)^2 dx^2 from 0 to x_max^2
-    // square first column of form factor matrix
-    form_factor_matrix.col(1) = form_factor_matrix.col(1).array().square();
-
-    Eigen::MatrixXd restricted_form_factor_matrix = PhotonInteractionHelpers::getBlockByRowValue(form_factor_matrix, 0, x_max, 0);
-    ProbabilityDist::DiscreteInversion form_factor_dist(restricted_form_factor_matrix);
-    return form_factor_dist;
+bool IncoherentScattering::isR1Accepted(double k, double random_number_1) {
+    double R1_acceptance_prob = (1 + 2*k)/(9 + 2*k);
+    return random_number_1 <= R1_acceptance_prob;
 }
 
-double CoherentScattering::sampleThetaFromCoherentScatteringDCS(const ProbabilityDist::DiscreteInversion& form_factor_dist, double x_max) {
-    double theta;
-    while (true) {
-        double sampled_x_squared = form_factor_dist.sample();
-
-
-        double cos_theta = 1 - 2*sampled_x_squared/(x_max*x_max);
-        double random_number = uniform_dist_.sample();
-        double g = (1 + cos_theta*cos_theta)/2;
-        if (random_number < g) {
-            theta = acos(cos_theta);
-            break;
-        }
-    }
-    return theta;
+double IncoherentScattering::getChiIfR1Accepted(double k, double random_number_2) {
+    double chi = 1 + 2*k*random_number_2;
+    return chi;
 }
 
-double IncoherentScattering::getRejectionConstant(double k) {
-    if (k < 0.5) {
-        return 1.0;
-    }
-    else {
-        return (1 + 2*k)/2;
-    }
+bool IncoherentScattering::isR3AcceptedIfR1Accepted(double chi, double random_number_3) {
+    double R3_acceptance_prob = 4 * (1/chi - 1/(chi*chi));
+    return random_number_3 <= R3_acceptance_prob;
 }
 
-double IncoherentScattering::getX(double k, double random_number) {
-    return sqrt(((1 + 2*k)/(1 + 2*k*random_number) - 1)*ALPHA*ALPHA*k);
+double IncoherentScattering::getKPrime(double k, double chi) {
+    double k_prime = k/chi;
+    return k_prime;
 }
 
-double IncoherentScattering::getRejectionProb(double mu, double beta) {
-    return 0.5 * (1 + mu*mu - beta*beta/(1 + beta));
+double IncoherentScattering::getMu(double k, double k_prime) {
+    double mu = 1 + 1/k - 1/k_prime;
+    return mu;
 }
 
-double IncoherentScattering::changeTrajectoryAndReturnEnergyForCoherentScattering(Particle& photon, double mu, double k) {
+bool IncoherentScattering::isAcceptedByScatteringFunction(double mu, double k, Material& material) {
+    double x = ALPHA*k*sqrt(1-mu);
+    double max_x = ALPHA*k*sqrt(2);
+    // S(x, Z)/S(max_x, Z)
+    double accept_prob =  material.getData().interpolateIncoherentScatteringFunction(x)/material.getData().interpolateIncoherentScatteringFunction(max_x);
+    double random_number = uniform_dist_.sample();
+    return random_number <= accept_prob;
+}
+
+double IncoherentScattering::getChiIfR1Rejected(double k, double random_number_2) {
+    double chi = (1 + 2*k)/(1 + 2*k*random_number_2);
+    return chi;
+}
+
+bool IncoherentScattering::isR3AcceptedIfR1Rejected(double k, double chi, double random_number_3) {
+    double R3_acceptance_prob = pow(1/k - chi/k + 1, 2) + 1/chi;
+    return 2*random_number_3 <= R3_acceptance_prob;
+}
+
+double IncoherentScattering::changeTrajectoryAndReturnEnergyForCoherentScattering(Particle& photon, double mu, double k, double k_prime) {
     double theta = acos(mu);
     double phi = 2*PI*uniform_dist_.sample();
     photon.rotate(theta, phi);
 
-    double initial_energy = photon.getEnergy();
-    double resulting_energy = getResultingEnergy(mu, k);
-    photon.setEnergy(resulting_energy);
-    return initial_energy - resulting_energy;
+    photon.setEnergy(k_prime*ELECTRON_REST_MASS);
+    return ELECTRON_REST_MASS * (k - k_prime);
 }
 
-double IncoherentScattering::sampleMuFromH(double b, double c_0) {
-    // sample h(k, x) = a/(b-x), where x = cos(theta)
-    double random_number = uniform_dist_.sample();
-    double x = b - (b + 1) * pow(c_0 / 2, random_number);
-    return x;
-}
-
-double IncoherentScattering::getKNAcceptanceProbability(double a, double b, double mu, double k) {
-    // calculate DCS(x) and h(x)
-    double f = (1 + mu * mu + (k * k * (1 - mu) * (1 - mu)) / (1 + k * (1 - mu))) / pow(1 + k * (1 - mu), 2);
-    double h = a / (b - mu);
-    return f/h;
-}
-
-double IncoherentScattering::getSFAcceptanceProbability(double mu, double k, Material& material) {
-    double x = ALPHA*k*sqrt(1-mu);
-    double max_x = ALPHA*k*sqrt(2);
-    // S(x, Z)/S(max_x, Z)
-    return material.getData().interpolateIncoherentScatteringFunction(x)/material.getData().interpolateIncoherentScatteringFunction(max_x);
-}
-
-double IncoherentScattering::getResultingEnergy(double mu, double k) {
-    double k_prime = 1/(1 - mu + 1/k);
-    return k_prime*ELECTRON_REST_MASS;
-}

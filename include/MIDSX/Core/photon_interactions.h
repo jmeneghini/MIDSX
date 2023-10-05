@@ -22,23 +22,21 @@ public:
 class CoherentScattering : public ParticleInteractionBehavior {
 public:
     double interact(Particle& photon, Material& material) override;
-private:
-    static ProbabilityDist::DiscreteInversion createFormFactorDistribution(Eigen::MatrixXd form_factor_matrix, double x_max);
-    double sampleThetaFromCoherentScatteringDCS(const ProbabilityDist::DiscreteInversion& form_factor_dist, double x_max);
 };
 
 class IncoherentScattering : public ParticleInteractionBehavior {
 public:
     double interact(Particle& photon, Material& material) override;
 private:
-    double getRejectionConstant(double k);
-    double getX(double k, double random_number);
-    double getRejectionProb(double mu, double beta);
-    double changeTrajectoryAndReturnEnergyForCoherentScattering(Particle& photon, double mu, double k);
-    double sampleMuFromH(double b, double c_0);
-    static double getKNAcceptanceProbability(double a, double b, double mu, double k);
-    static double getSFAcceptanceProbability(double x, double k, Material& material);
-    static double getResultingEnergy(double mu, double k);
+    static bool isR1Accepted(double k, double random_number_1);
+    static double getChiIfR1Accepted(double k, double random_number_2);
+    static bool isR3AcceptedIfR1Accepted(double chi, double random_number_3);
+    static double getKPrime(double k, double chi);
+    static double getMu(double k, double k_prime);
+    bool isAcceptedByScatteringFunction(double mu, double k, Material& material);
+    double changeTrajectoryAndReturnEnergyForCoherentScattering(Particle& photon, double mu, double k, double k_prime);
+    static double getChiIfR1Rejected(double k, double random_number_2);
+    static bool isR3AcceptedIfR1Rejected(double k, double chi, double random_number_3);
 };
 
 #endif //MCXRAYTRANSPORT_PHOTON_INTERACTIONS_H
