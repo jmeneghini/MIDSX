@@ -62,21 +62,27 @@ double CoherentScattering::interact(Particle& photon, Material& material) {
 double IncoherentScattering::interact(Particle& photon, Material& material) {
     double k = photon.getEnergy()/ELECTRON_REST_MASS; // unitless
 
-    double c_0 = 2*(2*k*k + 2*k + 1)/pow(2*k + 1, 3);
-    double b = (1 + c_0/2)/(1-c_0/2);
-    double a = 2*(b-1);
+    double rejection_constant = getRejectionConstant(k);
+
+    double x_max = ALPHA*k*sqrt(2);
+    double SFMax = material.getData().interpolateIncoherentScatteringFunction(x_max);
 
     while (true) {
-        double mu = sampleMuFromH(b, c_0);
-        double kn_accept_prob = getKNAcceptanceProbability(a, b, mu, k);
-
+        double random_number_1 = uniform_dist_.sample();
+        double x = getX(k, random_number_1);
+        double beta = x*x/(ALPHA*ALPHA*k);
+        double mu = 1 - pow(x/(ALPHA*k), 2);
+        double rejection_prob = getRejectionProb(mu, beta);
         double random_number_2 = uniform_dist_.sample();
-        if (random_number_2 < kn_accept_prob) {
-            double sf_accept_prob = getSFAcceptanceProbability(mu, k, material);
-            double random_number_3 = uniform_dist_.sample();
-            if (random_number_3 < sf_accept_prob) {
-                return changeTrajectoryAndReturnEnergyForCoherentScattering(photon, mu, k);
-            }
+        double SF_value = material.getData().interpolateIncoherentScatteringFunction(x);
+        if ((SF_value * rejection_prob) >= (random_number_2 * rejection_constant * SFMax)) {
+            double theta = acos(mu);
+            double phi = 2*PI*uniform_dist_.sample();
+            photon.rotate(theta, phi);
+            double initial_energy = photon.getEnergy();
+            double resulting_energy = getResultingEnergy(mu, k);
+            photon.setEnergy(resulting_energy);
+            return initial_energy - resulting_energy;
         }
     }
 }
@@ -106,6 +112,23 @@ double CoherentScattering::sampleThetaFromCoherentScatteringDCS(const Probabilit
         }
     }
     return theta;
+}
+
+double IncoherentScattering::getRejectionConstant(double k) {
+    if (k < 0.5) {
+        return 1.0;
+    }
+    else {
+        return (1 + 2*k)/2;
+    }
+}
+
+double IncoherentScattering::getX(double k, double random_number) {
+    return sqrt(((1 + 2*k)/(1 + 2*k*random_number) - 1)*ALPHA*ALPHA*k);
+}
+
+double IncoherentScattering::getRejectionProb(double mu, double beta) {
+    return 0.5 * (1 + mu*mu - beta*beta/(1 + beta));
 }
 
 double IncoherentScattering::changeTrajectoryAndReturnEnergyForCoherentScattering(Particle& photon, double mu, double k) {

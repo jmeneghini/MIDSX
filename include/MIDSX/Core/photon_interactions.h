@@ -31,6 +31,9 @@ class IncoherentScattering : public ParticleInteractionBehavior {
 public:
     double interact(Particle& photon, Material& material) override;
 private:
+    double getRejectionConstant(double k);
+    double getX(double k, double random_number);
+    double getRejectionProb(double mu, double beta);
     double changeTrajectoryAndReturnEnergyForCoherentScattering(Particle& photon, double mu, double k);
     double sampleMuFromH(double b, double c_0);
     static double getKNAcceptanceProbability(double a, double b, double mu, double k);
