@@ -186,7 +186,17 @@ double ProbabilityDist::ContinuousInversion::getInterpErrorOverInterval(double E
     }
     double eps_i = delta_x * (sum + (abs(normalized_PDF_(id.x_i_1, E) - getPDFFromCDFOverInterval(E, id.x_i_1, id))
             + abs(normalized_PDF_(id.x_i, E) - getPDFFromCDFOverInterval(E, id.x_i, id))) / 2);
-    return eps_i;
+
+    // calc integral of p(x) dx over interval
+    double sum_norm = 0;
+    for (int i = 1; i < N; ++i) {
+        double x_k = id.x_i + i * delta_x;
+        double p = normalized_PDF_(x_k, E);
+        sum_norm += p; // p is always positive so no need for abs
+    }
+    double norm = delta_x * (sum_norm + (normalized_PDF_(id.x_i_1, E) + normalized_PDF_(id.x_i, E)) / 2);
+
+    return eps_i/norm * 100; // relative error
 }
 
 double ProbabilityDist::ContinuousInversion::getPDFFromCDFOverInterval(double E, double x, IntervalData id) const {

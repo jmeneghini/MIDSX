@@ -81,29 +81,29 @@ std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
 
 // PENCIL BEAM ROIS:
 
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(39.0/2 - 6 - 1.5, 39.0/2 - 6 - 1.5, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            surface_container));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 6 - 1.5, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            surface_container));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(39.0/2 - 3 - 1.5, 39.0/2 - 3 - 1.5, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            surface_container));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 3 - 1.5, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            surface_container));
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(39.0/2 - 6 - 1.5, 39.0/2 - 6 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 6 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(39.0/2 - 3 - 1.5, 39.0/2 - 3 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 3 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
 
     tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
             Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 180),
@@ -111,17 +111,17 @@ std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
             Eigen::Vector3d(0, 3, 0),
             surface_container));
 
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(39.0/2 + 3 - 1.5, 39.0/2 + 3 - 1.5, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            surface_container));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(39.0/2 + 6 - 1.5, 39.0/2 + 6 - 1.5, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            surface_container));
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(39.0/2 + 3 - 1.5, 39.0/2 + 3 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(39.0/2 + 6 - 1.5, 39.0/2 + 6 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
 
     return tallies;
 }
@@ -199,10 +199,10 @@ Eigen::MatrixXd processEnergySpectrum() {
 PhotonSource initializeSource() {
     auto energy_spectrum = processEnergySpectrum();
 
-    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
-    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<PolyenergeticSpectrum>(poly_spectrum);
-//    MonoenergeticSpectrum mono_spectrum(56.4E3);
-//    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
+//    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
+//    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<PolyenergeticSpectrum>(poly_spectrum);
+    MonoenergeticSpectrum mono_spectrum(56.4E3);
+    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
 
     std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(Eigen::Vector3d(
             39.0/2, 39.0/2, 180)));
@@ -332,51 +332,6 @@ void displaySurfaceTallyResults(const std::vector<std::unique_ptr<SurfaceTally>>
     }
 }
 
-//void displayResults(const std::vector<std::shared_ptr<Tally>>& tallies, int N_photons, InteractionData& interaction_data, ComputationalDomain& comp_domain) {
-//    int i = 1;
-//    for (auto& tally : tallies) {
-//        auto quantity_container = tally->getQuantityContainer();
-//        quantity_container->processMeasurements();
-//        auto quantity = quantity_container->getTallyData();
-////        auto primary_air_kerma = quantity_container->getPrimaryAirKerma(interaction_data, 3, energy_spectrum.col(0));
-//
-//        std::cout << "Number of total photons at detector " << i << ": " << quantity.number_of_particles << std::endl;
-//        std::cout << "Number of primary photons at detector " << i << ": " << quantity.number_of_primary_particles << std::endl;
-//        std::cout << "Number of secondary photons at detector " << i << ": " << quantity.number_of_secondary_particles << std::endl;
-//        std::cout << "Primary energy per incident photon (eV per photon) at detector " << i << ": " <<  std::accumulate(quantity.primary_incident_energy.begin(),
-//                                                                                                                        quantity.primary_incident_energy.end(),
-//                                                                                                                        0.0)
-//                                                                                                                        / N_photons << std::endl;
-//        std::cout << "Secondary energy per incident photon (eV per photon) at detector " << i << ": " <<  std::accumulate(quantity.secondary_incident_energy.begin(),
-//                                                                                                                          quantity.secondary_incident_energy.end(),
-//                                                                                                                          0.0)
-//                                                                                                          / N_photons << std::endl;
-//        std::cout << "Single coherent energy per incident photon (eV per photon) at detector " << i << ": " <<  std::accumulate(quantity.single_coherent_incident_energy.begin(),
-//                                                                                                                          quantity.single_coherent_incident_energy.end(),
-//                                                                                                                          0.0)
-//                                                                                                          / N_photons << std::endl;
-//        std::cout << "Single incoherent energy per incident photon (eV per photon) at detector " << i << ": " <<  std::accumulate(quantity.single_incoherent_incident_energy.begin(),
-//                                                                                                                          quantity.single_incoherent_incident_energy.end(),
-//                                                                                                                          0.0)
-//                                                                                                          / N_photons << std::endl;
-//        std::cout << "Multiple scatter energy per incident photon (eV per photon) at detector " << i << ": " <<  std::accumulate(quantity.multiple_scatter_incident_energy.begin(),
-//                                                                                                                          quantity.multiple_scatter_incident_energy.end(),
-//                                                                                                                          0.0)
-//                                                                                                          / N_photons << std::endl;
-//        std::cout << "Energy deposited per incident photon (eV per photon) at detector " << i << ": " <<  std::accumulate(quantity.energy_deposition.begin(),
-//                                                                                                                          quantity.energy_deposition.end(),
-//                                                                                                                          0.0)
-//                                                                                                          / N_photons << std::endl;
-//        i++;
-//    }
-//    VoxelGrid& voxel_grid = comp_domain.getVoxelGridN(0);
-//    auto materials_dose = voxel_grid.getEnergyDepositedInMaterials();
-//    for (auto& material_dose : materials_dose) {
-//        std::cout << material_dose.first << ": " << material_dose.second / N_photons << std::endl;
-//    }
-//    std::cout << "Total dose: " << voxel_grid.getTotalEnergyDeposited() / N_photons << std::endl;
-//}
-
 int main() {
     auto data_service = setupDataService();
     auto materials = initializeMaterials();
@@ -397,8 +352,6 @@ int main() {
 
     displaySurfaceTallyResults(physics_engine.getSurfaceTallies(), NUM_OF_PHOTONS, comp_domain);
     displayVolumeTallyResults(physics_engine.getVolumeTallies(), NUM_OF_PHOTONS, comp_domain);
-
-//    displayResults(tallies, 10000000, interaction_data, comp_domain);
 
     return 0;
 }

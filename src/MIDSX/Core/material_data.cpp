@@ -69,7 +69,7 @@ void MaterialData::setCoherentScatteringDCSDistribution() {
     // get energy array
     Eigen::VectorXd energy_values = getIncoherentScatteringCrossSectionMatrix().col(0);
     std::function<double(double, double)> PDF_function = PDF;
-    coherent_scattering_dcs_dist_ = ProbabilityDist::ContinuousInversion(PDF_function, energy_values, -1, 1, 1E-7);
+    coherent_scattering_dcs_dist_ = ProbabilityDist::ContinuousInversion(PDF_function, energy_values, -1, 1, 0.01);
 }
 
 Eigen::Matrix<double, Eigen::Dynamic, 2> MaterialData::getTotalCrossSectionsMatrixFromInteractionData() {

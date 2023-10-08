@@ -18,7 +18,7 @@ int main() {
     auto data_service = DataAccessObject("data/data_sources/EPDL/EPDL.db");
     auto interaction_data = InteractionData({"Al"}, data_service);
 
-    const int N_PHOTONS = 100000000;
+    const int N_PHOTONS = 10000000;
     const double ENERGY = 60E3;
     Eigen::Vector3d position(0, 0, 0);
     Eigen::Vector3d direction(0, 0, 1);
@@ -51,7 +51,7 @@ int main() {
     {
         std::vector<double> sampled_cos_values;
         std::ofstream file;
-        file.open("/home/john/Documents/MIDSXData/experiments/interaction_validation/data_files/coherent_scattering_dist_al_60keV_RITA_4.csv", std::ios_base::app);
+        file.open("/home/john/Documents/MIDSXData/experiments/interaction_validation/data_files/coherent_scattering_dist_al_60keV_RITA_1E-2_percent.csv", std::ios_base::app);
 
 #pragma omp for
         for (int i = 0; i < N_PHOTONS; ++i) {
