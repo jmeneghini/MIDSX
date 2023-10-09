@@ -2,9 +2,11 @@
 #include <fstream>
 #include <chrono>
 
-
-
 int main() {
+
+    Eigen::Vector3d body_origin(28.730854637602084, 28.730854637602084, 155.0);
+    Eigen::Vector3d dim_space(96.46170927520417, 96.46170927520417, 180.0);
+
 
     const int N_PHOTONS = 100000000;
     const double ENERGY = 60E3;
@@ -18,11 +20,11 @@ int main() {
     std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
 
     std::unique_ptr<Directionality> directionality = std::make_unique<RectangularIsotropicDirectionality>(
-            RectangularIsotropicDirectionality(directionality_point,
-                                               Eigen::Vector3d(39.0, 0, 0),
-                                               Eigen::Vector3d(0, 39.0, 0)));
-
-    std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(PointGeometry(source_position));
+            RectangularIsotropicDirectionality(body_origin + Eigen::Vector3d(0.0, 0.0, 25.0),
+                                               Eigen::Vector3d(39.0, 0.0, 0.0),
+                                               Eigen::Vector3d(0.0, 39.0, 0.0)));
+    std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(
+            PointGeometry(Eigen::Vector3d(dim_space.x()/2.0, 0.0, 0.0)));
 
     PhotonSource source(std::move(spectrum), std::move(directionality), std::move(geometry));
 
@@ -44,7 +46,7 @@ int main() {
     {
         std::vector<Eigen::Vector3d> sampled_points;
         std::ofstream file;
-        file.open("/home/john/Documents/MIDSXData/experiments/source_validation/data_files/radiography_isotropic_dist.csv", std::ios_base::app);
+        file.open("/home/john/Documents/MIDSXData/experiments/source_validation/data_files/radiography_isotropic_dist_15_deg.csv", std::ios_base::app);
 
 #pragma omp for
         for (int i = 0; i < N_PHOTONS; ++i) {
