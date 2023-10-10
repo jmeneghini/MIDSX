@@ -77,10 +77,11 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon, std::vector<TempSurfa
         temp_voxel_data.energy_deposited = energy_deposited;
         temp_volume_tally_data.energy_deposited = energy_deposited;
         temp_volume_tally_data.final_photon = photon;
+
+        temp_voxel_data_per_photon.push_back(temp_voxel_data); // not in updateTempTallyPerPhoton because of out of bounds case
     }
     updateTempTallyPerPhoton(temp_surface_tally_data_per_photon, temp_volume_tally_data_per_photon,
                              temp_surface_tally_data, temp_volume_tally_data);
-    temp_volume_tally_data_per_photon.push_back(temp_volume_tally_data); // not in updateTempTallyPerPhoton because of out of bounds case
 }
 
 

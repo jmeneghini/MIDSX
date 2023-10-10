@@ -81,47 +81,47 @@ std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
 
 // PENCIL BEAM ROIS:
 
-    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-            Eigen::Vector3d(39.0/2 - 6 - 1.5, 39.0/2 - 6 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            surface_container));
-
-    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 6 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            surface_container));
-
-    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-            Eigen::Vector3d(39.0/2 - 3 - 1.5, 39.0/2 - 3 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            surface_container));
-
-    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 3 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            surface_container));
-
-    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            surface_container));
-
-    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-            Eigen::Vector3d(39.0/2 + 3 - 1.5, 39.0/2 + 3 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            surface_container));
-
-    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-            Eigen::Vector3d(39.0/2 + 6 - 1.5, 39.0/2 + 6 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            surface_container));
+//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+//            Eigen::Vector3d(39.0/2 - 6 - 1.5, 39.0/2 - 6 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            surface_container));
+//
+//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 6 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            surface_container));
+//
+//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+//            Eigen::Vector3d(39.0/2 - 3 - 1.5, 39.0/2 - 3 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            surface_container));
+//
+//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 3 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            surface_container));
+//
+//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            surface_container));
+//
+//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+//            Eigen::Vector3d(39.0/2 + 3 - 1.5, 39.0/2 + 3 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            surface_container));
+//
+//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+//            Eigen::Vector3d(39.0/2 + 6 - 1.5, 39.0/2 + 6 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            surface_container));
 
     return tallies;
 }
@@ -134,11 +134,11 @@ std::vector<std::unique_ptr<VolumeTally>> initializeVolumeTallies() {
 
     // WHOLE BODY VOI:
 
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            Eigen::Vector3d(0, 0, 155),
-//            Eigen::Vector3d(39.0, 39.0, 175),
-//            volume_container));
-//
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            Eigen::Vector3d(0, 0, 155),
+            Eigen::Vector3d(39.0, 39.0, 175),
+            volume_container));
+
 
     // BODY VOIS:
 
@@ -203,13 +203,13 @@ PhotonSource initializeSource() {
 //    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<PolyenergeticSpectrum>(poly_spectrum);
     MonoenergeticSpectrum mono_spectrum(56.4E3);
     std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
-
-    std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(Eigen::Vector3d(
-            39.0/2, 39.0/2, 180)));
-//    std::unique_ptr<Directionality> directionality = std::make_unique<RectangularIsotropicDirectionality>(
-//            RectangularIsotropicDirectionality(Eigen::Vector3d(0, 0, 180),
-//                                               Eigen::Vector3d(39.0, 0, 0),
-//                                               Eigen::Vector3d(0, 39.0, 0)));
+//
+//    std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(Eigen::Vector3d(
+//            39.0/2, 39.0/2, 180)));
+    std::unique_ptr<Directionality> directionality = std::make_unique<RectangularIsotropicDirectionality>(
+            RectangularIsotropicDirectionality(Eigen::Vector3d(0, 0, 180),
+                                               Eigen::Vector3d(39.0, 0, 0),
+                                               Eigen::Vector3d(0, 39.0, 0)));
     std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(PointGeometry(Eigen::Vector3d(39.0/2, 39.0/2, 0)));
 
     PhotonSource source(std::move(spectrum), std::move(directionality), std::move(geometry));
@@ -262,7 +262,7 @@ void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& 
                       << vector_quantity.second.getSingleIncoherentScatterValues().getSumSTD() / N_photons << std::endl;
             std::cout << "  Multiple scatter: "
                         << vector_quantity.second.getMultipleScatterValues().getSum() / N_photons << " +- "
-                        << vector_quantity.second.getMultipleScatterValues().getSumSTD() / N_photons << std::endl;
+                        << vector_quantity.second.getMultipleScatterValues().getSumSTD() / N_photons << std::endl << "\n";
         }
 
         for (auto &count_quantity: count_quantities) {
@@ -279,7 +279,7 @@ void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& 
                         << count_quantity.second.getSingleIncoherentScatterValues().getCountSTD() << std::endl;
             std::cout << "  Multiple scatter: "
                         << count_quantity.second.getMultipleScatterValues().getCount() << " +- "
-                        << count_quantity.second.getMultipleScatterValues().getCountSTD() << std::endl;
+                        << count_quantity.second.getMultipleScatterValues().getCountSTD() << std::endl << "\n";
         }
         i++;
     }
@@ -332,6 +332,19 @@ void displaySurfaceTallyResults(const std::vector<std::unique_ptr<SurfaceTally>>
     }
 }
 
+void displayVoxelData(ComputationalDomain& comp_domain, int N_photons) {
+    const int NUM_VOXEL_GRIDS = comp_domain.getNumVoxelGrids();
+    for (int i = 0; i < NUM_VOXEL_GRIDS; i++) {
+        std::cout << "Voxel Grid " << i << ":" << std::endl;
+        std::cout << "----------------" << std::endl;
+        VoxelGrid& voxel_grid = comp_domain.getVoxelGridN(i);
+        auto material_deposition = voxel_grid.getEnergyDepositedInMaterials();
+        for (auto &material: material_deposition) {
+            std::cout << "Material " << material.first << ": " << material.second/N_photons << std::endl << "\n";
+        }
+    }
+}
+
 int main() {
     auto data_service = setupDataService();
     auto materials = initializeMaterials();
@@ -344,7 +357,7 @@ int main() {
 
     PhotonSource source = initializeSource();
 
-    const int NUM_OF_PHOTONS = 100000000;
+    const int NUM_OF_PHOTONS = 10000000;
 
     std::cout << std::fixed << std::setprecision(15);
 
@@ -352,6 +365,7 @@ int main() {
 
     displaySurfaceTallyResults(physics_engine.getSurfaceTallies(), NUM_OF_PHOTONS, comp_domain);
     displayVolumeTallyResults(physics_engine.getVolumeTallies(), NUM_OF_PHOTONS, comp_domain);
+    displayVoxelData(comp_domain, NUM_OF_PHOTONS);
 
     return 0;
 }
