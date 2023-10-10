@@ -35,47 +35,47 @@ std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
 
     // FULL FIELD ROIS:
 
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(0, 0, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            surface_container));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(19.5 - 1.5, 0, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            surface_container));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(10.5 - 1.5, 10.5 - 1.5, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            surface_container));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(19.5 - 1.5, 10.5 - 1.5, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            surface_container));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            surface_container));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(28.5 - 1.5, 28.5 - 1.5, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            surface_container));
-//
-//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-//            Eigen::Vector3d(39 - 3, 39 - 3, 180),
-//            Eigen::Vector3d(3, 0, 0),
-//            Eigen::Vector3d(0, 3, 0),
-//            surface_container));
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(0, 0, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(19.5 - 1.5, 0, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(10.5 - 1.5, 10.5 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(19.5 - 1.5, 10.5 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(28.5 - 1.5, 28.5 - 1.5, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
+
+    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+            Eigen::Vector3d(39 - 3, 39 - 3, 180),
+            Eigen::Vector3d(3, 0, 0),
+            Eigen::Vector3d(0, 3, 0),
+            surface_container));
 
 
 
@@ -134,10 +134,10 @@ std::vector<std::unique_ptr<VolumeTally>> initializeVolumeTallies() {
 
     // WHOLE BODY VOI:
 
-    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-            Eigen::Vector3d(0, 0, 155),
-            Eigen::Vector3d(39.0, 39.0, 175),
-            volume_container));
+//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+//            Eigen::Vector3d(0, 0, 155),
+//            Eigen::Vector3d(39.0, 39.0, 175),
+//            volume_container));
 
 
     // BODY VOIS:
