@@ -1,0 +1,10 @@
+{
+  "dim_space": [120.0, 120.0, 26.0],
+  "background_material_id": 150,
+  "voxel_grids": [
+    {
+      "file_path": "../../data/voxels/TG_195_Case_5_Voxelized_Volume.nii.gz",
+      "origin": [44.0, 35.0, 0.0]
+    }
+  ]
+}

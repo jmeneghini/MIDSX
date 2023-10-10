@@ -78,6 +78,8 @@ std::unordered_map<int, double> VoxelGrid::getEnergyDepositedInMaterials() {
     return energyDepositedInMaterials;
 }
 
+
+
 void VoxelGrid::initializeVoxels() {
     std::unique_ptr<py::scoped_interpreter> guard;
     if (!is_python_environment_) {
