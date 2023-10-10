@@ -20,20 +20,24 @@ PhysicsEngine::PhysicsEngine(ComputationalDomain& comp_domain, InteractionData& 
 void PhysicsEngine::transportPhoton(Photon& photon) {
     std::vector<TempSurfaceTallyData> temp_surface_tally_data_per_photon;
     std::vector<TempVolumeTallyData> temp_volume_tally_data_per_photon;
+    std::vector<TempVoxelData> temp_voxel_data_per_photon;
+
     while (!photon.isTerminated()) {
-        transportPhotonOneStep(photon, temp_surface_tally_data_per_photon, temp_volume_tally_data_per_photon);
+        transportPhotonOneStep(photon, temp_surface_tally_data_per_photon, temp_volume_tally_data_per_photon, temp_voxel_data_per_photon);
     }
 #pragma omp critical
     {
-        processTallies(temp_surface_tally_data_per_photon, temp_volume_tally_data_per_photon);
-}
+        processTallies(temp_surface_tally_data_per_photon, temp_volume_tally_data_per_photon, temp_voxel_data_per_photon);
+    }
 }
 
 void PhysicsEngine::transportPhotonOneStep(Photon& photon, std::vector<TempSurfaceTallyData>& temp_surface_tally_data_per_photon,
-                                           std::vector<TempVolumeTallyData>& temp_volume_tally_data_per_photon) {
+                                           std::vector<TempVolumeTallyData>& temp_volume_tally_data_per_photon,
+                                           std::vector<TempVoxelData>& temp_voxel_data_per_photon) {
 
     TempSurfaceTallyData temp_surface_tally_data;
     TempVolumeTallyData temp_volume_tally_data;
+
     // delta tracking algorithm
     temp_surface_tally_data.initial_photon = temp_volume_tally_data.initial_photon = photon;
     double photon_energy = photon.getEnergy();
@@ -68,12 +72,15 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon, std::vector<TempSurfa
         setInteractionType(photon, current_material, total_cross_section);
         photon.setPrimary(false); // photon has interacted
         double energy_deposited = photon.interact(current_material);
-        current_voxel.dose += energy_deposited;
+
+        TempVoxelData temp_voxel_data(current_voxel);
+        temp_voxel_data.energy_deposited = energy_deposited;
         temp_volume_tally_data.energy_deposited = energy_deposited;
         temp_volume_tally_data.final_photon = photon;
     }
     updateTempTallyPerPhoton(temp_surface_tally_data_per_photon, temp_volume_tally_data_per_photon,
                              temp_surface_tally_data, temp_volume_tally_data);
+    temp_volume_tally_data_per_photon.push_back(temp_volume_tally_data); // not in updateTempTallyPerPhoton because of out of bounds case
 }
 
 
@@ -137,7 +144,8 @@ void PhysicsEngine::updateTempTallyPerPhoton(std::vector<TempSurfaceTallyData>& 
 }
 
 void PhysicsEngine::processTallies(std::vector<TempSurfaceTallyData>& temp_surface_tally_data_per_photon,
-                                   std::vector<TempVolumeTallyData>& temp_volume_tally_data_per_photon) {
+                                   std::vector<TempVolumeTallyData>& temp_volume_tally_data_per_photon,
+                                    std::vector<TempVoxelData>& temp_voxel_data_per_photon) {
     for (auto &surface_tally: surface_tallies_) {
         for (auto &temp_surface_tally_data: temp_surface_tally_data_per_photon) {
             surface_tally->processMeasurements(temp_surface_tally_data);
@@ -147,5 +155,8 @@ void PhysicsEngine::processTallies(std::vector<TempSurfaceTallyData>& temp_surfa
         for (auto &temp_volume_tally_data: temp_volume_tally_data_per_photon) {
             volume_tally->processMeasurements(temp_volume_tally_data);
         }
+    }
+    for (auto &temp_voxel_data: temp_voxel_data_per_photon) {
+        temp_voxel_data.voxel.dose += temp_voxel_data.energy_deposited;
     }
 }

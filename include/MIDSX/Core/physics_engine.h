@@ -28,7 +28,8 @@ public:
 
     // transport photon and simulate one interaction (photoelectric, coherent, or incoherent)
     void transportPhotonOneStep(Photon& photon, std::vector<TempSurfaceTallyData>& temp_surface_tally_data_per_photon,
-                                std::vector<TempVolumeTallyData>& temp_volume_tally_data_per_photon);
+                                std::vector<TempVolumeTallyData>& temp_volume_tally_data_per_photon,
+                                std::vector<TempVoxelData>& temp_voxel_data_per_photon);
 
     // set interaction type based on max cross section and total cross section of photon's current voxel
     void setInteractionType(Photon& photon, Material& material, double total_cross_section);
@@ -62,7 +63,8 @@ private:
                                     TempSurfaceTallyData& temp_surface_tally_data, TempVolumeTallyData& temp_volume_tally_data);
 
     void processTallies(std::vector<TempSurfaceTallyData>& temp_surface_tally_data_per_photon,
-                                       std::vector<TempVolumeTallyData>& temp_volume_tally_data_per_photon);
+                                       std::vector<TempVolumeTallyData>& temp_volume_tally_data_per_photon,
+                                       std::vector<TempVoxelData>& temp_voxel_data_per_photon);
 };
 
 #endif

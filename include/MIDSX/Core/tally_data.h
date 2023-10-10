@@ -2,6 +2,14 @@
 #define MCXRAYTRANSPORT_TALLY_DATA_H
 
 #include "photon.h"
+#include "voxel.h"
+
+struct TempVoxelData {
+    Voxel& voxel;
+    double energy_deposited = 0.0;
+
+    explicit TempVoxelData(Voxel& voxel) : voxel(voxel) {}
+};
 
 struct TempSurfaceTallyData {
     double free_path = 0.0;
