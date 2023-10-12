@@ -7,7 +7,7 @@
   "background_material_id": 3,
   "voxel_grids": [
     {
-      "file_path": "../../data/voxels/al_hvl_100kVp.nii.gz",
+      "file_path": "../../data/voxels/al_hvl_30kVp.nii.gz",
       "origin": [0, 0, 10]
     }
   ]

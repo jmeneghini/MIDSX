@@ -13,7 +13,7 @@ DataAccessObject setupDataService() {
 std::vector<std::string> initializeMaterials() {
     std::vector<std::string> materials = {};
 //    materials.emplace_back("Tissue, Soft (ICRU-46)");
-//    materials.emplace_back("Al");
+    materials.emplace_back("Al");
     materials.emplace_back("Air, Dry (near sea level)");
     return materials;
 }
@@ -102,9 +102,9 @@ int main() {
 
     PhotonSource source = initializeSource();
 
-    runSimulation(source, physics_engine, 1000000);
+    runSimulation(source, physics_engine, 10000000);
 
-    displayResults(physics_engine.getSurfaceTallies(), 1000000, interaction_data);
+    displayResults(physics_engine.getSurfaceTallies(), 10000000, interaction_data);
 
     return 0;
 }

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(radiography)
+project(long_body)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp") # turn on OpenMP
 
@@ -14,6 +14,4 @@ find_package(MIDSX REQUIRED)
 
 set(COMMON_LIBS pybind11::embed MIDSX::MIDSX)
 
-create_executable(radiography radiography.cpp)
-create_executable(radiography_test radiography_test.cpp)
-create_executable(radiography_15_degrees radiography_15_degrees.cpp)
+create_executable(long_body long_body.cpp)

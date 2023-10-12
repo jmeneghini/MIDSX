@@ -6,14 +6,14 @@
 
 namespace py = pybind11;
 
-std::shared_ptr<DataAccessObject> setupDataService() {
-    return std::make_shared<DataAccessObject>("data/data_sources/EPDL/EPDL.db");
+DataAccessObject setupDataService() {
+    return DataAccessObject("data/data_sources/EPDL/EPDL.db");
 }
 
-std::vector<std::unique_ptr<Material>> initializeMaterials(const std::shared_ptr<DataAccessObject>& data_service) {
-    std::vector<std::unique_ptr<Material>> materials;
-    materials.emplace_back(std::make_unique<Material>("Al", data_service));
-    materials.emplace_back(std::make_unique<Material>("Air, Dry (near sea level)", data_service));
+std::vector<std::string> initializeMaterials() {
+    std::vector<std::string> materials;
+//    materials.emplace_back("Al");
+    materials.emplace_back("Air, Dry (near sea level)");
     return materials;
 }
 
@@ -37,11 +37,11 @@ Eigen::MatrixXd processEnergySpectrum() {
 PhotonSource initializeSource() {
     auto energy_spectrum = processEnergySpectrum();
 
-    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
-    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<PolyenergeticSpectrum>(poly_spectrum);
+//    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
+//    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<PolyenergeticSpectrum>(poly_spectrum);
 
-//    MonoenergeticSpectrum mono_spectrum(30E3);
-//    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
+    MonoenergeticSpectrum mono_spectrum(30E3);
+    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
 
     std::unique_ptr<Directionality> directionality = std::make_unique<DiscIsotropicDirectionality>(
             DiscIsotropicDirectionality(Eigen::Vector3d(2, 2, 10),
@@ -90,10 +90,10 @@ void displayResults(const std::vector<std::unique_ptr<SurfaceTally>>& surface_ta
 
 int main() {
     auto data_service = setupDataService();
-    auto materials = initializeMaterials(data_service);
+    auto materials = initializeMaterials();
     auto surface_tallies = initializeSurfaceTallies();
 
-    InteractionData interaction_data(std::move(materials), data_service);
+    InteractionData interaction_data(materials, data_service);
     ComputationalDomain comp_domain("cpp_simulations/half_value_layer/hvl.json");
     PhysicsEngine physics_engine(comp_domain, interaction_data, {}, std::move(surface_tallies));
 
@@ -101,9 +101,10 @@ int main() {
 
     PhotonSource source = initializeSource();
 
-    runSimulation(source, physics_engine, 1000000);
+    int N_PHOTONS = 10000000;
+    runSimulation(source, physics_engine, N_PHOTONS);
 
-    displayResults(physics_engine.getSurfaceTallies(), 1000000, interaction_data);
+    displayResults(physics_engine.getSurfaceTallies(), N_PHOTONS, interaction_data);
 
     return 0;
 }
