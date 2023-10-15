@@ -57,6 +57,7 @@ double DerivedQuantity::getPrimarySpectrumAirKerma(SurfaceQuantityContainer &sur
     // assumes midpoint evenly spaced energy bins
     double energy_width = energy_spectrum[1] - energy_spectrum[0];
     double total = 0;
+#pragma omp parallel for reduction(+:total)
     for (int i = 0; i < energy_spectrum.size(); i++) {
         total += getPrimaryAirKerma(surface_quantity_container, interaction_data, energy_spectrum[i], energy_width, is_cosine_weighted);
     }

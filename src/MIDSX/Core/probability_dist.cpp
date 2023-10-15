@@ -18,10 +18,12 @@ ProbabilityDist::DiscreteInversion::DiscreteInversion(const Eigen::Matrix<double
 double ProbabilityDist::DiscreteInversion::sample() const {
     double sample = uniform_dist_.sample();
     Eigen::VectorXd cdf = cdf_matrix_.col(1);
-    int index = ProbabilityDistHelpers::findIndexOfNextSmallestValue(sample, cdf);
-    if (index < 0) {
+    int index = ProbabilityDistHelpers::findIndexOfNextSmallestValue(sample, cdf) + 1;
+    if (index == 0) {
+        // sample is less than min cdf
         return cdf_matrix_(0, 0);
     }
+
     return cdf_matrix_(index, 0);
 }
 
