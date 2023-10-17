@@ -158,6 +158,8 @@ void PhysicsEngine::processTallies(std::vector<TempSurfaceTallyData>& temp_surfa
         }
     }
     for (auto &temp_voxel_data: temp_voxel_data_per_photon) {
-        temp_voxel_data.voxel.dose += temp_voxel_data.energy_deposited;
+        if (temp_voxel_data.energy_deposited != 0.0) {
+            VoxelHelpers::updateWelford(temp_voxel_data.voxel, temp_voxel_data.energy_deposited);
+        }
     }
 }

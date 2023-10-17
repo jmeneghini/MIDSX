@@ -8,6 +8,7 @@
 #include "interpolators.h"
 #include "photon_interactions.h"
 #include "volume_tally.h"
+#include "voxel.h"
 #include "surface_tally.h"
 #include <cmath>
 #include <utility>

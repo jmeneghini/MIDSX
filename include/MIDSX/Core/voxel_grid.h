@@ -41,7 +41,7 @@ public:
 
     double getTotalEnergyDeposited();
 
-    std::unordered_map <int, double> getEnergyDepositedInMaterials();
+    std::unordered_map<int, std::pair<double, double>> getEnergyDepositedInMaterials();
 
     // add to number of photons that have exited the voxel grid
     void addExit() {

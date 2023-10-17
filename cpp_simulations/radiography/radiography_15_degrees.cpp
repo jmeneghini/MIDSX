@@ -137,58 +137,58 @@ std::vector<std::unique_ptr<VolumeTally>> initializeVolumeTallies() {
 
     // WHOLE BODY VOI:
 
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            body_origin,
-//            body_origin + Eigen::Vector3d(39.0, 39.0, 20.0),
-//            volume_container));
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            body_origin,
+            body_origin + Eigen::Vector3d(39.0, 39.0, 20.0),
+            volume_container));
 
 
     // BODY VOIS:
 
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            body_origin + Eigen::Vector3d(39.0/2.0 - 1.5, 39.0/2.0 - 15.0 - 1.5, 10.0 - 1.5),
-//            body_origin + Eigen::Vector3d(39.0/2.0 + 1.5, 39.0/2.0 - 15.0 + 1.5, 10.0 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            body_origin + Eigen::Vector3d(39.0/2.0 - 15.0 - 1.5, 39.0/2.0 - 1.5, 10.0 - 1.5),
-//            body_origin + Eigen::Vector3d(39.0/2.0 - 15.0 + 1.5, 39.0/2.0 + 1.5, 10.0 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            body_origin + Eigen::Vector3d(39.0/2.0 - 1.5, 39.0/2.0 - 1.5, 10.0 - 1.5),
-//            body_origin + Eigen::Vector3d(39.0/2.0 + 1.5, 39.0/2.0 + 1.5, 10.0 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            body_origin + Eigen::Vector3d(39.0/2.0 + 15.0 - 1.5, 39.0/2.0 - 1.5, 10.0 - 1.5),
-//            body_origin + Eigen::Vector3d(39.0/2.0 + 15.0 + 1.5, 39.0/2.0 + 1.5, 10.0 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            body_origin + Eigen::Vector3d(39.0/2.0 - 1.5, 39.0/2.0 + 15.0 - 1.5, 10.0 - 1.5),
-//            body_origin + Eigen::Vector3d(39.0/2.0 + 1.5, 39.0/2.0 + 15.0 + 1.5, 10.0 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            body_origin + Eigen::Vector3d(39.0/2.0 - 1.5, 39.0/2.0 - 1.5, 10.0 - 6.0 - 1.5),
-//            body_origin + Eigen::Vector3d(39.0/2.0 + 1.5, 39.0/2.0 + 1.5, 10.0 - 6.0 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            body_origin + Eigen::Vector3d(39.0/2.0 - 1.5, 39.0/2.0 - 1.5, 10.0 - 3.0 - 1.5),
-//            body_origin + Eigen::Vector3d(39.0/2.0 + 1.5, 39.0/2.0 + 1.5, 10.0 - 3.0 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            body_origin + Eigen::Vector3d(39.0/2.0 - 1.5, 39.0/2.0 - 1.5, 10.0 + 3.0 - 1.5),
-//            body_origin + Eigen::Vector3d(39.0/2.0 + 1.5, 39.0/2.0 + 1.5, 10.0 + 3.0 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            body_origin + Eigen::Vector3d(39.0/2.0 - 1.5, 39.0/2.0 - 1.5, 10.0 + 6.0 - 1.5),
-//            body_origin + Eigen::Vector3d(39.0/2.0 + 1.5, 39.0/2.0 + 1.5, 10.0 + 6.0 + 1.5),
-//            volume_container));
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            body_origin + Eigen::Vector3d(39.0/2.0 - 1.5, 39.0/2.0 - 15.0 - 1.5, 10.0 - 1.5),
+            body_origin + Eigen::Vector3d(39.0/2.0 + 1.5, 39.0/2.0 - 15.0 + 1.5, 10.0 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            body_origin + Eigen::Vector3d(39.0/2.0 - 15.0 - 1.5, 39.0/2.0 - 1.5, 10.0 - 1.5),
+            body_origin + Eigen::Vector3d(39.0/2.0 - 15.0 + 1.5, 39.0/2.0 + 1.5, 10.0 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            body_origin + Eigen::Vector3d(39.0/2.0 - 1.5, 39.0/2.0 - 1.5, 10.0 - 1.5),
+            body_origin + Eigen::Vector3d(39.0/2.0 + 1.5, 39.0/2.0 + 1.5, 10.0 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            body_origin + Eigen::Vector3d(39.0/2.0 + 15.0 - 1.5, 39.0/2.0 - 1.5, 10.0 - 1.5),
+            body_origin + Eigen::Vector3d(39.0/2.0 + 15.0 + 1.5, 39.0/2.0 + 1.5, 10.0 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            body_origin + Eigen::Vector3d(39.0/2.0 - 1.5, 39.0/2.0 + 15.0 - 1.5, 10.0 - 1.5),
+            body_origin + Eigen::Vector3d(39.0/2.0 + 1.5, 39.0/2.0 + 15.0 + 1.5, 10.0 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            body_origin + Eigen::Vector3d(39.0/2.0 - 1.5, 39.0/2.0 - 1.5, 10.0 - 6.0 - 1.5),
+            body_origin + Eigen::Vector3d(39.0/2.0 + 1.5, 39.0/2.0 + 1.5, 10.0 - 6.0 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            body_origin + Eigen::Vector3d(39.0/2.0 - 1.5, 39.0/2.0 - 1.5, 10.0 - 3.0 - 1.5),
+            body_origin + Eigen::Vector3d(39.0/2.0 + 1.5, 39.0/2.0 + 1.5, 10.0 - 3.0 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            body_origin + Eigen::Vector3d(39.0/2.0 - 1.5, 39.0/2.0 - 1.5, 10.0 + 3.0 - 1.5),
+            body_origin + Eigen::Vector3d(39.0/2.0 + 1.5, 39.0/2.0 + 1.5, 10.0 + 3.0 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            body_origin + Eigen::Vector3d(39.0/2.0 - 1.5, 39.0/2.0 - 1.5, 10.0 + 6.0 - 1.5),
+            body_origin + Eigen::Vector3d(39.0/2.0 + 1.5, 39.0/2.0 + 1.5, 10.0 + 6.0 + 1.5),
+            volume_container));
 
     return tallies;
 }
@@ -202,10 +202,10 @@ Eigen::MatrixXd processEnergySpectrum() {
 PhotonSource initializeSource() {
     auto energy_spectrum = processEnergySpectrum();
 
-//    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
-//    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<PolyenergeticSpectrum>(poly_spectrum);
-    MonoenergeticSpectrum mono_spectrum(56.4E3);
-    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
+    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
+    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<PolyenergeticSpectrum>(poly_spectrum);
+//    MonoenergeticSpectrum mono_spectrum(56.4E3);
+//    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
 //
 //    std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(Eigen::Vector3d(
 //            39.0/2, 39.0/2, 180)));
@@ -249,9 +249,9 @@ void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& 
     for (auto &tally: volume_tallies) {
         std::cout << "Volume tally " << i << ":" << std::endl;
         std::cout << "----------------" << std::endl;
-        auto quantity_container = tally->getVolumeQuantityContainer();
-        auto vector_quantities = quantity_container.getVectorQuantities();
-        auto count_quantities = quantity_container.getCountQuantities();
+        auto& quantity_container = tally->getVolumeQuantityContainer();
+        auto& vector_quantities = quantity_container.getVectorQuantities();
+        auto& count_quantities = quantity_container.getCountQuantities();
         for (auto &vector_quantity: vector_quantities) {
             std::cout << VectorVolumeQuantityHelper::toString(vector_quantity.first) << ":" << std::endl;
             std::cout << "  Total: " << vector_quantity.second.getTotalValues().getSum() / N_photons << " +- "
@@ -296,9 +296,9 @@ void displaySurfaceTallyResults(const std::vector<std::unique_ptr<SurfaceTally>>
     for (auto &tally: surface_tallies) {
         std::cout << "Surface tally " << i << ":" << std::endl;
         std::cout << "----------------" << std::endl;
-        auto quantity_container = tally->getSurfaceQuantityContainer();
-        auto vector_quantities = quantity_container.getVectorQuantities();
-        auto count_quantities = quantity_container.getCountQuantities();
+        auto& quantity_container = tally->getSurfaceQuantityContainer();
+        auto& vector_quantities = quantity_container.getVectorQuantities();
+        auto& count_quantities = quantity_container.getCountQuantities();
         for (auto &vector_quantity: vector_quantities) {
             std::cout << VectorSurfaceQuantityHelper::toString(vector_quantity.first) << ":" << std::endl;
             std::cout << "  Total: " << vector_quantity.second.getTotalValues().getSum() / N_photons << " +- "
@@ -361,7 +361,7 @@ int main() {
 
     PhotonSource source = initializeSource();
 
-    const int NUM_OF_PHOTONS = 10000000;
+    const int NUM_OF_PHOTONS = 100000000;
 
     std::cout << std::fixed << std::setprecision(15);
 

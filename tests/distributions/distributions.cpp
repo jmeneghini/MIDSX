@@ -51,7 +51,7 @@ int main() {
     {
         std::vector<double> sampled_cos_values;
         std::ofstream file;
-        file.open("/home/john/Documents/MIDSXData/experiments/interaction_validation/data_files/coherent_scattering_dist_al_60keV_RITA_1E-2_percent.csv", std::ios_base::app);
+        file.open("/home/john/Documents/MIDSXData/experiments/interaction_validation/data_files/coherent_scattering_dist_al_60keV_RITA_1E-2_percent_test.csv", std::ios_base::app);
 
 #pragma omp for
         for (int i = 0; i < N_PHOTONS; ++i) {

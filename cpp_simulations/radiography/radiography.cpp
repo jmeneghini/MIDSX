@@ -34,48 +34,48 @@ std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
 //
 
     // FULL FIELD ROIS:
-
-    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-            Eigen::Vector3d(0, 0, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            surface_container));
-
-    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-            Eigen::Vector3d(19.5 - 1.5, 0, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            surface_container));
-
-    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-            Eigen::Vector3d(10.5 - 1.5, 10.5 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            surface_container));
-
-    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-            Eigen::Vector3d(19.5 - 1.5, 10.5 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            surface_container));
-
-    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            surface_container));
-
-    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-            Eigen::Vector3d(28.5 - 1.5, 28.5 - 1.5, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            surface_container));
-
-    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
-            Eigen::Vector3d(39 - 3, 39 - 3, 180),
-            Eigen::Vector3d(3, 0, 0),
-            Eigen::Vector3d(0, 3, 0),
-            surface_container));
+//
+//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+//            Eigen::Vector3d(0, 0, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            surface_container));
+//
+//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+//            Eigen::Vector3d(19.5 - 1.5, 0, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            surface_container));
+//
+//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+//            Eigen::Vector3d(10.5 - 1.5, 10.5 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            surface_container));
+//
+//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+//            Eigen::Vector3d(19.5 - 1.5, 10.5 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            surface_container));
+//
+//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+//            Eigen::Vector3d(19.5 - 1.5, 19.5 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            surface_container));
+//
+//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+//            Eigen::Vector3d(28.5 - 1.5, 28.5 - 1.5, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            surface_container));
+//
+//    tallies.emplace_back(std::make_unique<RectangularSurfaceTally>(
+//            Eigen::Vector3d(39 - 3, 39 - 3, 180),
+//            Eigen::Vector3d(3, 0, 0),
+//            Eigen::Vector3d(0, 3, 0),
+//            surface_container));
 
 
 
@@ -134,58 +134,58 @@ std::vector<std::unique_ptr<VolumeTally>> initializeVolumeTallies() {
 
     // WHOLE BODY VOI:
 
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            Eigen::Vector3d(0, 0, 155),
-//            Eigen::Vector3d(39.0, 39.0, 175),
-//            volume_container));
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            Eigen::Vector3d(0, 0, 155),
+            Eigen::Vector3d(39.0, 39.0, 175),
+            volume_container));
 
 
     // BODY VOIS:
 
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 15 - 1.5, 155 + 10 - 1.5),
-//            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 - 15 + 1.5, 155 + 10 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            Eigen::Vector3d(39.0/2 - 15 - 1.5, 39.0/2 - 1.5, 155 + 10 - 1.5),
-//            Eigen::Vector3d(39.0/2 - 15 + 1.5, 39.0/2 + 1.5, 155 + 10 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 - 1.5),
-//            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            Eigen::Vector3d(39.0/2 + 15 - 1.5, 39.0/2 - 1.5, 155 + 10 - 1.5),
-//            Eigen::Vector3d(39.0/2 + 15 + 1.5, 39.0/2 + 1.5, 155 + 10 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 + 15 - 1.5, 155 + 10 - 1.5),
-//            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 15 + 1.5, 155 + 10 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 - 6 - 1.5),
-//            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 - 6 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 - 3 - 1.5),
-//            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 - 3 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 + 3 - 1.5),
-//            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 + 3 + 1.5),
-//            volume_container));
-//
-//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-//            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 + 6 - 1.5),
-//            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 + 6 + 1.5),
-//            volume_container));
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 15 - 1.5, 155 + 10 - 1.5),
+            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 - 15 + 1.5, 155 + 10 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            Eigen::Vector3d(39.0/2 - 15 - 1.5, 39.0/2 - 1.5, 155 + 10 - 1.5),
+            Eigen::Vector3d(39.0/2 - 15 + 1.5, 39.0/2 + 1.5, 155 + 10 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 - 1.5),
+            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            Eigen::Vector3d(39.0/2 + 15 - 1.5, 39.0/2 - 1.5, 155 + 10 - 1.5),
+            Eigen::Vector3d(39.0/2 + 15 + 1.5, 39.0/2 + 1.5, 155 + 10 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 + 15 - 1.5, 155 + 10 - 1.5),
+            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 15 + 1.5, 155 + 10 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 - 6 - 1.5),
+            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 - 6 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 - 3 - 1.5),
+            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 - 3 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 + 3 - 1.5),
+            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 + 3 + 1.5),
+            volume_container));
+
+    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+            Eigen::Vector3d(39.0/2 - 1.5, 39.0/2 - 1.5, 155 + 10 + 6 - 1.5),
+            Eigen::Vector3d(39.0/2 + 1.5, 39.0/2 + 1.5, 155 + 10 + 6 + 1.5),
+            volume_container));
 
         return tallies;
 }
@@ -199,10 +199,10 @@ Eigen::MatrixXd processEnergySpectrum() {
 PhotonSource initializeSource() {
     auto energy_spectrum = processEnergySpectrum();
 
-//    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
-//    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<PolyenergeticSpectrum>(poly_spectrum);
-    MonoenergeticSpectrum mono_spectrum(56.4E3);
-    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
+    PolyenergeticSpectrum poly_spectrum(energy_spectrum);
+    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<PolyenergeticSpectrum>(poly_spectrum);
+//    MonoenergeticSpectrum mono_spectrum(56.4E3);
+//    std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
 //
 //    std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(Eigen::Vector3d(
 //            39.0/2, 39.0/2, 180)));
@@ -357,7 +357,7 @@ int main() {
 
     PhotonSource source = initializeSource();
 
-    const int NUM_OF_PHOTONS = 10000000;
+    const int NUM_OF_PHOTONS = 100000000;
 
     std::cout << std::fixed << std::setprecision(15);
 
