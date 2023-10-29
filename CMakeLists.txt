@@ -2,13 +2,12 @@ cmake_minimum_required(VERSION 3.10)
 project(MIDSX VERSION 0.1.0 LANGUAGES CXX)
 
 include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-if(CMAKE_BUILD_TYPE MATCHES Release)
-    message(STATUS "Release build.")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
-endif()
+find_package(OpenMP REQUIRED)
 
 set(SOURCE_DIR src/MIDSX)
 
@@ -19,6 +18,12 @@ file(GLOB_RECURSE SOURCES "${SOURCE_DIR}/*.cpp")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_library(MIDSX STATIC ${SOURCES})
+
+if(CMAKE_BUILD_TYPE MATCHES Release)
+    message(STATUS "Release build. Parallelization enabled.")
+    find_package(OpenMP REQUIRED)
+    target_link_libraries(MIDSX PUBLIC OpenMP::OpenMP_CXX)
+endif()
 
 target_include_directories(MIDSX PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${INCLUDE_DIR}>
@@ -36,9 +41,13 @@ endif()
 
 
 # Specify the Python interpreter
-set(Python3_EXECUTABLE "/home/john/Documents/MIDSX/env/bin/python")
-find_package(Python3 3.10 EXACT REQUIRED COMPONENTS Interpreter Development)
-target_include_directories(MIDSX PRIVATE ${Python3_INCLUDE_DIRS})
+find_package(Python3 COMPONENTS Interpreter Development)
+if(Python3_FOUND)
+    message(STATUS "Python3 found with target Python3::Python")
+    target_link_libraries(MIDSX PUBLIC Python3::Python)
+else()
+    message(WARNING "Python3 not found")
+endif()
 
 # Find Boost
 find_package(Boost REQUIRED)
@@ -55,7 +64,6 @@ endif()
 target_link_libraries(MIDSX PUBLIC ${SQLITE3_LIBRARY})
 
 # Find the PyBind11 libraries
-list(APPEND CMAKE_PREFIX_PATH "/home/john/Documents/MIDSX/env/lib/python3.10/site-packages/pybind11/share/cmake")
 find_package(pybind11 REQUIRED)
 target_link_libraries(MIDSX PRIVATE pybind11::embed)
 

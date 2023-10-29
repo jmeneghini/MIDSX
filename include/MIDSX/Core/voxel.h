@@ -7,7 +7,7 @@ struct Voxel {
     uint8_t materialID = 0;
     double dose = 0.0;
     // For Welford's algorithm
-    uint count = 0;
+    unsigned int count = 0;
     float mean = 0.0;
     float M2 = 0.0;
 };
