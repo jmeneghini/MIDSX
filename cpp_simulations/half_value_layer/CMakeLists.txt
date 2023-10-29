@@ -1,12 +1,17 @@
 cmake_minimum_required(VERSION 3.10)
 project(hvl)
 
-if(CMAKE_BUILD_TYPE MATCHES Release)
-    message(STATUS "Release build.")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
-endif()
+find_package(OpenMP REQUIRED)
 
-list(APPEND CMAKE_PREFIX_PATH "/home/john/Documents/MIDSX/env/lib/python3.10/site-packages/pybind11/share/cmake")
+function(create_executable EXE_NAME SRC_FILE)
+    add_executable(${EXE_NAME} ${SRC_FILE})
+    target_link_libraries(${EXE_NAME} PRIVATE ${COMMON_LIBS})
+    if(CMAKE_BUILD_TYPE MATCHES Release)
+        message(STATUS "Release build. Parallelization enabled.")
+        target_link_libraries(${EXE_NAME} PUBLIC OpenMP::OpenMP_CXX)
+    endif()
+endfunction()
+
 find_package(pybind11 REQUIRED)
 find_package(MIDSX REQUIRED)
 

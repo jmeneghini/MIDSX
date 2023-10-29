@@ -15,12 +15,7 @@ endfunction()
 
 find_package(pybind11 REQUIRED)
 find_package(MIDSX REQUIRED)
-# check if MIDSX was found
-if(NOT MIDSX_FOUND)
-    message(FATAL_ERROR "MIDSX not found. Please set MIDSX_DIR.")
-endif()
-# print MIDSX directory
-message(STATUS "MIDSX_DIR: ${MIDSX_DIR}")
+
 
 set(COMMON_LIBS pybind11::embed MIDSX::MIDSX)
 

@@ -40,14 +40,29 @@ endif()
 
 
 
-# Specify the Python interpreter
+# Specify the Python interpreter and link pybind11
 find_package(Python3 COMPONENTS Interpreter Development)
 if(Python3_FOUND)
     message(STATUS "Python3 found with target Python3::Python")
+
+    # Use the Python interpreter to get the pybind11 path
+    execute_process(
+            COMMAND ${Python3_EXECUTABLE} -c
+            "import pybind11; print(pybind11.get_cmake_dir())"
+            OUTPUT_VARIABLE PYBIND11_CMAKE_DIR
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+    # Use the path from the previous command to find the package
+    list(APPEND CMAKE_PREFIX_PATH ${PYBIND11_CMAKE_DIR})
+    find_package(pybind11 REQUIRED)
+
     target_link_libraries(MIDSX PUBLIC Python3::Python)
+    target_link_libraries(MIDSX PUBLIC pybind11::embed)
 else()
     message(WARNING "Python3 not found")
 endif()
+
 
 # Find Boost
 find_package(Boost REQUIRED)
@@ -64,8 +79,8 @@ endif()
 target_link_libraries(MIDSX PUBLIC ${SQLITE3_LIBRARY})
 
 # Find the PyBind11 libraries
-find_package(pybind11 REQUIRED)
-target_link_libraries(MIDSX PRIVATE pybind11::embed)
+#find_package(pybind11 REQUIRED)
+#target_link_libraries(MIDSX PRIVATE pybind11::embed)
 
 
 configure_package_config_file(
