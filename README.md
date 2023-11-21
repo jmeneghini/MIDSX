@@ -4,7 +4,7 @@
 ![Stars](https://img.shields.io/github/stars/jmeneghini/MIDSX)
 ![Issues](https://img.shields.io/github/issues/jmeneghini/MIDSX)
 ## Description
-MIDSX is a code system for simulating the propagation of X-rays through a medium. Using [EPDL](https://www-nds.iaea.org/epics/) and [NIST](https://www.nist.gov/pml/x-ray-mass-attenuation-coefficients) datasets, it samples photon free paths and interactions to propagate photons through a computational domain of specified dimensions and geometries. Geometries/bodies are defined using the [NIfTI-1 Data Format](https://nifti.nimh.nih.gov/nifti-1), which are specified in .domain JSON files. To extract results from a simulation, both Volume and Surface tallies with specifiable measurable quantities and geometries are available, along with derived quantities, such as air kerma for HVL measurements. The following project is a **WIP**, so documentation is currently not available, but it is in the works.
+MIDSX is a code system for simulating the propagation of X-rays through a medium. Using [EPDL](https://www-nds.iaea.org/epics/) and [NIST](https://www.nist.gov/pml/x-ray-mass-attenuation-coefficients) datasets, it samples photon free paths and interactions to propagate photons through a computational domain of specified dimensions and geometries. Geometries/bodies are defined using the [NIfTI-1 Data Format](https://nifti.nimh.nih.gov/nifti-1), which are specified in JSON files. To extract results from a simulation, both Volume and Surface tallies with specifiable measurable quantities and geometries are available, along with derived quantities, such as air kerma for HVL measurements. The following project is a **WIP**, so documentation is currently not available, but it is in the works.
 
 ## Getting Started
 
@@ -81,7 +81,7 @@ create_executable(project main.cpp)
 
 A typical MIDSX simulation has the following structure:
 
-* A .domain file containing scene information. This is simply a JSON file:
+* A .json file containing scene information:
 ```json
 {
   "dim_space": [
@@ -111,9 +111,9 @@ data_service = DataAccessObject("data/data_sources/EPDL/EPDL.db")
 std::vector<std::string> materials = {"Air - C5", "Heart - C5"};
 InteractionData interaction_data(materials, data_service);
 ```
-* Using the .domain file, the `ComputationalDomain` object can be initialized.
+* Using the .json file, the `ComputationalDomain` object can be initialized.
 ```C++
-ComputationalDomain comp_domain("file.domain")
+ComputationalDomain comp_domain("domain.json")
 ```
 
 * In order to make measurements, tallies must be specified. Various `SurfaceTally` and `VolumeTally` objects are available, and these objects must be supplied a `QuanityContainer` which holds `Quantity`'s to be measured by the tallies. These containers can be created manually, or predefined containers can be used via `QuanitityContainerFactory`. These created tallies must be contained as pointers in two separate vectors for surface and volume tallies.
