@@ -3,6 +3,7 @@ project(MIDSX VERSION 0.1.0 LANGUAGES CXX)
 
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
+include(AddGitSubmodule.cmake)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -27,7 +28,7 @@ target_include_directories(MIDSX PUBLIC
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 # Eigen3 submodule
-add_subdirectory(extern/eigen)
+add_git_submodule(extern/eigen)
 target_link_libraries(MIDSX PUBLIC Eigen3::Eigen)
 
 
@@ -42,7 +43,7 @@ else()
 endif()
 
 # Pybind11 submodule
-add_subdirectory(extern/pybind11)
+add_git_submodule(extern/pybind11)
 target_link_libraries(MIDSX PUBLIC pybind11::embed)
 
 
