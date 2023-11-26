@@ -19,7 +19,7 @@ On Mac, the library can be installed with brew: `brew install sqlite3`
 
 * **Python 3.8.x or higher:** If not already installed, go [here](https://www.python.org/downloads/)
 
-* **nibabel:** In order to load NifTI files, MIDSX uses the python package nibabel. It can be easily installed with pip: `pip install nibabel`
+* **nibabel:** To load NifTI files, MIDSX uses the python package nibabel. It can be easily installed with pip: `pip install nibabel`
 
 MIDSX additionally uses the following libraries via Git submodules; these do not need to be installed manually:
 
@@ -29,7 +29,7 @@ MIDSX additionally uses the following libraries via Git submodules; these do not
 
 ### Installation
 
-MIDSX has been tested on MacOS and Ubuntu. To install with the command line:
+MIDSX has been tested on macOS and Ubuntu. To install with the command line:
 
 1. Clone the repo and enter the directory
  ```sh
@@ -56,22 +56,17 @@ To use the library, configure a project with the following CMakeLists.txt struct
 cmake_minimum_required(VERSION 3.10)
 project(project_name)
 
-# needed for parallelization
-find_package(OpenMP REQUIRED)
-
 # links libraries and turns off parallellization if building in debug mode
 function(create_executable EXE_NAME SRC_FILE)
     add_executable(${EXE_NAME} ${SRC_FILE})
     target_link_libraries(${EXE_NAME} PRIVATE ${COMMON_LIBS})
-    if(CMAKE_BUILD_TYPE MATCHES Release)
-        message(STATUS "Release build. Parallelization enabled.")
-        target_link_libraries(${EXE_NAME} PUBLIC OpenMP::OpenMP_CXX)
-    endif()
 endfunction()
 
 # finds pybind11 (doesn't seem to link with library) and MIDSX
 find_package(pybind11 REQUIRED)
 find_package(MIDSX REQUIRED)
+# needed for parallelization
+find_package(OpenMP REQUIRED)
 
 # sets common libs that are linked to executable
 set(COMMON_LIBS pybind11::embed MIDSX::MIDSX)
@@ -89,7 +84,7 @@ A typical MIDSX simulation has the following structure:
     4,
     100
   ],
-  "background_material_id": 3,
+  "background_material_name": "Air, Dry (near sea level)",
   "voxel_grids": [
     {
       "file_path": "path/to/nifti/file.nii",
@@ -99,24 +94,25 @@ A typical MIDSX simulation has the following structure:
 }
 ```
 
-* An `DataAccessObject` which is used to access the SQLite database. By default, this is located
-at `MIDSX/data/data_sources/EPDL/EPDL.db`.
-```C++
-#include <MIDSX/Core.h>
-data_service = DataAccessObject("data/data_sources/EPDL/EPDL.db")
-```
-
-* With `DataAccessObject` and a vector of material names, the `InteractionData` object can be constructed. For all the available materials, see the SQLite database. I recommend [DB Browser for SQLite](https://sqlitebrowser.org/).
-```C++
-std::vector<std::string> materials = {"Air - C5", "Heart - C5"};
-InteractionData interaction_data(materials, data_service);
-```
 * Using the .json file, the `ComputationalDomain` object can be initialized.
 ```C++
 ComputationalDomain comp_domain("domain.json")
 ```
 
-* In order to make measurements, tallies must be specified. Various `SurfaceTally` and `VolumeTally` objects are available, and these objects must be supplied a `QuanityContainer` which holds `Quantity`'s to be measured by the tallies. These containers can be created manually, or predefined containers can be used via `QuanitityContainerFactory`. These created tallies must be contained as pointers in two separate vectors for surface and volume tallies.
+* The `InteractionData` object can either be manually initialized via a list of material names
+or by calling `comp_domain.getInteractionData()`, which generate an `InteractionData`
+object using the materials contained in the `ComputationalDomain` object.
+
+```C++
+std::vector<std::string> material_names = {"Air, Dry (near sea level)", "Water, Liquid"};
+InteractionData interaction_data(material_names);
+
+// or
+
+InteractionData interaction_data = comp_domain.getInteractionData();
+```
+
+* To make measurements, tallies must be specified. Various `SurfaceTally` and `VolumeTally` objects are available, and these objects must be supplied a `QuanityContainer` which holds `Quantity`'s to be measured by the tallies. These containers can be created manually, or predefined containers can be used via `QuanitityContainerFactory`. These created tallies must be contained as pointers in two separate vectors for surface and volume tallies.
 
 ```C++
 std::vector<std::unique_ptr<SurfaceTally>> surface_tallies = {}
@@ -142,35 +138,26 @@ PhysicsEngine physics_engine(comp_domain, interaction_data,
  std::move(volume_tallies), std::move(surface_tallies));
 ```
 
-* In order to run the simulation, one just needs to a way to generate photons. MIDSX uses `EnergySpectrum`, `Directionality`, and `SourceGeometry` objects to build a `PhotonSource`.
+* In order to run the simulation, one just needs a way to generate photons. MIDSX uses `EnergySpectrum`, `Directionality`, and `SourceGeometry` objects to build a `PhotonSource`.
 
 ```C++
 PolyenergeticSpectrum poly_spectrum(energy_spectrum);
-   MonoenergeticSpectrum mono_spectrum(56.4E3);
-   std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
+MonoenergeticSpectrum mono_spectrum(56.4E3);
+std::unique_ptr<EnergySpectrum> spectrum = std::make_unique<MonoenergeticSpectrum>(mono_spectrum);
 
-   std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(Eigen::Vector3d(39.0/2, 39.0/2, 180)));
+std::unique_ptr<Directionality> directionality = std::make_unique<BeamDirectionality>(BeamDirectionality(Eigen::Vector3d(39.0/2, 39.0/2, 180)));
 
 
-    std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(PointGeometry(Eigen::Vector3d(0.0, dim_space.y()/2.0, dim_space.z()/2.0)));
+std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(PointGeometry(Eigen::Vector3d(0.0, dim_space.y()/2.0, dim_space.z()/2.0)));
 
-    PhotonSource source(std::move(spectrum), std::move(directionality), std::move(geometry));
+PhotonSource source(std::move(spectrum), std::move(directionality), std::move(geometry));
 ```
 
-* Now, with `PhotonSource` and `PhysicsEngine`, you can now run a simulation in parallel.
+* Now, with `PhotonSource` and `PhysicsEngine`, you can use `runSimulation` to run the simulation.
 
 ```C++
-int j = 0;
-N_photons = 1E6;
-#pragma omp parallel for
-for (int i = 0; i < N_photons; i++) {
-    Photon photon = source.generatePhoton();
-    physics_engine.transportPhoton(photon);
-    if (i % (N_photons / 20) == 0) {
-        std::cout << "Progress: " << j << "%" << std::flush << "\r";
-        j += 5;
-    }
-}
+const int NUM_OF_PHOTONS = 1000000;
+runSimulation(source, physics_engine, NUM_OF_PHOTONS);
 ```
 
 * Data can be retrieved from the simulation via `physics_engine.getSurfaceTallies()` and `physics_engine.getVolumeTallies()`.
