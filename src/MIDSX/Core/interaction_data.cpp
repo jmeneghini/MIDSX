@@ -5,9 +5,14 @@ InteractionData::InteractionData(const std::vector<std::string>& material_names)
     initializeData();
 }
 
-std::string InteractionData::getAnyMaterialNameFromID(int id) {
+std::string InteractionData::getAnyMaterialNameFromId(int id) {
     std::string material_name = InteractionDataHelpers::convertMaterialIdToName(id, dao_);
     return material_name;
+}
+
+uint8_t InteractionData::getAnyMaterialIdFromName(std::string name) {
+    uint8_t material_id = InteractionDataHelpers::convertMaterialNameToId(name, dao_);
+    return material_id;
 }
 
 void InteractionData::initializeData() {

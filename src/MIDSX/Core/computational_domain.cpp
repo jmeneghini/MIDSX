@@ -69,7 +69,10 @@ bool ComputationalDomain::isJSON(const std::string &file_path) {
 void ComputationalDomain::setCompProperties(const json &json_object) {
     std::array<double, 3> dim_space = json_object["dim_space"];
     dim_space_ = Eigen::Map<Eigen::Vector3d>(dim_space.data());
-    background_voxel.materialID = json_object["background_material_id"];
+    // set background voxel
+    // initialize dummy interaction data object to use helper function
+    InteractionData interaction_data({});
+    background_voxel.materialID = interaction_data.getAnyMaterialIdFromName(json_object["background_material_name"]);
 }
 
 void ComputationalDomain::setVoxelGrids(const json &json_object, const std::string &json_directory_path) {
@@ -104,7 +107,7 @@ std::string ComputationalDomain::getBackgroundMaterialName() const {
     // create dummy interaction data object to use helper function
     InteractionData interaction_data({});
     int background_material_id = background_voxel.materialID;
-    return interaction_data.getAnyMaterialNameFromID(background_material_id);
+    return interaction_data.getAnyMaterialNameFromId(background_material_id);
 }
 
 

@@ -62,7 +62,7 @@ void PhysicsEngine::transportPhotonOneStep(Photon& photon, std::vector<TempSurfa
     int current_material_id = current_voxel.materialID;
 
     // get total cross section for current material
-    Material& current_material = interaction_data_.getMaterialFromID(current_material_id);
+    Material& current_material = interaction_data_.getMaterialFromId(current_material_id);
     double total_cross_section = (current_material.getData().interpolateTotalCrossSection(photon_energy));
 
     // sample delta scattering

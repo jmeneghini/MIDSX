@@ -1,6 +1,6 @@
 {
   "dim_space": [39, 39, 180],
-  "background_material_id": 3,
+  "background_material_id": "Air, Dry (near sea level)",
   "voxel_grids": [
     {
       "file_path": "../../data/voxels/radiography_body.nii.gz",

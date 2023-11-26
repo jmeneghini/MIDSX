@@ -18,8 +18,7 @@ void MaterialProperties::initializeProperties() {
 }
 
 void MaterialProperties::setMaterialId() {
-    std::string query = "SELECT MaterialID FROM Materials WHERE Name = '" + name_ + "';";
-    material_id_ = InteractionDataHelpers::castStringVector<int>(dao_.executeQuery(query))[0];
+    material_id_ = InteractionDataHelpers::convertMaterialNameToId(name_, dao_);
 }
 
 void MaterialProperties::setElementalComposition() {

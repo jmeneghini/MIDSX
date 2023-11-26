@@ -77,7 +77,7 @@ std::vector<std::string> VoxelGrid::getMaterialNames() const {
     }
     std::vector<std::string> material_names;
     for (auto &material_id: material_ids_set) {
-        material_names.push_back(interaction_data.getAnyMaterialNameFromID(material_id));
+        material_names.push_back(interaction_data.getAnyMaterialNameFromId(material_id));
     }
     return material_names;
 }

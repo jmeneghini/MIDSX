@@ -4,7 +4,7 @@
     4,
     100
   ],
-  "background_material_id": 3,
+  "background_material_name": "Air, Dry (near sea level)",
   "voxel_grids": [
     {
       "file_path": "../../data/voxels/al_hvl_100kVp.nii.gz",

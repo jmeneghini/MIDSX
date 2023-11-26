@@ -1,6 +1,6 @@
 {
   "dim_space": [40, 40, 400],
-  "background_material_id": 3,
+  "background_material_name": "Air, Dry (near sea level)",
   "voxel_grids": [
     {
       "file_path": "../../data/voxels/long_body.nii.gz",

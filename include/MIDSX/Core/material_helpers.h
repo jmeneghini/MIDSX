@@ -113,6 +113,12 @@ namespace InteractionDataHelpers {
         std::string query = "SELECT Name FROM Materials WHERE MaterialID = " + std::to_string(material_id) + ";";
         return dao.executeQuery(query)[0];
     }
+
+    // convert material name to material id
+    inline uint8_t convertMaterialNameToId(const std::string& material_name, DataAccessObject& dao) {
+        std::string query = "SELECT MaterialID FROM Materials WHERE Name = '" + material_name + "';";
+        return castStringVector<int>(dao.executeQuery(query))[0];
+    }
 }
 
 #endif //MCXRAYTRANSPORT_MATERIAL_HELPERS_H
