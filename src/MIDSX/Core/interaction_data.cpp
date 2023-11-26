@@ -21,9 +21,20 @@ void InteractionData::initializeData() {
 }
 
 void InteractionData::setMaterialMap() {
-    for (const auto& material_name : material_names_) {
-        Material temp_material(material_name, dao_);
-        material_map_.emplace(temp_material.getProperties().getMaterialId(), temp_material);
+#pragma omp parallel default(none) shared(material_map_, material_names_, dao_)
+    {
+        std::vector<Material> temp_materials;
+#pragma omp for
+        for (const auto &material_name: material_names_) {
+            Material temp_material(material_name, dao_);
+            temp_materials.emplace_back(temp_material);
+        }
+#pragma omp critical
+        {
+            for (auto &material: temp_materials) {
+                material_map_.emplace(material.getProperties().getMaterialId(), material);
+            }
+        }
     }
 }
 
