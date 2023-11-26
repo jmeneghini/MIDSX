@@ -28,5 +28,6 @@
 #include "Core/voxel.h"
 #include "Core/computational_domain.h"
 #include "Core/derived_quantities.h"
+#include "Core/run_simulation.h"
 
 #endif //MCXRAYTRANSPORT_MIDSX_H

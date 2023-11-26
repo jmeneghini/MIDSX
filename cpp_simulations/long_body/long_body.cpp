@@ -213,29 +213,6 @@ PhotonSource initializeSource() {
 }
 
 
-
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "openmp-use-default-none"
-void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_photons) {
-    int j = 0;
-    auto start = std::chrono::high_resolution_clock::now();
-//#pragma omp parallel for
-    for (int i = 0; i < N_photons; i++) {
-        Photon photon = source.generatePhoton();
-        physics_engine.transportPhoton(photon);
-        if (i % (N_photons / 20) == 0) {
-            std::cout << "Progress: " << j << "%" << std::flush << "\r";
-            j += 5;
-        }
-    }
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = end - start;
-    std::cout << "\nSimulation Time: " << elapsed.count() << " s" << std::endl;
-    std::cout << "Time per photon: " << elapsed.count() / N_photons << " s" << std::endl;
-    std::cout << "\n" << std::endl;
-}
-#pragma clang diagnostic pop
-
 void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& volume_tallies, int N_photons, ComputationalDomain& comp_domain) {
     int i = 1;
     for (auto &tally: volume_tallies) {

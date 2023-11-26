@@ -10,14 +10,6 @@ namespace py = pybind11;
 Eigen::Vector3d body_origin(28.730854637602084, 28.730854637602084, 155.0);
 Eigen::Vector3d dim_space(96.46170927520417, 96.46170927520417, 180.0);
 
-std::vector<std::string> initializeMaterials() {
-    std::vector<std::string> materials = {};
-    materials.emplace_back("Tissue, Soft (ICRU-46)");
-//    materials.emplace_back("Al");
-    materials.emplace_back("Air, Dry (near sea level)");
-    return materials;
-}
-
 std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
     std::vector<std::unique_ptr<SurfaceTally>> tallies = {};
 
@@ -216,30 +208,6 @@ PhotonSource initializeSource() {
     return source;
 }
 
-
-
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "openmp-use-default-none"
-void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_photons) {
-    int j = 0;
-    auto start = std::chrono::high_resolution_clock::now();
-#pragma omp parallel for
-    for (int i = 0; i < N_photons; i++) {
-        Photon photon = source.generatePhoton();
-        physics_engine.transportPhoton(photon);
-        if (i % (N_photons / 20) == 0) {
-            std::cout << "Progress: " << j << "%" << std::flush << "\r";
-            j += 5;
-        }
-    }
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = end - start;
-    std::cout << "\nSimulation Time: " << elapsed.count() << " s" << std::endl;
-    std::cout << "Time per photon: " << elapsed.count() / N_photons << " s" << std::endl;
-    std::cout << "\n" << std::endl;
-}
-#pragma clang diagnostic pop
-
 void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& volume_tallies, int N_photons, ComputationalDomain& comp_domain) {
     int i = 1;
     for (auto &tally: volume_tallies) {
@@ -346,12 +314,11 @@ void displayVoxelData(ComputationalDomain& comp_domain, int N_photons) {
 }
 
 int main() {
-    auto materials = initializeMaterials();
     auto surface_tallies = initializeSurfaceTallies();
     auto volume_tallies = initializeVolumeTallies();
 
-    InteractionData interaction_data(materials);
     ComputationalDomain comp_domain("cpp_simulations/radiography/radiography_15_degrees.json");
+    InteractionData interaction_data = comp_domain.getInteractionData();
     PhysicsEngine physics_engine(comp_domain, interaction_data, std::move(volume_tallies), std::move(surface_tallies));
 
     PhotonSource source = initializeSource();

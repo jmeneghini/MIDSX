@@ -6,13 +6,6 @@
 
 namespace py = pybind11;
 
-std::vector<std::string> initializeMaterials() {
-    std::vector<std::string> materials;
-    materials.emplace_back("Al");
-    materials.emplace_back("Air, Dry (near sea level)");
-    return materials;
-}
-
 std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
     std::vector<std::unique_ptr<SurfaceTally>> tallies = {};
 
@@ -51,24 +44,6 @@ PhotonSource initializeSource() {
     return source;
 }
 
-
-
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "openmp-use-default-none"
-void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int N_photons) {
-    int j = 0;
-#pragma omp parallel for
-    for (int i = 0; i < N_photons; i++) {
-        Photon photon = source.generatePhoton();
-        physics_engine.transportPhoton(photon);
-        if (i % (N_photons / 20) == 0) {
-            std::cout << "Progress: " << j << "%" << std::flush << "\r";
-            j += 5;
-        }
-    }
-}
-#pragma clang diagnostic pop
-
 void displayResults(const std::vector<std::unique_ptr<SurfaceTally>>& surface_tallies, int N_photons, InteractionData& interaction_data) {
     auto quantity_container = surface_tallies[0]->getSurfaceQuantityContainer();
     auto vector_quantities = quantity_container.getVectorQuantities();
@@ -85,11 +60,10 @@ void displayResults(const std::vector<std::unique_ptr<SurfaceTally>>& surface_ta
 }
 
 int main() {
-    auto materials = initializeMaterials();
     auto surface_tallies = initializeSurfaceTallies();
 
-    InteractionData interaction_data(materials);
     ComputationalDomain comp_domain("cpp_simulations/half_value_layer/hvl.json");
+    InteractionData interaction_data = comp_domain.getInteractionData();
     PhysicsEngine physics_engine(comp_domain, interaction_data, {}, std::move(surface_tallies));
 
 
