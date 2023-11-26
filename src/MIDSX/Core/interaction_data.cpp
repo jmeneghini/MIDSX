@@ -1,12 +1,16 @@
 #include "Core/interaction_data.h"
 
-InteractionData::InteractionData(const std::vector<std::string>& material_names, const DataAccessObject& dao) :
-        dao_(dao), material_names_(material_names) {
+InteractionData::InteractionData(const std::vector<std::string>& material_names) :
+        dao_(DataAccessObject(MIDSX_DB_PATH)), material_names_(material_names) {
     initializeData();
 }
 
+std::string InteractionData::getAnyMaterialNameFromID(int id) {
+    std::string material_name = InteractionDataHelpers::convertMaterialIdToName(id, dao_);
+    return material_name;
+}
 
-void InteractionData::initializeData() {\
+void InteractionData::initializeData() {
     setMaterialMap();
     setMaxTotalCrossSectionsAndInterpolator();
 }

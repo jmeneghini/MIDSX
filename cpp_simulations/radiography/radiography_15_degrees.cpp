@@ -10,10 +10,6 @@ namespace py = pybind11;
 Eigen::Vector3d body_origin(28.730854637602084, 28.730854637602084, 155.0);
 Eigen::Vector3d dim_space(96.46170927520417, 96.46170927520417, 180.0);
 
-DataAccessObject setupDataService() {
-    return DataAccessObject("data/data_sources/EPDL/EPDL.db");
-}
-
 std::vector<std::string> initializeMaterials() {
     std::vector<std::string> materials = {};
     materials.emplace_back("Tissue, Soft (ICRU-46)");
@@ -350,12 +346,11 @@ void displayVoxelData(ComputationalDomain& comp_domain, int N_photons) {
 }
 
 int main() {
-    auto data_service = setupDataService();
     auto materials = initializeMaterials();
     auto surface_tallies = initializeSurfaceTallies();
     auto volume_tallies = initializeVolumeTallies();
 
-    InteractionData interaction_data(materials, data_service);
+    InteractionData interaction_data(materials);
     ComputationalDomain comp_domain("cpp_simulations/radiography/radiography_15_degrees.json");
     PhysicsEngine physics_engine(comp_domain, interaction_data, std::move(volume_tallies), std::move(surface_tallies));
 

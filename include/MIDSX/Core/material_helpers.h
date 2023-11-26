@@ -48,14 +48,14 @@ namespace MaterialHelpers {
 
 namespace InteractionDataHelpers {
 
-    template <typename T>
-    inline std::vector<T> castStringVector(const std::vector<std::string>& string_vector) {
+    template<typename T>
+    inline std::vector<T> castStringVector(const std::vector<std::string> &string_vector) {
         // Create a vector of the new type
         std::vector<T> converted_vector(string_vector.size());
 
         // Convert each string to the new type
         std::transform(string_vector.begin(), string_vector.end(), converted_vector.begin(),
-                       [](const std::string& str) {
+                       [](const std::string &str) {
                            std::istringstream iss(str);
                            T value;
                            iss >> value;
@@ -66,10 +66,10 @@ namespace InteractionDataHelpers {
         return converted_vector;
     }
 
-    inline Eigen::MatrixXd mergeMatrices(std::vector<Eigen::MatrixXd>& matrices) {
+    inline Eigen::MatrixXd mergeMatrices(std::vector<Eigen::MatrixXd> &matrices) {
         std::vector<double> merged;
 
-        for (const auto& matrix : matrices) {
+        for (const auto &matrix: matrices) {
             std::vector<double> v(matrix.data(), matrix.data() + matrix.size());
             merged.insert(merged.end(), v.begin(), v.end());
         }
@@ -84,8 +84,8 @@ namespace InteractionDataHelpers {
         return result;
     }
 
-    template <typename T>
-    Eigen::MatrixXd convertNVectorsToEigenMatrix(const std::vector<std::vector<T>>& source) {
+    template<typename T>
+    Eigen::MatrixXd convertNVectorsToEigenMatrix(const std::vector<std::vector<T>> &source) {
         Eigen::MatrixXd result(source[0].size(), source.size());
 
         for (std::size_t i = 0; i < source.size(); ++i) {
@@ -95,8 +95,8 @@ namespace InteractionDataHelpers {
         return result;
     }
 
-    template <typename T>
-    std::vector<std::vector<T>> distributeNTimes(const std::vector<T>& source, int n) {
+    template<typename T>
+    std::vector<std::vector<T>> distributeNTimes(const std::vector<T> &source, int n) {
         std::vector<std::vector<T>> result(n);  // Initialize vector of vectors
 
         for (std::size_t i = 0; i < source.size(); ++i) {
@@ -104,6 +104,14 @@ namespace InteractionDataHelpers {
         }
 
         return result;
+    }
+
+    // convert material id to material name
+    inline std::string convertMaterialIdToName(int material_id, DataAccessObject &dao) {
+        // Add each element of the vector to a string if there are multiple elements
+        // (might be split into multiple lines)
+        std::string query = "SELECT Name FROM Materials WHERE MaterialID = " + std::to_string(material_id) + ";";
+        return dao.executeQuery(query)[0];
     }
 }
 

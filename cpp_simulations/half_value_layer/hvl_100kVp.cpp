@@ -6,10 +6,6 @@
 
 namespace py = pybind11;
 
-DataAccessObject setupDataService() {
-    return DataAccessObject("data/data_sources/EPDL/EPDL.db");
-}
-
 std::vector<std::string> initializeMaterials() {
     std::vector<std::string> materials = {};
 //    materials.emplace_back("Tissue, Soft (ICRU-46)");
@@ -90,11 +86,10 @@ void displayResults(const std::vector<std::unique_ptr<SurfaceTally>>& surface_ta
 }
 
 int main() {
-    auto data_service = setupDataService();
     auto materials = initializeMaterials();
     auto surface_tallies = initializeSurfaceTallies();
 
-    InteractionData interaction_data(materials, data_service);
+    InteractionData interaction_data(materials);
     ComputationalDomain comp_domain("cpp_simulations/half_value_layer/hvl.json");
     PhysicsEngine physics_engine(comp_domain, interaction_data, {}, std::move(surface_tallies));
 

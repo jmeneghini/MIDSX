@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "voxel.h"
+#include "interaction_data.h"
 #include <Eigen/Dense>
 #include <pybind11/embed.h>
 #include <pybind11/numpy.h>
@@ -38,6 +39,8 @@ public:
 
     // get voxel index from spatial position
     Eigen::Vector3i getVoxelIndex(const Eigen::Vector3d& position) const;
+
+    std::vector<std::string> getMaterialNames() const;
 
     double getTotalEnergyDeposited();
 

@@ -11,34 +11,6 @@ Eigen::Vector3d dim_space = Eigen::Vector3d(120.0, 120.0, 26.0);
 Eigen::Vector3d body_origin = Eigen::Vector3d(44.0, 35.0, 0.0);
 Eigen::Vector3d dim_body = Eigen::Vector3d(32.0, 50.0, 26.0);
 
-DataAccessObject setupDataService() {
-    return DataAccessObject("data/data_sources/EPDL/EPDL.db");
-}
-
-std::vector<std::string> initializeMaterials() {
-    std::vector<std::string> materials = {};
-    materials.emplace_back("Air - C5");
-    materials.emplace_back("Cushion/Foam - C5");
-    materials.emplace_back("Carbon fiber - C5");
-    materials.emplace_back("Soft tissue - C5");
-    materials.emplace_back("Heart - C5");
-    materials.emplace_back("Lung - C5");
-    materials.emplace_back("Liver - C5");
-    materials.emplace_back("Gallbladder - C5");
-    materials.emplace_back("Spleen - C5");
-    materials.emplace_back("Stomach - C5");
-    materials.emplace_back("Large Intestine - C5");
-    materials.emplace_back("Pancreas - C5");
-    materials.emplace_back("Adrenal - C5");
-    materials.emplace_back("Thyroid - C5");
-    materials.emplace_back("Thymus - C5");
-    materials.emplace_back("Small Intestine - C5");
-    materials.emplace_back("Esophagus - C5");
-    materials.emplace_back("Skin - C5");
-    materials.emplace_back("Breast - C5");
-    materials.emplace_back("Cortical Bone - C5");
-    return materials;
-}
 
 std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
     std::vector<std::unique_ptr<SurfaceTally>> tallies = {};
@@ -208,13 +180,11 @@ void displayVoxelData(ComputationalDomain& comp_domain, int N_photons) {
 }
 
 int main() {
-    auto data_service = setupDataService();
-    auto materials = initializeMaterials();
     auto surface_tallies = initializeSurfaceTallies();
     auto volume_tallies = initializeVolumeTallies();
 
-    InteractionData interaction_data(materials, data_service);
     ComputationalDomain comp_domain("cpp_simulations/CT_w_voxelized_solid/CT_w_voxelized_solid.json");
+    InteractionData interaction_data = comp_domain.getInteractionData();
     PhysicsEngine physics_engine(comp_domain, interaction_data, std::move(volume_tallies), std::move(surface_tallies));
 
     PhotonSource source = initializeSource();

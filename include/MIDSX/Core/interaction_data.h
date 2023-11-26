@@ -8,14 +8,20 @@
 #include <memory>
 #include <map>
 
+namespace {
+    // anonymous namespace. only accessible in this file
+    const std::string MIDSX_DB_PATH = "data/data_sources/EPDL/EPDL.db";
+}
 
 class InteractionData {
 public:
-    explicit InteractionData(const std::vector<std::string>& material_names, const DataAccessObject& dao);
+    explicit InteractionData(const std::vector<std::string>& material_names);
 
-    Material& getMaterial(int id) { return material_map_.at(id); }
+    Material& getMaterialFromID(int id) { return material_map_.at(id); }
     Eigen::Matrix<double, Eigen::Dynamic, 2> getMaxTotalCrossSectionsMatrix() const { return max_total_cs_matrix_; }
     double interpolateMaxTotalCrossSection(double energy) const { return (max_total_cs_interpolator_)(energy); }
+
+    std::string getAnyMaterialNameFromID(int id);
 private:
     DataAccessObject dao_;
     std::vector<std::string> material_names_;

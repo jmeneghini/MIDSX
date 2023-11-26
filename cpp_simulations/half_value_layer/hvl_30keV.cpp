@@ -6,17 +6,6 @@
 
 namespace py = pybind11;
 
-DataAccessObject setupDataService() {
-    return DataAccessObject("data/data_sources/EPDL/EPDL.db");
-}
-
-std::vector<std::string> initializeMaterials() {
-    std::vector<std::string> materials;
-//    materials.emplace_back("Al");
-    materials.emplace_back("Air, Dry (near sea level)");
-    return materials;
-}
-
 std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
     std::vector<std::unique_ptr<SurfaceTally>> tallies = {};
 
@@ -89,12 +78,10 @@ void displayResults(const std::vector<std::unique_ptr<SurfaceTally>>& surface_ta
 }
 
 int main() {
-    auto data_service = setupDataService();
-    auto materials = initializeMaterials();
     auto surface_tallies = initializeSurfaceTallies();
 
-    InteractionData interaction_data(materials, data_service);
     ComputationalDomain comp_domain("cpp_simulations/half_value_layer/hvl.json");
+    InteractionData interaction_data = comp_domain.getInteractionData();
     PhysicsEngine physics_engine(comp_domain, interaction_data, {}, std::move(surface_tallies));
 
 

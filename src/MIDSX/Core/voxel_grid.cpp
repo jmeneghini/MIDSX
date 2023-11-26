@@ -58,6 +58,19 @@ Eigen::Vector3i VoxelGrid::getVoxelIndex(const Eigen::Vector3d& position) const 
     return voxelIndex;
 }
 
+std::vector<std::string> VoxelGrid::getMaterialNames() const {
+    std::vector<std::string> material_names;
+    // initialize dummy interaction data object to use getMaterial function
+    InteractionData interaction_data({});
+    for (auto& voxel : voxels_) {
+        std::string material_name = interaction_data.getAnyMaterialNameFromID(voxel.materialID);
+        if (std::find(material_names.begin(), material_names.end(), material_name) == material_names.end()) {
+            material_names.push_back(material_name);
+        }
+    }
+    return material_names;
+}
+
 double VoxelGrid::getTotalEnergyDeposited() {
     double totalDose = 0.0;
     for (auto& voxel : voxels_) {

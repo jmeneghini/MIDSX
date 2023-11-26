@@ -8,6 +8,11 @@ ComputationalDomain::ComputationalDomain(const std::string &json_file_path,
     initializeCompDomain(json_file_path);
 }
 
+InteractionData ComputationalDomain::getInteractionData() const {
+    std::vector<std::string> material_names = getMaterialNames();
+    return InteractionData(material_names);
+}
+
 bool ComputationalDomain::isInComputationalDomain(const Eigen::Vector3d &position) const {
     return position.x() >= 0 && position.x() <= dim_space_.x() &&
            position.y() >= 0 && position.y() <= dim_space_.y() &&
@@ -70,15 +75,38 @@ void ComputationalDomain::setCompProperties(const json &json_object) {
 void ComputationalDomain::setVoxelGrids(const json &json_object, const std::string &json_directory_path) {
     std::vector<std::string> nifti_file_paths;
     std::vector<Eigen::Vector3d> origins;
-    for (auto &voxel_grid_json : json_object["voxel_grids"]) {
+    for (auto &voxel_grid_json: json_object["voxel_grids"]) {
         getNIFTIFilePaths(voxel_grid_json, json_directory_path, nifti_file_paths);
         getOrigins(voxel_grid_json, origins);
     }
     for (int i = 0; i < nifti_file_paths.size(); i++) {
         voxel_grids_.emplace_back(VoxelGrid(nifti_file_paths[i], is_python_environment_), origins[i]);
     }
-
 }
+
+std::vector<std::string> ComputationalDomain::getMaterialNames() const {
+    std::vector<std::string> material_names;
+    // get background material name
+    material_names.push_back(getBackgroundMaterialName());
+    // get unique material names from voxel grids
+    for (auto& voxel_grid : voxel_grids_) {
+        std::vector<std::string> voxel_grid_material_names = voxel_grid.first.getMaterialNames();
+        for (auto& material_name : voxel_grid_material_names) {
+            if (std::find(material_names.begin(), material_names.end(), material_name) == material_names.end()) {
+                material_names.push_back(material_name);
+            }
+        }
+    }
+    return material_names;
+}
+
+std::string ComputationalDomain::getBackgroundMaterialName() const {
+    // create dummy interaction data object to use helper function
+    InteractionData interaction_data({});
+    int background_material_id = background_voxel.materialID;
+    return interaction_data.getAnyMaterialNameFromID(background_material_id);
+}
+
 
 void ComputationalDomain::getNIFTIFilePaths(const json& voxel_grid_json, const std::string &json_directory_path,
                                             std::vector<std::string> &nifti_file_paths) {

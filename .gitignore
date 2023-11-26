@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+/cpp_simulations/long_body/cmake-build-debug/
+/cpp_simulations/long_body/cmake-build-debugopenmp/
+/cpp_simulations/long_body/cmake-build-release/
