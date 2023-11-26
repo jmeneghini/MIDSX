@@ -59,17 +59,29 @@ Eigen::Vector3i VoxelGrid::getVoxelIndex(const Eigen::Vector3d& position) const 
 }
 
 std::vector<std::string> VoxelGrid::getMaterialNames() const {
-    std::vector<std::string> material_names;
-    // initialize dummy interaction data object to use getMaterial function
     InteractionData interaction_data({});
-    for (auto& voxel : voxels_) {
-        std::string material_name = interaction_data.getAnyMaterialNameFromID(voxel.materialID);
-        if (std::find(material_names.begin(), material_names.end(), material_name) == material_names.end()) {
-            material_names.push_back(material_name);
+    std::unordered_set<uint8_t> material_ids_set;
+#pragma omp parallel default(none) shared(material_ids_set, interaction_data)
+    {
+        // use unordered_set to avoid duplicates
+        std::unordered_set<uint8_t> material_ids_set_private;
+#pragma omp for
+        for (auto &voxel: voxels_) {
+            material_ids_set_private.insert(voxel.materialID);
         }
+#pragma omp critical
+        {
+            material_ids_set.insert(material_ids_set_private.begin(), material_ids_set_private.end());
+        }
+
+    }
+    std::vector<std::string> material_names;
+    for (auto &material_id: material_ids_set) {
+        material_names.push_back(interaction_data.getAnyMaterialNameFromID(material_id));
     }
     return material_names;
 }
+
 
 double VoxelGrid::getTotalEnergyDeposited() {
     double totalDose = 0.0;
