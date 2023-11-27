@@ -1,7 +1,3 @@
-Certainly! Here's the revised and corrected version of the MIDSX documentation:
-
----
-
 # MIDSX (Monte Carlo Interactions and Dosage Simulation of X-rays)
 ![Contributors](https://img.shields.io/github/contributors/jmeneghini/MIDSX)
 ![Forks](https://img.shields.io/github/forks/jmeneghini/MIDSX)
