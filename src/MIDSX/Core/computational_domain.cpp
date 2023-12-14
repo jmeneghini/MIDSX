@@ -2,6 +2,9 @@
 
 using json = nlohmann::json;
 
+/*
+ * ComputationalDomain class
+ */
 ComputationalDomain::ComputationalDomain(const std::string &json_file_path,
                                          bool is_python_environment):
                                          is_python_environment_(is_python_environment) {

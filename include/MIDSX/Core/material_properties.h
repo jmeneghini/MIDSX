@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <memory>
 
+
 class MaterialProperties {
 public:
     MaterialProperties(std::string  name, DataAccessObject& dao);

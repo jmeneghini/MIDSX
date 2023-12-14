@@ -1,3 +1,7 @@
+/**
+ * @file constants.h
+ * @brief Contains constants used throughout the code.
+ */
 #ifndef MCXRAYTRANSPORT_CONSTANTS_H
 #define MCXRAYTRANSPORT_CONSTANTS_H
 
