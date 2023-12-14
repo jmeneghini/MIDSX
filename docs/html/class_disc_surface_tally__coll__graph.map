@@ -1,0 +1,9 @@
+<map id="DiscSurfaceTally" name="DiscSurfaceTally">
+<area shape="rect" id="node1" title=" " alt="" coords="141,364,262,391"/>
+<area shape="rect" id="node2" href="$class_surface_tally.html" title=" " alt="" coords="154,288,249,315"/>
+<area shape="rect" id="node3" href="$struct_temp_surface_tally_data.html" title=" " alt="" coords="31,184,185,211"/>
+<area shape="rect" id="node4" href="$class_photon.html" title=" " alt="" coords="77,95,139,121"/>
+<area shape="rect" id="node5" href="$class_particle.html" title=" " alt="" coords="5,5,72,32"/>
+<area shape="rect" id="node6" href="$struct_photon_scattering_history.html" title=" " alt="" coords="97,5,261,32"/>
+<area shape="rect" id="node7" href="$class_surface_quantity_container.html" title=" " alt="" coords="210,184,382,211"/>
+</map>

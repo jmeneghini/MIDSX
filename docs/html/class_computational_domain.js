@@ -1,0 +1,25 @@
+var class_computational_domain =
+[
+    [ "ComputationalDomain", "class_computational_domain.html#ac41a443171aea038e03ee547f0872eb0", null ],
+    [ "ComputationalDomain", "class_computational_domain.html#a2fd89d023d879f74fb28a5bf0d918e00", null ],
+    [ "getBackgroundMaterialName", "class_computational_domain.html#aaf45db40e729ebaeae160cb711289308", null ],
+    [ "getInteractionData", "class_computational_domain.html#aebe7ce9af6e8e96baad59b0d40b98fa6", null ],
+    [ "getMaterialNames", "class_computational_domain.html#a977b5758be733a8a1aef45d13dfb6db4", null ],
+    [ "getNIFTIFilePaths", "class_computational_domain.html#af7f3b1472d37d9148e922a89e9b5e505", null ],
+    [ "getNumVoxelGrids", "class_computational_domain.html#a4092d50cc2d22b690c9bef3aed98dd33", null ],
+    [ "getOrigins", "class_computational_domain.html#a075d887d1410dc38457f02cf71b38ac6", null ],
+    [ "getVoxel", "class_computational_domain.html#a7573565fcd750fac39efd7df9ec02621", null ],
+    [ "getVoxelGridDimSpaceN", "class_computational_domain.html#af5e631fc971d0f7079f079e783acd775", null ],
+    [ "getVoxelGridN", "class_computational_domain.html#a4f6077ac4b08a31d9205bab627fbef30", null ],
+    [ "getVoxelGridOriginN", "class_computational_domain.html#a65c6f09967c612757512ddd51f1dd0bd", null ],
+    [ "initializeCompDomain", "class_computational_domain.html#a0eee52fa33aee9972ca79deb3d82bd29", null ],
+    [ "isInComputationalDomain", "class_computational_domain.html#a474b38bc8e9aa86fdd08f390d555b1ba", null ],
+    [ "isJSON", "class_computational_domain.html#a5e56934942078cf1062ac845c36c5b98", null ],
+    [ "isNIFTI", "class_computational_domain.html#a2dc589d8ffb2e656bfa723d49172f38e", null ],
+    [ "setCompProperties", "class_computational_domain.html#a55dac9f583d79a0d51e9c326ae9696e6", null ],
+    [ "setVoxelGrids", "class_computational_domain.html#acd94ba8fc3d7ce109cf3369c4fc44f04", null ],
+    [ "background_voxel", "class_computational_domain.html#a41dba99ac6c0c5779838aa68127129d2", null ],
+    [ "dim_space_", "class_computational_domain.html#aa10d2f4670f7f994d33f03a3191a27e9", null ],
+    [ "is_python_environment_", "class_computational_domain.html#a096e69604e7065f046fde851a16d041d", null ],
+    [ "voxel_grids_", "class_computational_domain.html#a5f5b3ff834c5de7cd67139586d1c842f", null ]
+];

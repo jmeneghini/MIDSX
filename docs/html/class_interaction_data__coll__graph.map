@@ -1,0 +1,7 @@
+<map id="InteractionData" name="InteractionData">
+<area shape="rect" id="node1" title="Class which provides access to various simulation significant data." alt="" coords="132,247,243,273"/>
+<area shape="rect" id="node2" href="$class_interpolator_1_1_log_log_linear.html" title="Class which performs linear interpolation on a log&#45;log scale." alt="" coords="5,157,177,184"/>
+<area shape="rect" id="node3" href="$class_interpolator_1_1_linear.html" title="Class which performs linear interpolation." alt="" coords="26,81,157,108"/>
+<area shape="rect" id="node4" href="$class_interpolator_1_1_interpolator.html" title="Abstract base class for interpolators." alt="" coords="11,5,171,32"/>
+<area shape="rect" id="node5" href="$class_data_access_object.html" title="Class which provides an interface to a SQLite database." alt="" coords="217,157,349,184"/>
+</map>

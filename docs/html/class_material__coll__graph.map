@@ -1,0 +1,13 @@
+<map id="Material" name="Material">
+<area shape="rect" id="node1" title="Class which represents a material." alt="" coords="1084,21,1152,48"/>
+<area shape="rect" id="node2" href="$class_material_properties.html" title=" " alt="" coords="534,35,661,61"/>
+<area shape="rect" id="node4" href="$class_material_data.html" title="Class which contains the computed simulation data for a material." alt="" coords="903,132,999,159"/>
+<area shape="rect" id="node3" href="$class_data_access_object.html" title="Class which provides an interface to a SQLite database." alt="" coords="229,35,361,61"/>
+<area shape="rect" id="node5" href="$class_interpolator_1_1_log_log_spline.html" title="Class which performs 3rd order spline interpolation on a log&#45;log scale." alt="" coords="511,171,684,197"/>
+<area shape="rect" id="node6" href="$class_interpolator_1_1_spline.html" title="Class which performs 3rd order spline interpolation." alt="" coords="230,208,361,235"/>
+<area shape="rect" id="node7" href="$class_interpolator_1_1_interpolator.html" title="Abstract base class for interpolators." alt="" coords="5,240,165,267"/>
+<area shape="rect" id="node9" href="$class_interpolator_1_1_linear.html" title="Class which performs linear interpolation." alt="" coords="230,283,361,309"/>
+<area shape="rect" id="node8" href="$class_interpolator_1_1_log_log_linear.html" title="Class which performs linear interpolation on a log&#45;log scale." alt="" coords="511,355,683,381"/>
+<area shape="rect" id="node10" href="$class_probability_dist_1_1_continuous_inversion.html" title=" " alt="" coords="507,409,688,450"/>
+<area shape="rect" id="node11" href="$class_probability_dist_1_1_uniform.html" title=" " alt="" coords="215,416,376,443"/>
+</map>

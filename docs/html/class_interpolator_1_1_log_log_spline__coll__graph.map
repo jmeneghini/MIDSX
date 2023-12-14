@@ -1,0 +1,5 @@
+<map id="Interpolator::LogLogSpline" name="Interpolator::LogLogSpline">
+<area shape="rect" id="node1" title="Class which performs 3rd order spline interpolation on a log&#45;log scale." alt="" coords="5,155,179,181"/>
+<area shape="rect" id="node2" href="$class_interpolator_1_1_spline.html" title="Class which performs 3rd order spline interpolation." alt="" coords="27,80,157,107"/>
+<area shape="rect" id="node3" href="$class_interpolator_1_1_interpolator.html" title="Abstract base class for interpolators." alt="" coords="12,5,172,32"/>
+</map>
