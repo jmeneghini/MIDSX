@@ -1,0 +1,117 @@
+[
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/computational_domain.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/computational_domain.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/computational_domain.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/data_access_object.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/data_access_object.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/data_access_object.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/derived_quantities.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/derived_quantities.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/derived_quantities.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/interaction_data.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/interaction_data.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/interaction_data.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/interpolators.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/interpolators.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/interpolators.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/material.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/material.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/material.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/material_data.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/material_data.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/material_data.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/material_properties.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/material_properties.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/material_properties.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/particle.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/particle.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/particle.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/photon_interactions.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/photon_interactions.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/photon_interactions.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/physics_engine.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/physics_engine.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/physics_engine.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/probability_dist.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/probability_dist.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/probability_dist.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/quantity.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/quantity.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/quantity.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/run_simulation.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/run_simulation.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/run_simulation.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/source.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/source.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/source.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/surface_quantity.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/surface_quantity.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/surface_quantity.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/surface_quantity_container.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/surface_quantity_container.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/surface_quantity_container.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/surface_tally.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/surface_tally.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/surface_tally.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/volume_quantity.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/volume_quantity.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/volume_quantity.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/volume_quantity_container.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/volume_quantity_container.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/volume_quantity_container.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/volume_tally.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/volume_tally.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/volume_tally.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/voxel.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/voxel.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/voxel.cpp"
+},
+{
+  "directory": "/home/john/Documents/MIDSX/build",
+  "command": "/usr/bin/g++ -I/home/john/Documents/MIDSX/include/MIDSX -I/home/john/Documents/MIDSX/extern/eigen -isystem /usr/include/python3.11 -isystem /home/john/Documents/MIDSX/extern/pybind11/include -g -fPIC -std=gnu++17 -o CMakeFiles/MIDSX.dir/src/MIDSX/Core/voxel_grid.cpp.o -c /home/john/Documents/MIDSX/src/MIDSX/Core/voxel_grid.cpp",
+  "file": "/home/john/Documents/MIDSX/src/MIDSX/Core/voxel_grid.cpp"
+}
+]

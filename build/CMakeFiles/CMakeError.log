@@ -1,0 +1,52 @@
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wshorten64to32 failed with the following output:
+Change Dir: /home/john/Documents/MIDSX/build/CMakeFiles/CMakeScratch/TryCompile-FyePau
+
+Run Build Command(s):/usr/bin/ninja cmTC_40fc6 && [1/2] Building CXX object CMakeFiles/cmTC_40fc6.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_40fc6.dir/src.cxx.o 
+/usr/bin/g++ -DCOMPILER_SUPPORT_Wshorten64to32  -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Werror -fPIE   -Wshorten-64-to-32 -std=gnu++17 -o CMakeFiles/cmTC_40fc6.dir/src.cxx.o -c /home/john/Documents/MIDSX/build/CMakeFiles/CMakeScratch/TryCompile-FyePau/src.cxx
+g++: error: unrecognized command-line option '-Wshorten-64-to-32'
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wcpp11extensions failed with the following output:
+Change Dir: /home/john/Documents/MIDSX/build/CMakeFiles/CMakeScratch/TryCompile-NtUAgS
+
+Run Build Command(s):/usr/bin/ninja cmTC_f83dd && [1/2] Building CXX object CMakeFiles/cmTC_f83dd.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_f83dd.dir/src.cxx.o 
+/usr/bin/g++ -DCOMPILER_SUPPORT_Wcpp11extensions  -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wlogical-op -Wenum-conversion -Werror -fPIE   -Wc++11-extensions -std=gnu++17 -o CMakeFiles/cmTC_f83dd.dir/src.cxx.o -c /home/john/Documents/MIDSX/build/CMakeFiles/CMakeScratch/TryCompile-NtUAgS/src.cxx
+g++: error: unrecognized command-line option '-Wc++11-extensions'; did you mean '-fms-extensions'?
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_wd981 failed with the following output:
+Change Dir: /home/john/Documents/MIDSX/build/CMakeFiles/CMakeScratch/TryCompile-AfJIfS
+
+Run Build Command(s):/usr/bin/ninja cmTC_1b3a7 && [1/2] Building CXX object CMakeFiles/cmTC_1b3a7.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_1b3a7.dir/src.cxx.o 
+/usr/bin/g++ -DCOMPILER_SUPPORT_wd981  -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wlogical-op -Wenum-conversion -Wdouble-promotion -Wshadow -Wno-psabi -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Werror -fPIE   -wd981 -std=gnu++17 -o CMakeFiles/cmTC_1b3a7.dir/src.cxx.o -c /home/john/Documents/MIDSX/build/CMakeFiles/CMakeScratch/TryCompile-AfJIfS/src.cxx
+g++: error: unrecognized command-line option '-wd981'
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+int main() { return 0; }
+
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_wd2304 failed with the following output:
+Change Dir: /home/john/Documents/MIDSX/build/CMakeFiles/CMakeScratch/TryCompile-b8meJK
+
+Run Build Command(s):/usr/bin/ninja cmTC_d5773 && [1/2] Building CXX object CMakeFiles/cmTC_d5773.dir/src.cxx.o
+FAILED: CMakeFiles/cmTC_d5773.dir/src.cxx.o 
+/usr/bin/g++ -DCOMPILER_SUPPORT_wd2304  -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wlogical-op -Wenum-conversion -Wdouble-promotion -Wshadow -Wno-psabi -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Werror -fPIE   -wd2304 -std=gnu++17 -o CMakeFiles/cmTC_d5773.dir/src.cxx.o -c /home/john/Documents/MIDSX/build/CMakeFiles/CMakeScratch/TryCompile-b8meJK/src.cxx
+g++: error: unrecognized command-line option '-wd2304'
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+int main() { return 0; }
+

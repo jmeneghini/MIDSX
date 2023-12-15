@@ -1,0 +1,3 @@
+/home/john/Documents/MIDSX/cpp_simulations/CT_w_voxelized_solid/cmake-build-debugopenmp/CMakeFiles/CT_w_voxelized_solid.dir
+/home/john/Documents/MIDSX/cpp_simulations/CT_w_voxelized_solid/cmake-build-debugopenmp/CMakeFiles/edit_cache.dir
+/home/john/Documents/MIDSX/cpp_simulations/CT_w_voxelized_solid/cmake-build-debugopenmp/CMakeFiles/rebuild_cache.dir

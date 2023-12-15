@@ -1,0 +1,26 @@
+# ninja log v5
+3	2176	1701023348005296433	CMakeFiles/MIDSX.dir/src/MIDSX/Core/material.cpp.o	35530d8e523cdf2f
+1	1556	1701019826983659553	CMakeFiles/MIDSX.dir/src/MIDSX/Core/particle.cpp.o	d01b07b826aaf27a
+2500	7596	1701023353409428499	CMakeFiles/MIDSX.dir/src/MIDSX/Core/voxel_grid.cpp.o	11d588cc1c85a5e5
+0	436	1701019825879639027	CMakeFiles/MIDSX.dir/src/MIDSX/Core/data_access_object.cpp.o	ccf385b5a8d9b6c9
+0	242	1702510667461620926	build.ninja	9e339855ce70a8e4
+2	2844	1701023348669312667	CMakeFiles/MIDSX.dir/src/MIDSX/Core/interaction_data.cpp.o	dc5220d88301ea78
+5	2722	1701023348549309733	CMakeFiles/MIDSX.dir/src/MIDSX/Core/surface_quantity.cpp.o	ba4e1e299a038e15
+4	6374	1701023352189398696	CMakeFiles/MIDSX.dir/src/MIDSX/Core/physics_engine.cpp.o	cc2a09ba80c7c6ca
+5	2629	1701023348457307484	CMakeFiles/MIDSX.dir/src/MIDSX/Core/surface_quantity_container.cpp.o	18f651b25d9ebc51
+2	2496	1701019827935677248	CMakeFiles/MIDSX.dir/src/MIDSX/Core/probability_dist.cpp.o	ed5aa963eb203724
+4	2084	1701023347913294184	CMakeFiles/MIDSX.dir/src/MIDSX/Core/photon_interactions.cpp.o	cf9cca72dfa32662
+4	3621	1701023349445331637	CMakeFiles/MIDSX.dir/src/MIDSX/Core/material_data.cpp.o	982dcc6f5260830b
+4	2519	1701023348349304844	CMakeFiles/MIDSX.dir/src/MIDSX/Core/material_properties.cpp.o	f83a366874987da1
+2176	4115	1701023349941343762	CMakeFiles/MIDSX.dir/src/MIDSX/Core/volume_quantity_container.cpp.o	5affc204372dbfc2
+5	3224	1701023349049321957	CMakeFiles/MIDSX.dir/src/MIDSX/Core/surface_tally.cpp.o	e4d06cd4dff2a5c0
+2496	2685	1701019828127680815	CMakeFiles/MIDSX.dir/src/MIDSX/Core/voxel.cpp.o	feaa7190910a338f
+3	6841	1701023352653410032	CMakeFiles/MIDSX.dir/src/MIDSX/Core/computational_domain.cpp.o	7f516298c7568d2b
+5	3479	1701023349305328215	CMakeFiles/MIDSX.dir/src/MIDSX/Core/source.cpp.o	b66a7a5ff9a18b0e
+5	2889	1701023348717313840	CMakeFiles/MIDSX.dir/src/MIDSX/Core/volume_quantity.cpp.o	b8481311d473a95e
+3	128	0	CMakeFiles/install.util	c7ada42bb59527d0
+1	8098	1701019833515780858	CMakeFiles/MIDSX.dir/src/MIDSX/Core/interpolators.cpp.o	3be4d760e87e1d1e
+7596	8612	1701023354241448821	libMIDSX.a	350c462a2557f713
+4	2500	1701023348329304355	CMakeFiles/MIDSX.dir/src/MIDSX/Core/quantity.cpp.o	e009ad730d3c595b
+2085	4007	1701023349773339655	CMakeFiles/MIDSX.dir/src/MIDSX/Core/volume_tally.cpp.o	e471f02ff3748090
+3	2649	1701023348477307973	CMakeFiles/MIDSX.dir/src/MIDSX/Core/derived_quantities.cpp.o	dd41566447bcb7c3

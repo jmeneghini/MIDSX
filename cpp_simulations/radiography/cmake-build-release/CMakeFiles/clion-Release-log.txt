@@ -1,0 +1,5 @@
+/home/john/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/232.9559.58/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=/home/john/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/232.9559.58/bin/ninja/linux/x64/ninja -G Ninja -S /home/john/Documents/MIDSX/cpp_simulations/radiography -B /home/john/Documents/MIDSX/cpp_simulations/radiography/cmake-build-release
+-- Found pybind11: /home/john/Documents/MIDSX/env/lib/python3.10/site-packages/pybind11/include (found version "2.11.1")
+-- Configuring done (0.8s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/john/Documents/MIDSX/cpp_simulations/radiography/cmake-build-release

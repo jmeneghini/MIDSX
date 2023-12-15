@@ -1,0 +1,4 @@
+/home/john/Documents/MIDSX/tests/distributions/cmake-build-debug/CMakeFiles/distributions.dir
+/home/john/Documents/MIDSX/tests/distributions/cmake-build-debug/CMakeFiles/source_ang_dist.dir
+/home/john/Documents/MIDSX/tests/distributions/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/john/Documents/MIDSX/tests/distributions/cmake-build-debug/CMakeFiles/rebuild_cache.dir

@@ -1,7 +1,0 @@
-<map id="Interpolator::Interpolator" name="Interpolator::Interpolator">
-<area shape="rect" id="node1" title="Abstract base class for interpolators." alt="" coords="110,5,270,32"/>
-<area shape="rect" id="node2" href="$class_interpolator_1_1_linear.html" title="Class which performs linear interpolation." alt="" coords="47,80,178,107"/>
-<area shape="rect" id="node4" href="$class_interpolator_1_1_spline.html" title="Class which performs 3rd order spline interpolation." alt="" coords="213,80,343,107"/>
-<area shape="rect" id="node3" href="$class_interpolator_1_1_log_log_linear.html" title="Class which performs linear interpolation on a log&#45;log scale." alt="" coords="5,155,177,181"/>
-<area shape="rect" id="node5" href="$class_interpolator_1_1_log_log_spline.html" title="Class which performs 3rd order spline interpolation on a log&#45;log scale." alt="" coords="202,155,375,181"/>
-</map>

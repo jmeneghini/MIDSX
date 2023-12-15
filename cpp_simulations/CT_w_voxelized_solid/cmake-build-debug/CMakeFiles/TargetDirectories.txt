@@ -1,0 +1,3 @@
+/home/john/Documents/MIDSX/cpp_simulations/CT_w_voxelized_solid/cmake-build-debug/CMakeFiles/CT_w_voxelized_solid.dir
+/home/john/Documents/MIDSX/cpp_simulations/CT_w_voxelized_solid/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/john/Documents/MIDSX/cpp_simulations/CT_w_voxelized_solid/cmake-build-debug/CMakeFiles/rebuild_cache.dir

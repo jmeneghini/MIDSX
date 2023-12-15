@@ -1,5 +1,0 @@
-<map id="Interpolator::LogLogLinear" name="Interpolator::LogLogLinear">
-<area shape="rect" id="node1" title="Class which performs linear interpolation on a log&#45;log scale." alt="" coords="5,155,177,181"/>
-<area shape="rect" id="node2" href="$class_interpolator_1_1_linear.html" title="Class which performs linear interpolation." alt="" coords="26,80,157,107"/>
-<area shape="rect" id="node3" href="$class_interpolator_1_1_interpolator.html" title="Abstract base class for interpolators." alt="" coords="11,5,171,32"/>
-</map>

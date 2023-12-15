@@ -1,0 +1,17 @@
+/home/john/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/232.9559.58/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=/home/john/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/232.9559.58/bin/ninja/linux/x64/ninja -G Ninja -S /home/john/Documents/MIDSX -B /home/john/Documents/MIDSX/cmake-build-release
+-- Found OpenMP_CXX: -fopenmp (found version "4.5") 
+-- Release build. Parallelization enabled.
+-- Found OpenMP_CXX: -fopenmp (found version "4.5") 
+-- Standard libraries to link to explicitly: none
+-- The Fortran compiler identification is GNU 11.4.0
+-- Found unsuitable Qt version "5.15.3" from /usr/bin/qmake
+-- Qt4 not found, so disabling the mandelbrot and opengl demos
+-- Could NOT find CLANG_FORMAT: Found unsuitable version "0.0", but required is exact version "9" (found CLANG_FORMAT_EXECUTABLE-NOTFOUND)
+-- 
+-- Configured Eigen 3.4.90
+-- 
+-- Python3 found with target Python3::Python
+-- pybind11 v2.12.0 dev1
+-- Configuring done (0.2s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/john/Documents/MIDSX/cmake-build-release

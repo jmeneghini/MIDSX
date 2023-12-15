@@ -1,0 +1,87 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-RelWithDebInfo-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "RelWithDebInfo",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "hvl",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "hvl_100kVp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-hvl_100kVp-RelWithDebInfo-f2c2b13d97965001e868.json",
+					"name" : "hvl_100kVp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "hvl_100keV::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-hvl_100keV-RelWithDebInfo-6f71ce25db8e224296e9.json",
+					"name" : "hvl_100keV",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "hvl_30kVp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-hvl_30kVp-RelWithDebInfo-5f968a6c449c282c9508.json",
+					"name" : "hvl_30kVp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "hvl_30keV::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-hvl_30keV-RelWithDebInfo-4a24ba5d05941137a977.json",
+					"name" : "hvl_30keV",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/john/Documents/MIDSX/cpp_simulations/half_value_layer/cmake-build-debugopenmp",
+		"source" : "/home/john/Documents/MIDSX/cpp_simulations/half_value_layer"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 5
+	}
+}

@@ -1,0 +1,80 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"extern/eigen/unsupported/Eigen/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 26,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 31,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Devel",
+			"destination" : "include/eigen3/unsupported/Eigen",
+			"paths" : 
+			[
+				"extern/eigen/unsupported/Eigen/AdolcForward",
+				"extern/eigen/unsupported/Eigen/AlignedVector3",
+				"extern/eigen/unsupported/Eigen/ArpackSupport",
+				"extern/eigen/unsupported/Eigen/AutoDiff",
+				"extern/eigen/unsupported/Eigen/BVH",
+				"extern/eigen/unsupported/Eigen/EulerAngles",
+				"extern/eigen/unsupported/Eigen/FFT",
+				"extern/eigen/unsupported/Eigen/IterativeSolvers",
+				"extern/eigen/unsupported/Eigen/KroneckerProduct",
+				"extern/eigen/unsupported/Eigen/LevenbergMarquardt",
+				"extern/eigen/unsupported/Eigen/MatrixFunctions",
+				"extern/eigen/unsupported/Eigen/MoreVectorization",
+				"extern/eigen/unsupported/Eigen/MPRealSupport",
+				"extern/eigen/unsupported/Eigen/NNLS",
+				"extern/eigen/unsupported/Eigen/NonLinearOptimization",
+				"extern/eigen/unsupported/Eigen/NumericalDiff",
+				"extern/eigen/unsupported/Eigen/OpenGLSupport",
+				"extern/eigen/unsupported/Eigen/Polynomials",
+				"extern/eigen/unsupported/Eigen/Skyline",
+				"extern/eigen/unsupported/Eigen/SparseExtra",
+				"extern/eigen/unsupported/Eigen/SpecialFunctions",
+				"extern/eigen/unsupported/Eigen/Splines"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Devel",
+			"destination" : "include/eigen3/unsupported/Eigen",
+			"paths" : 
+			[
+				"extern/eigen/unsupported/Eigen/src"
+			],
+			"type" : "directory"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "extern/eigen/unsupported/Eigen",
+		"source" : "extern/eigen/unsupported/Eigen"
+	}
+}
