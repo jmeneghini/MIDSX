@@ -1,7 +1,3 @@
-Certainly! Here's the revised and corrected version of the MIDSX documentation:
-
----
-
 # MIDSX (Monte Carlo Interactions and Dosage Simulation of X-rays)
 ![Contributors](https://img.shields.io/github/contributors/jmeneghini/MIDSX)
 ![Forks](https://img.shields.io/github/forks/jmeneghini/MIDSX)
@@ -19,7 +15,7 @@ MIDSX requires the following dependencies to be manually installed:
 
 * **CMake 3.10.0 or higher:** If you don't have CMake installed, or require a newer version, follow this [guide](https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line).
 
-* **SQLite3 Library:** On Linux, the library can be installed using your distribution's package manager. Using apt: `sudo apt install sqlite3`. On Mac, the library can be installed with brew: `brew install sqlite3`.
+* **SQLite3 Library:** On Linux, the library can be installed using your distribution's package manager. Using apt: `sudo apt install sqlite3 libsqlite3-dev`. On Mac, the library can be installed with brew: `brew install sqlite3 libsqlite3-dev`.
 
 * **Python 3.8.x or higher:** If not already installed, go [here](https://www.python.org/downloads/).
 

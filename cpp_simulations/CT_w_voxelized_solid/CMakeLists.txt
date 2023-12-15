@@ -7,7 +7,9 @@ function(create_executable EXE_NAME SRC_FILE)
 endfunction()
 
 
-find_package(pybind11 REQUIRED)
+# add submodules (root/extern)
+add_subdirectory(../../extern/pybind11 pybind11)
+
 find_package(MIDSX REQUIRED)
 find_package(OpenMP REQUIRED)
 

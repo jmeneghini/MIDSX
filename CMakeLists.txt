@@ -28,7 +28,7 @@ target_include_directories(MIDSX PUBLIC
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 # Eigen3 submodule
-add_git_submodule(extern/eigen)
+add_git_submodule(${CMAKE_CURRENT_LIST_DIR}/extern/eigen)
 target_link_libraries(MIDSX PUBLIC Eigen3::Eigen)
 
 
@@ -43,7 +43,7 @@ else()
 endif()
 
 # Pybind11 submodule
-add_git_submodule(extern/pybind11)
+add_git_submodule(${CMAKE_CURRENT_LIST_DIR}/extern/pybind11)
 target_link_libraries(MIDSX PUBLIC pybind11::embed)
 
 
