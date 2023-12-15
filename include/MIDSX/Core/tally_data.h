@@ -4,6 +4,11 @@
 #include "photon.h"
 #include "voxel.h"
 
+/**
+ * @brief Struct which represents the temporary data for a voxel.
+ *
+ * Solely exists for parallelizing photon transport.
+ */
 struct TempVoxelData {
     Voxel& voxel;
     double energy_deposited = 0.0;
@@ -11,6 +16,11 @@ struct TempVoxelData {
     explicit TempVoxelData(Voxel& voxel) : voxel(voxel) {}
 };
 
+/**
+ * @brief Struct which represents the temporary data for a surface tally.
+ *
+ * Stores data for a photon undergoing a single step.
+ */
 struct TempSurfaceTallyData {
     double free_path = 0.0;
     bool isInteract = false;
@@ -19,6 +29,11 @@ struct TempSurfaceTallyData {
     Photon initial_photon;
 };
 
+/**
+ * @brief Struct which represents the temporary data for a volume tally.
+ *
+ * Stores data for a photon undergoing a single step.
+ */
 struct TempVolumeTallyData {
     double energy_deposited = 0.0;
     double free_path = 0.0;
@@ -28,6 +43,11 @@ struct TempVolumeTallyData {
     Photon final_photon;
 };
 
+/**
+ * @brief Struct which stores data for a volume tally.
+ *
+ * Stores data for a volume tally.
+ */
 struct VolumeTallyData {
     Eigen::Vector<double, Eigen::Dynamic> energy_deposition;
     Eigen::Vector<double, Eigen::Dynamic> incident_energy;
@@ -45,6 +65,11 @@ struct VolumeTallyData {
     double area = 0.0;
 };
 
+/**
+ * @brief Struct which stores data for a surface tally.
+ *
+ * Stores data for a surface tally.
+ */
 struct SurfaceTallyData {
     Eigen::Vector<double, Eigen::Dynamic> energy_deposition;
     Eigen::Vector<double, Eigen::Dynamic> incident_energy;

@@ -5,8 +5,12 @@
 #include "photon.h"
 #include "tally_data.h"
 
+/**
+ * @brief Class which represents a vector quantity. Used by the Tally classes to store simulation data.
+ */
 class VectorValue {
 public:
+    // pretty self-explanatory
     void addValue(double value);
     void addValues(const std::vector<double>& values);
     std::vector<double> getVector() const;
@@ -25,8 +29,12 @@ private:
     bool var_calculated_ = false;
 };
 
+/**
+ * @brief Class which represents a count quantity. Used by the Tally classes to store simulation data.
+ */
 class CountValue {
 public:
+    // pretty self-explanatory
     void addCount();
     void addCounts(int count);
     int getCount() const;

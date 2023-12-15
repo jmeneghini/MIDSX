@@ -4,6 +4,9 @@
 #include "particle.h"
 #include "probability_dist.h"
 
+/**
+ * @brief Virtual class which represents the behavior of a particle when it interacts with a material.
+ */
 class ParticleInteractionBehavior {
 public:
     virtual ~ParticleInteractionBehavior() = default;

@@ -14,18 +14,56 @@ namespace PhotonInteractionHelpers {
     Eigen::MatrixXd getBlockByRowValue(Eigen::MatrixXd& matrix, double rowStartValue, double rowEndValue, int column);
     }
 
+/**
+ * @brief Class which represents the photoelectric effect interaction.
+ */
 class PhotoelectricEffect : public ParticleInteractionBehavior {
 public:
+    /**
+     * @brief Performs the photoelectric effect interaction.
+     *
+     * Ends the photon's trajectory and returns its energy.
+     *
+     * @param photon The photon to interact.
+     * @param material The material to interact with.
+     * @return The energy deposited at location of interaction.
+     */
     double interact(Particle& photon, Material& material) override;
 };
 
+/**
+ * @brief Class which represents the coherent scattering interaction.
+ */
 class CoherentScattering : public ParticleInteractionBehavior {
 public:
+    /**
+     * @brief Performs the coherent scattering interaction.
+     *
+     * Utilizes the RITA algorithm to sample the scattering angle. Samples a runtime DCS from the material data to get the scattering angle. No energy is deposited.
+     *
+     * @param photon The photon to interact.
+     * @param material The material to interact with.
+     * @return The energy deposited at location of interaction. Always 0.
+     */
     double interact(Particle& photon, Material& material) override;
 };
 
+/**
+ * @brief Class which represents the incoherent scattering interaction.
+ */
 class IncoherentScattering : public ParticleInteractionBehavior {
 public:
+    /**
+     * @brief Performs the incoherent scattering interaction.
+     *
+     * Uses Kahn's algorithm to sample the Klein-Nishina distribution.
+     * Then performs an additional rejection sampling on the Scattering Function to get the scattering angle and new energy.
+     *
+     *
+     * @param photon The photon to interact.
+     * @param material The material to interact with.
+     * @return The energy deposited at location of interaction.
+     */
     double interact(Particle& photon, Material& material) override;
 private:
     static bool isR1Accepted(double k, double random_number_1);
