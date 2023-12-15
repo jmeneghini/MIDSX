@@ -33,3 +33,8 @@
 /cpp_simulations/long_body/cmake-build-debug/
 /cpp_simulations/long_body/cmake-build-debugopenmp/
 /cpp_simulations/long_body/cmake-build-release/
+/cmake-build-relwithdebinfo/
+/cmake-build-release/
+/cmake-build-minsizerel/
+/cmake-build-default/
+/cmake-build-debug/
