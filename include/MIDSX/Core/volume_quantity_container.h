@@ -6,16 +6,68 @@
 #include "volume_quantity.h"
 #include "tally_data.h"
 
+/**
+ * @brief Class which represents a container for volume quantities.
+ *
+ * Essentially a wrapper around a map of VolumeQuantityType to their respective VolumeQuantity objects.
+ * Allows users to specify which quantities they want to measure for a volume tally.
+ */
 class VolumeQuantityContainer {
 public:
+    /**
+     * @brief Adds a vector quantity to the container.
+     *
+     * @param quantity The vector quantity to add to the container.
+     */
     void addVectorQuantity(const VectorVolumeQuantity& quantity);
+
+    /**
+     * @brief Adds a count quantity to the container.
+     *
+     * @param quantity The count quantity to add to the container.
+     */
     void addCountQuantity(const CountVolumeQuantity& quantity);
+
+    /**
+     * @brief Measures all quantities in the container for a TempVolumeTallyData object.
+     *
+     * @param temp_tally_data The TempVolumeTallyData object to measure the quantities for.
+     */
     void measureAll(TempVolumeTallyData& temp_tally_data);
+
+    /**
+     * @brief Merges the quantities from a vector of VolumeQuantityContainers into this container.
+     *
+     * @param containers The vector of VolumeQuantityContainers to merge into this container.
+     */
     void merge(const std::vector<VolumeQuantityContainer>& containers);
+
+    /**
+     * @brief Gets the map of vector quantities in the container.
+     *
+     * @return The map of vector quantities in the container.
+     */
     std::unordered_map<VectorVolumeQuantityType, VectorVolumeQuantity>& getVectorQuantities();
+
+    /**
+     * @brief Gets the map of count quantities in the container.
+     *
+     * @return The map of count quantities in the container.
+     */
     std::unordered_map<CountVolumeQuantityType, CountVolumeQuantity>& getCountQuantities();
 
+    /**
+     * @brief Sets the volume of the volume tally.
+     *
+     * @param volume The volume of the volume tally.
+     */
     void setVolume(double volume);
+
+    /**
+     * @brief Gets the volume of the volume tally.
+     *
+     * @return The volume of the volume tally.
+     */
     double getVolume() const;
 private:
     std::unordered_map<VectorVolumeQuantityType, VectorVolumeQuantity> vector_quantities_;

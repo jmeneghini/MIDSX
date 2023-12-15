@@ -3,6 +3,11 @@
 
 #include <string>
 
+/**
+ * @brief Struct which represents a voxel.
+ *
+ * Stores the material ID and dose for a voxel.
+ */
 struct Voxel {
     uint8_t materialID = 0;
     double dose = 0.0;
@@ -13,6 +18,11 @@ struct Voxel {
 };
 
 namespace VoxelHelpers {
+    /**
+     * @brief Uses Welford's algorithm to update the mean and variance of voxel does and count.
+     * @param voxel
+     * @param value
+     */
     void updateWelford(Voxel& voxel, double value);
 }
 

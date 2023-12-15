@@ -8,7 +8,9 @@
 #include <utility>
 #include <exception>
 
-// Exception class for handling database errors
+/**
+ * @brief Exception class for database errors.
+ */
 class DatabaseException : public std::exception {
 public:
     explicit DatabaseException(std::string  message);
@@ -17,12 +19,25 @@ private:
     std::string msg_;
 };
 
+/**
+ * @brief Class which provides an interface to a SQLite database.
+ */
 class DataAccessObject {
 public:
+    /**
+     * @brief Constructor for the DataAccessObject class.
+     *
+     * @param db_name The name of the database.
+     */
     explicit DataAccessObject(const std::string& db_name);
     ~DataAccessObject();
 
-    // Executes a query and returns the results as a vector of strings
+    /**
+     * @brief Executes a query and returns the results as a vector of strings
+     *
+     * @param query The query to execute.
+     * @return A vector of strings containing the results of the query.
+     */
     std::vector<std::string> executeQuery(const std::string& query);
 
 private:
