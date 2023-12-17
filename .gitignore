@@ -38,3 +38,5 @@
 /cmake-build-minsizerel/
 /cmake-build-default/
 /cmake-build-debug/
+/docs/html/
+/docs/xml/
