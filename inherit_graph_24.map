@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$class_surface_tally.html" title="Virtual class which represents a surface tally." alt="" coords="5,31,99,56"/>
+<area shape="rect" id="Node000001" href="$class_disc_surface_tally.html" title="Class which represents a disc surface tally." alt="" coords="168,5,288,31"/>
+<area shape="poly" id="edge17_Node000000_Node000001" title=" " alt="" coords="114,32,168,24,168,29,115,37"/>
+<area shape="rect" id="Node000002" href="$class_rectangular_surface_tally.html" title="Class which represents a rectangular surface tally." alt="" coords="147,55,309,80"/>
+<area shape="poly" id="edge18_Node000000_Node000002" title=" " alt="" coords="115,49,147,54,146,59,114,55"/>
+</map>

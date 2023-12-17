@@ -1,0 +1,5 @@
+<map id="RectangularIsotropicDirectionality" name="RectangularIsotropicDirectionality">
+<area shape="rect" id="Node000001" title="Class which represents a rectangular isotropic directionality." alt="" coords="5,79,220,105"/>
+<area shape="rect" id="Node000002" href="$class_directionality.html" title="Virtual class which represents a directionality for a photon source." alt="" coords="65,5,160,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,46,115,79,110,79,110,46"/>
+</map>

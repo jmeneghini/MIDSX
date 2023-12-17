@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['sample_0',['sample',['../class_probability_dist_1_1_discrete_inversion.html#a2f8908937868a995db6fa04deba34794',1,'ProbabilityDist::DiscreteInversion::sample()'],['../class_probability_dist_1_1_continuous_inversion.html#a334bf798f0f522ac47f565a231fdaa94',1,'ProbabilityDist::ContinuousInversion::sample()'],['../class_probability_dist_1_1_uniform.html#aaee459b4326af7ca024c01cb9cd03000',1,'ProbabilityDist::Uniform::sample()']]],
+  ['samplecoherentscatteringdcs_1',['sampleCoherentScatteringDCS',['../class_material_data.html#a128a62024c4c771d8b161ecc2f0eff5f',1,'MaterialData']]],
+  ['sampledirection_2',['sampledirection',['../class_isotropic_directionality.html#a410696c8b81ecf31e9d4cb791cc874ca',1,'IsotropicDirectionality::sampleDirection()'],['../class_beam_directionality.html#aaf1b0d56d802214e5cfc14afb5230658',1,'BeamDirectionality::sampleDirection()'],['../class_rectangular_isotropic_directionality.html#af14f691a934893140c5d69e0787a3b10',1,'RectangularIsotropicDirectionality::sampleDirection()'],['../class_disc_isotropic_directionality.html#a9957953edcaf1bd8da7574e219719568',1,'DiscIsotropicDirectionality::sampleDirection()']]],
+  ['sampleenergy_3',['sampleenergy',['../class_monoenergetic_spectrum.html#ab8d3a9099e958feac56e4a8d9ba8917c',1,'MonoenergeticSpectrum::sampleEnergy()'],['../class_polyenergetic_spectrum.html#aa986764c423c42dcd3e1a4c00bf527c3',1,'PolyenergeticSpectrum::sampleEnergy()']]],
+  ['sampleposition_4',['samplePosition',['../class_point_geometry.html#a90c33227d92ada4b6badb2fc5f541f90',1,'PointGeometry']]],
+  ['setarea_5',['setArea',['../class_surface_quantity_container.html#a59cdf53c6a890d943dfde059aa64db03',1,'SurfaceQuantityContainer']]],
+  ['setcompproperties_6',['setCompProperties',['../class_computational_domain.html#a55dac9f583d79a0d51e9c326ae9696e6',1,'ComputationalDomain']]],
+  ['setdirection_7',['setDirection',['../class_particle.html#a2a566977c15527e1e1893a082299c0e5',1,'Particle']]],
+  ['setenergy_8',['setEnergy',['../class_particle.html#a3f50869e89de79855e95b3fe87732b56',1,'Particle']]],
+  ['setinteractionbehavior_9',['setInteractionBehavior',['../class_photon.html#a3abfb1a09d48cc6b986afc4396df858e',1,'Photon']]],
+  ['setinteractiontype_10',['setInteractionType',['../class_physics_engine.html#a0a91ee64fef624db61d8c6d912ccb3cc',1,'PhysicsEngine']]],
+  ['setmaterialmap_11',['setMaterialMap',['../class_interaction_data.html#ab01145819d56e7a12454ae9064c18e9b',1,'InteractionData']]],
+  ['setmaxtotalcrosssectionsandinterpolator_12',['setMaxTotalCrossSectionsAndInterpolator',['../class_interaction_data.html#a1f5f0c558bd14f4d21916a8720245282',1,'InteractionData']]],
+  ['setprimary_13',['setPrimary',['../class_particle.html#abefc30df16259b191afb94f4b9743c07',1,'Particle']]],
+  ['setrange_14',['setRange',['../class_probability_dist_1_1_uniform.html#a687370e9e773353f736d29e803362b4d',1,'ProbabilityDist::Uniform']]],
+  ['setvolume_15',['setVolume',['../class_volume_quantity_container.html#a5665ae4e17cdd97d6feea4b2dbb080be',1,'VolumeQuantityContainer']]],
+  ['setvoxel_16',['setVoxel',['../class_voxel_grid.html#ab4cf1ab2435e2e734996e407e20aa1c6',1,'VoxelGrid']]],
+  ['setvoxelgrids_17',['setVoxelGrids',['../class_computational_domain.html#acd94ba8fc3d7ce109cf3369c4fc44f04',1,'ComputationalDomain']]],
+  ['spline_18',['Spline',['../class_interpolator_1_1_spline.html#a59ace05e3ed39bd7220d17cec17db6c2',1,'Interpolator::Spline']]]
+];

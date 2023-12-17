@@ -1,0 +1,5 @@
+<map id="Particle" name="Particle">
+<area shape="rect" id="Node000001" title="Class which represents a particle." alt="" coords="5,5,71,31"/>
+<area shape="rect" id="Node000002" href="$class_photon.html" title="Class which represents a photon. Inherits from Particle." alt="" coords="7,79,69,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="41,46,41,79,35,79,35,46"/>
+</map>

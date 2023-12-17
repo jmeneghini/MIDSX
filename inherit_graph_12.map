@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$class_particle.html" title="Class which represents a particle." alt="" coords="5,5,71,31"/>
+<area shape="rect" id="Node000001" href="$class_photon.html" title="Class which represents a photon. Inherits from Particle." alt="" coords="119,5,181,31"/>
+<area shape="poly" id="edge11_Node000000_Node000001" title=" " alt="" coords="86,16,118,16,118,21,86,21"/>
+</map>

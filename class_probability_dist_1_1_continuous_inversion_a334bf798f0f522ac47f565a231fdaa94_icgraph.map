@@ -1,0 +1,5 @@
+<map id="ProbabilityDist::ContinuousInversion::sample" name="ProbabilityDist::ContinuousInversion::sample">
+<area shape="rect" id="Node000001" title="Returns a sample from the continuous distribution." alt="" coords="248,5,423,46"/>
+<area shape="rect" id="Node000002" href="$class_material_data.html#a128a62024c4c771d8b161ecc2f0eff5f" title="Samples the incoherent scattering DCS distribution for the material at the given energy." alt="" coords="5,5,200,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,28,200,28,200,23,232,23"/>
+</map>
