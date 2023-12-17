@@ -18,10 +18,10 @@ var searchData=
   ['setvolume_15',['setVolume',['../class_volume_quantity_container.html#a5665ae4e17cdd97d6feea4b2dbb080be',1,'VolumeQuantityContainer']]],
   ['setvoxel_16',['setVoxel',['../class_voxel_grid.html#ab4cf1ab2435e2e734996e407e20aa1c6',1,'VoxelGrid']]],
   ['setvoxelgrids_17',['setVoxelGrids',['../class_computational_domain.html#acd94ba8fc3d7ce109cf3369c4fc44f04',1,'ComputationalDomain']]],
-  ['simulation_20of_20x_20rays_18',['MIDSX (Monte Carlo Interactions and Dosage Simulation of X-rays)',['../md__r_e_a_d_m_e.html',1,'']]],
+  ['simulation_20of_20x_20rays_18',['MIDSX (Monte Carlo Interactions and Dosage Simulation of X-rays)',['../index.html',1,'']]],
   ['sourcegeometry_19',['SourceGeometry',['../class_source_geometry.html',1,'']]],
   ['spline_20',['spline',['../class_interpolator_1_1_spline.html#a59ace05e3ed39bd7220d17cec17db6c2',1,'Interpolator::Spline::Spline()'],['../class_interpolator_1_1_spline.html',1,'Interpolator::Spline']]],
-  ['started_21',['Getting Started',['../md__r_e_a_d_m_e.html#autotoc_md2',1,'']]],
+  ['started_21',['Getting Started',['../index.html#autotoc_md2',1,'']]],
   ['surfacequantitycontainer_22',['SurfaceQuantityContainer',['../class_surface_quantity_container.html',1,'']]],
   ['surfacetally_23',['SurfaceTally',['../class_surface_tally.html',1,'']]],
   ['surfacetallydata_24',['SurfaceTallyData',['../struct_surface_tally_data.html',1,'']]]

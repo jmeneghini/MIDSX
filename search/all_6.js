@@ -42,7 +42,7 @@ var searchData=
   ['getproperties_39',['getProperties',['../class_material.html#a7b1cfb515b8ddf675e4e530601b4423d',1,'Material']]],
   ['getsurfacequantitycontainer_40',['getSurfaceQuantityContainer',['../class_surface_tally.html#acc563f87c9a701a96bcc2385fbc0a5fb',1,'SurfaceTally']]],
   ['getsurfacetallies_41',['getSurfaceTallies',['../class_physics_engine.html#a430389df0e94555f32d2e2557697c32a',1,'PhysicsEngine']]],
-  ['getting_20started_42',['Getting Started',['../md__r_e_a_d_m_e.html#autotoc_md2',1,'']]],
+  ['getting_20started_42',['Getting Started',['../index.html#autotoc_md2',1,'']]],
   ['gettotalcrosssectionmatrix_43',['getTotalCrossSectionMatrix',['../class_material_data.html#a7b71673ab4b399046ae671187fbf3de6',1,'MaterialData']]],
   ['gettotalenergydeposited_44',['getTotalEnergyDeposited',['../class_voxel_grid.html#aa40efd33da390b24a80287708f823767',1,'VoxelGrid']]],
   ['gettotalmaxcrosssectionsmatrixfrominteractiondata_45',['getTotalMaxCrossSectionsMatrixFromInteractionData',['../class_interaction_data.html#a4c08dbf45d10804648023bd6cf39784d',1,'InteractionData']]],

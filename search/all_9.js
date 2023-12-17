@@ -6,8 +6,8 @@ var searchData=
   ['measure_3',['measure',['../class_vector_volume_quantity.html#ac378072014d221efc0a88b86279aefae',1,'VectorVolumeQuantity::measure()'],['../class_count_volume_quantity.html#aea6ed99f2b3b93ccc6212d98c39d8fb6',1,'CountVolumeQuantity::measure()'],['../class_count_surface_quantity.html#aa9ff7bcf344a3c29ef76b124fe07538f',1,'CountSurfaceQuantity::measure()'],['../class_vector_surface_quantity.html#a19ebde686c46ca2ddbbed433c1e53efd',1,'VectorSurfaceQuantity::measure()']]],
   ['measureall_4',['measureall',['../class_surface_quantity_container.html#a950f4075b98fdfa9b1625a7a19cff41c',1,'SurfaceQuantityContainer::measureAll()'],['../class_volume_quantity_container.html#ac0199a91df7667fba27c4287df6a2d15',1,'VolumeQuantityContainer::measureAll()']]],
   ['merge_5',['merge',['../class_surface_quantity_container.html#a20bf40d8a0001f3a00dbf73c64c73b0c',1,'SurfaceQuantityContainer::merge()'],['../class_volume_quantity_container.html#a5ea36eb5770d641518791c1266ee76bc',1,'VolumeQuantityContainer::merge()']]],
-  ['midsx_20monte_20carlo_20interactions_20and_20dosage_20simulation_20of_20x_20rays_6',['MIDSX (Monte Carlo Interactions and Dosage Simulation of X-rays)',['../md__r_e_a_d_m_e.html',1,'']]],
+  ['midsx_20monte_20carlo_20interactions_20and_20dosage_20simulation_20of_20x_20rays_6',['MIDSX (Monte Carlo Interactions and Dosage Simulation of X-rays)',['../index.html',1,'']]],
   ['monoenergeticspectrum_7',['monoenergeticspectrum',['../class_monoenergetic_spectrum.html',1,'MonoenergeticSpectrum'],['../class_monoenergetic_spectrum.html#a4acfb8f49c6c7d0a6c8344d4e0709529',1,'MonoenergeticSpectrum::MonoenergeticSpectrum()']]],
-  ['monte_20carlo_20interactions_20and_20dosage_20simulation_20of_20x_20rays_8',['MIDSX (Monte Carlo Interactions and Dosage Simulation of X-rays)',['../md__r_e_a_d_m_e.html',1,'']]],
+  ['monte_20carlo_20interactions_20and_20dosage_20simulation_20of_20x_20rays_8',['MIDSX (Monte Carlo Interactions and Dosage Simulation of X-rays)',['../index.html',1,'']]],
   ['move_9',['move',['../class_particle.html#a6a4cd7a825f287d0b5d7e9d45a87afc1',1,'Particle']]]
 ];

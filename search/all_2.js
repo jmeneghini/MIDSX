@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['carlo_20interactions_20and_20dosage_20simulation_20of_20x_20rays_0',['MIDSX (Monte Carlo Interactions and Dosage Simulation of X-rays)',['../md__r_e_a_d_m_e.html',1,'']]],
+  ['carlo_20interactions_20and_20dosage_20simulation_20of_20x_20rays_0',['MIDSX (Monte Carlo Interactions and Dosage Simulation of X-rays)',['../index.html',1,'']]],
   ['coherentscattering_1',['CoherentScattering',['../class_coherent_scattering.html',1,'']]],
   ['computationaldomain_2',['computationaldomain',['../class_computational_domain.html',1,'ComputationalDomain'],['../class_computational_domain.html#a2fd89d023d879f74fb28a5bf0d918e00',1,'ComputationalDomain::ComputationalDomain()']]],
   ['constants_2eh_3',['constants.h',['../constants_8h.html',1,'']]],
