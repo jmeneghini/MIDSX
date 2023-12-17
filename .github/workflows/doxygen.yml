@@ -5,21 +5,30 @@ on:
     branches:
       - main  # Trigger the workflow on push to the main branch
 
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  deploy:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Install Doxygen
-        run: sudo apt-get install doxygen
+      - name: Doxygen Action
+        uses: mattnotmitt/doxygen-action@v1.1.0
+        with:
+          # Path to Doxyfile
+          doxyfile-path: "./docs/Doxyfile" # default is ./Doxyfile
+          # Working directory
+          working-directory: "." # default is .
 
-      - name: Generate Doxygen Documentation
-        run: doxygen Doxyfile  # Assumes Doxyfile outputs HTML to the docs directory
-
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/html  # Deploy the contents of the docs directory
+          # Default Doxyfile build documentation to html directory.
+          # Change the directory if changes in Doxyfile
+          publish_dir: ./docs/html
