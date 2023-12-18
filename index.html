@@ -75,11 +75,23 @@ $(function() {
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md__r_e_a_d_m_e"></a><img src="https://img.shields.io/github/contributors/jmeneghini/MIDSX" alt="Contributors" class="inline"/> <img src="https://img.shields.io/github/forks/jmeneghini/MIDSX" alt="Forks" class="inline"/> <img src="https://img.shields.io/github/stars/jmeneghini/MIDSX" alt="Stars" class="inline"/> <img src="https://img.shields.io/github/issues/jmeneghini/MIDSX" alt="Issues" class="inline"/></p>
 <h1><a class="anchor" id="autotoc_md1"></a>
+Table of Contents</h1>
+<ul>
+<li>Description</li>
+<li>Getting Started<ul>
+<li>Dependencies</li>
+<li>Installation</li>
+</ul>
+</li>
+<li>Documentation</li>
+<li>Usage</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md2"></a>
 Description</h1>
 <p>MIDSX is a code system for simulating the propagation of X-rays through a medium. Using <a href="https://www-nds.iaea.org/epics/">EPDL</a> and <a href="https://www.nist.gov/pml/x-ray-mass-attenuation-coefficients">NIST</a> datasets, it samples photon free paths and interactions to propagate photons through a computational domain of specified dimensions and geometries. Geometries/bodies are defined using the <a href="https://nifti.nimh.nih.gov/nifti-1">NIfTI-1 Data Format</a>, which are specified in JSON files. To extract results from a simulation, both Volume and Surface tallies with specifiable measurable quantities and geometries are available, along with derived quantities, such as air kerma for HVL measurements. The following project is a <b>WIP</b>, so documentation is currently not available, but it is in the works.</p>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md3"></a>
 Getting Started</h1>
-<h2><a class="anchor" id="autotoc_md3"></a>
+<h2><a class="anchor" id="autotoc_md4"></a>
 Dependencies</h2>
 <p>MIDSX requires the following dependencies to be manually installed:</p>
 <ul>
@@ -93,7 +105,7 @@ Dependencies</h2>
 <li><b>Eigen:</b> For data storage and linear algebra.</li>
 <li><b>pybind11:</b> For use of nibabel in C++ code. Will be used later for MIDSX python bindings.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md4"></a>
+<h2><a class="anchor" id="autotoc_md5"></a>
 Installation</h2>
 <p>MIDSX has been tested on macOS and Ubuntu. To install with the command line:</p>
 <ol type="1">
@@ -107,7 +119,10 @@ Installation</h2>
 <div class="line">sudo make install</div>
 </div><!-- fragment --></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md6"></a>
+Documentation</h1>
+<p>The <a href="https://jmeneghini.github.io/MIDSX/">documentation</a> for MIDSX is generated via Doxygen and is hosted with Github Pages.</p>
+<h1><a class="anchor" id="autotoc_md7"></a>
 Usage</h1>
 <p>To use the library, configure a project with the following CMakeLists.txt structure:</p>
 <div class="fragment"><div class="line">cmake_minimum_required(VERSION 3.10)</div>
