@@ -60,6 +60,10 @@ configure_package_config_file(
         INSTALL_DESTINATION lib/cmake/MIDSX
 )
 
+# OpenRAND submodule
+add_git_submodule(${CMAKE_CURRENT_LIST_DIR}/extern/OpenRAND)
+target_link_libraries(MIDSX PUBLIC OpenRAND)
+
 # Installation and export
 install(TARGETS MIDSX
         EXPORT MIDSXTargets

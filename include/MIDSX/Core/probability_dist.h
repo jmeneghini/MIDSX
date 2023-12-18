@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <Eigen/Core>
 #include <unsupported/Eigen/CXX11/Tensor>
+#include <openrand>
 
 namespace ProbabilityDistHelpers {
     int findIndexOfNextSmallestValue(double x, const Eigen::VectorXd &vector);
