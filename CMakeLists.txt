@@ -12,6 +12,7 @@ find_package(OpenMP REQUIRED)
 
 set(SOURCE_DIR src/MIDSX)
 set(INCLUDE_DIR include/MIDSX/)
+set(OPENRAND_DIR extern/OpenRAND/)
 file(GLOB_RECURSE SOURCES "${SOURCE_DIR}/*.cpp")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -60,9 +61,16 @@ configure_package_config_file(
         INSTALL_DESTINATION lib/cmake/MIDSX
 )
 
-# OpenRAND submodule
-add_git_submodule(${CMAKE_CURRENT_LIST_DIR}/extern/OpenRAND)
-target_link_libraries(MIDSX PUBLIC OpenRAND)
+# OpenRAND
+include(FetchContent)
+FetchContent_Declare(
+        crng
+        GIT_REPOSITORY https://github.com/msu-sparta/OpenRAND.git
+        GIT_TAG        main
+)
+
+FetchContent_MakeAvailable(crng)
+
 
 # Installation and export
 install(TARGETS MIDSX
