@@ -7,3 +7,4 @@
 [submodule "extern/OpenRAND"]
 	path = extern/OpenRAND
 	url = https://github.com/msu-sparta/OpenRAND.git
+	branch = new_rng
