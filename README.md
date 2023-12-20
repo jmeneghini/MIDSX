@@ -61,6 +61,7 @@ MIDSX has been tested on macOS and Ubuntu. To install with the command line:
 
 ## Documentation
 The [documentation](https://jmeneghini.github.io/MIDSX/) for MIDSX is generated via Doxygen and is hosted with Github Pages.
+The preprint for the validation of MIDSX can be found on [arXiv](https://arxiv.org/abs/2311.16873)
 
 
 ## Usage
