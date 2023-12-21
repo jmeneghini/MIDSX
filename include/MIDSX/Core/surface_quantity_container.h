@@ -35,11 +35,12 @@ public:
     void measureAll(TempSurfaceTallyData& temp_tally_data);
 
     /**
-     * @brief Merges the quantities from a vector of SurfaceQuantityContainers into this container.
+     * @brief Overloads the + operator for SurfaceQuantityContainer.
      *
-     * @param containers The vector of SurfaceQuantityContainers to merge into this container.
+     * @param other The SurfaceQuantityContainer to add to this SurfaceQuantityContainer.
+     * @return The sum of the two SurfaceQuantityContainer objects.
      */
-    void merge(const std::vector<SurfaceQuantityContainer>& containers);
+    SurfaceQuantityContainer operator+(const SurfaceQuantityContainer& other) const;
 
     /**
      * @brief Gets the map of vector quantities in the container.

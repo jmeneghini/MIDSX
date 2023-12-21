@@ -34,6 +34,18 @@ VectorSurfaceQuantity::VectorSurfaceQuantity(VectorSurfaceQuantityType type) {
     }
 }
 
+VectorSurfaceQuantity VectorSurfaceQuantity::operator+(const VectorSurfaceQuantity& other) const {
+    if (type_ != other.type_) {
+        throw std::runtime_error("Cannot add VectorSurfaceQuantity objects of different types");
+    }
+    VectorSurfaceQuantity new_vector_surface_quantity(type_);
+    new_vector_surface_quantity.primary_values_ = primary_values_ + other.primary_values_;
+    new_vector_surface_quantity.single_incoherent_scatter_values_ = single_incoherent_scatter_values_ + other.single_incoherent_scatter_values_;
+    new_vector_surface_quantity.single_coherent_scatter_values_ = single_coherent_scatter_values_ + other.single_coherent_scatter_values_;
+    new_vector_surface_quantity.multiple_scatter_values_ = multiple_scatter_values_ + other.multiple_scatter_values_;
+    return new_vector_surface_quantity;
+}
+
 void VectorSurfaceQuantity::measure(TempSurfaceTallyData &temp_surface_tally_data) {
 double value = valueExtractor_(temp_surface_tally_data);
     if (value == 0) {
@@ -93,6 +105,18 @@ CountSurfaceQuantity::CountSurfaceQuantity(CountSurfaceQuantityType type) {
     } else {
         throw std::runtime_error("Unknown CountSurfaceQuantityType");
     }
+}
+
+CountSurfaceQuantity CountSurfaceQuantity::operator+(const CountSurfaceQuantity& other) const {
+    if (type_ != other.type_) {
+        throw std::runtime_error("Cannot add CountSurfaceQuantity objects of different types");
+    }
+    CountSurfaceQuantity new_count_surface_quantity(type_);
+    new_count_surface_quantity.primary_values_ = primary_values_ + other.primary_values_;
+    new_count_surface_quantity.single_incoherent_scatter_values_ = single_incoherent_scatter_values_ + other.single_incoherent_scatter_values_;
+    new_count_surface_quantity.single_coherent_scatter_values_ = single_coherent_scatter_values_ + other.single_coherent_scatter_values_;
+    new_count_surface_quantity.multiple_scatter_values_ = multiple_scatter_values_ + other.multiple_scatter_values_;
+    return new_count_surface_quantity;
 }
 
 void CountSurfaceQuantity::measure(TempSurfaceTallyData &temp_surface_tally_data) {

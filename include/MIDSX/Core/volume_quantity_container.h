@@ -36,11 +36,12 @@ public:
     void measureAll(TempVolumeTallyData& temp_tally_data);
 
     /**
-     * @brief Merges the quantities from a vector of VolumeQuantityContainers into this container.
+     * @brief Overloads the + operator for VolumeQuantityContainer.
      *
-     * @param containers The vector of VolumeQuantityContainers to merge into this container.
+     * @param other The VolumeQuantityContainer to add to this VolumeQuantityContainer.
+     * @return The sum of the two VolumeQuantityContainer objects.
      */
-    void merge(const std::vector<VolumeQuantityContainer>& containers);
+    VolumeQuantityContainer operator+(const VolumeQuantityContainer& other) const;
 
     /**
      * @brief Gets the map of vector quantities in the container.

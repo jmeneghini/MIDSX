@@ -1,6 +1,16 @@
 #include "Core/quantity.h"
 
-
+VectorValue VectorValue::operator+(const VectorValue& other) const {
+    // combine two vectors
+    VectorValue sum = *this;
+    sum.addValues(other.getVector());
+    // reset sum and var
+    sum.summed_ = false;
+    sum.var_calculated_ = false;
+    sum.sum_ = 0;
+    sum.var_ = 0;
+    return sum;
+}
 
 void VectorValue::addValue(double value) {
     values_.push_back(value);
@@ -81,6 +91,12 @@ double VectorValue::getVariance() {
     var_ = var;
     var_calculated_ = true;
     return var;
+}
+
+CountValue CountValue::operator+(const CountValue& other) const {
+    CountValue sum;
+    sum.count_ = count_ + other.count_;
+    return sum;
 }
 
 void CountValue::addCount() {

@@ -54,6 +54,14 @@ public:
     explicit VectorVolumeQuantity(VectorVolumeQuantityType type);
 
     /**
+     * @brief Overloads the + operator for VectorVolumeQuantity.
+     *
+     * @param other The VectorVolumeQuantity to add to this VectorVolumeQuantity.
+     * @return The sum of the two VectorVolumeQuantity objects.
+     */
+    VectorVolumeQuantity operator+(const VectorVolumeQuantity& other) const;
+
+    /**
      * @brief Measures the VectorVolumeQuantity for a TempVolumeTallyData object.
      *
      * @param temp_volume_tally_data The TempVolumeTallyData object to measure the VectorVolumeQuantity for.
@@ -99,6 +107,14 @@ public:
      * @param type The type of the CountVolumeQuantity to be measured.
      */
     explicit CountVolumeQuantity(CountVolumeQuantityType type);
+
+    /**
+     * @brief Overloads the + operator for CountVolumeQuantity.
+     *
+     * @param other The CountVolumeQuantity to add to this CountVolumeQuantity.
+     * @return The sum of the two CountVolumeQuantity objects.
+     */
+    CountVolumeQuantity operator+(const CountVolumeQuantity& other) const;
 
     /**
      * @brief Measures the CountVolumeQuantity for a TempVolumeTallyData object.

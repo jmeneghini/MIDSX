@@ -38,6 +38,17 @@ VectorVolumeQuantity::VectorVolumeQuantity(VectorVolumeQuantityType type) {
     }
 }
 
+VectorVolumeQuantity VectorVolumeQuantity::operator+(const VectorVolumeQuantity& other) const {
+    if (type_ != other.type_) {
+        throw std::runtime_error("Cannot add VectorVolumeQuantity objects of different types");
+    }
+    VectorVolumeQuantity new_vector_volume_quantity(type_);
+    new_vector_volume_quantity.primary_values_ = primary_values_ + other.primary_values_;
+    new_vector_volume_quantity.single_incoherent_scatter_values_ = single_incoherent_scatter_values_ + other.single_incoherent_scatter_values_;
+    new_vector_volume_quantity.single_coherent_scatter_values_ = single_coherent_scatter_values_ + other.single_coherent_scatter_values_;
+    new_vector_volume_quantity.multiple_scatter_values_ = multiple_scatter_values_ + other.multiple_scatter_values_;
+    return new_vector_volume_quantity;
+}
 
 void VectorVolumeQuantity::measure(TempVolumeTallyData &temp_volume_tally_data) {
     double value = valueExtractor_(temp_volume_tally_data);
@@ -102,6 +113,18 @@ CountVolumeQuantity::CountVolumeQuantity(CountVolumeQuantityType type) {
     } else {
         throw std::runtime_error("Unknown CountVolumeQuantityType");
     }
+}
+
+CountVolumeQuantity CountVolumeQuantity::operator+(const CountVolumeQuantity& other) const {
+    if (type_ != other.type_) {
+        throw std::runtime_error("Cannot add CountVolumeQuantity objects of different types");
+    }
+    CountVolumeQuantity new_count_volume_quantity(type_);
+    new_count_volume_quantity.primary_values_ = primary_values_ + other.primary_values_;
+    new_count_volume_quantity.single_incoherent_scatter_values_ = single_incoherent_scatter_values_ + other.single_incoherent_scatter_values_;
+    new_count_volume_quantity.single_coherent_scatter_values_ = single_coherent_scatter_values_ + other.single_coherent_scatter_values_;
+    new_count_volume_quantity.multiple_scatter_values_ = multiple_scatter_values_ + other.multiple_scatter_values_;
+    return new_count_volume_quantity;
 }
 
 void CountVolumeQuantity::measure(TempVolumeTallyData &temp_volume_tally_data) {

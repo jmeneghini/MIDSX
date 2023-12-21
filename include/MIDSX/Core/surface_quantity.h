@@ -52,6 +52,15 @@ public:
     explicit VectorSurfaceQuantity(VectorSurfaceQuantityType type);
 
     /**
+     * @brief Overloads the + operator for VectorSurfaceQuantity.
+     *
+     * @param other The VectorSurfaceQuantity to add to this VectorSurfaceQuantity.
+     * @return The sum of the two VectorSurfaceQuantity objects.
+     */
+
+    VectorSurfaceQuantity operator+(const VectorSurfaceQuantity& other) const;
+
+    /**
      * @brief Measures the VectorSurfaceQuantity for a TempSurfaceTallyData object.
      *
      * @param temp_surface_tally_data The TempSurfaceTallyData object to measure the VectorSurfaceQuantity for.
@@ -103,6 +112,14 @@ public:
      * @param type The type of the CountSurfaceQuantity to be measured.
      */
     explicit CountSurfaceQuantity(CountSurfaceQuantityType type);
+
+    /**
+     * @brief Overloads the + operator for CountSurfaceQuantity.
+     *
+     * @param other The CountSurfaceQuantity to add to this CountSurfaceQuantity.
+     * @return The sum of the two CountSurfaceQuantity objects.
+     */
+    CountSurfaceQuantity operator+(const CountSurfaceQuantity& other) const;
 
     /**
      * @brief Measures the CountSurfaceQuantity for a TempSurfaceTallyData object.

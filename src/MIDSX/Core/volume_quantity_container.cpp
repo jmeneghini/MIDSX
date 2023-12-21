@@ -17,19 +17,32 @@ void VolumeQuantityContainer::measureAll(TempVolumeTallyData& temp_tally_data) {
     }
 }
 
-void VolumeQuantityContainer::merge(const std::vector<VolumeQuantityContainer> &containers) {
-    for (auto& container : containers) {
-        for (auto& vector_quantity : container.vector_quantities_) {
-            if (vector_quantities_.find(vector_quantity.first) == vector_quantities_.end()) {
-                vector_quantities_.emplace(vector_quantity.first, vector_quantity.second);
-            }
-        }
-        for (auto& count_quantity : container.count_quantities_) {
-            if (count_quantities_.find(count_quantity.first) == count_quantities_.end()) {
-                count_quantities_.emplace(count_quantity.first, count_quantity.second);
-            }
+VolumeQuantityContainer VolumeQuantityContainer::operator+(const VolumeQuantityContainer& other) const {
+    // check that the two containers have the same quantities
+    for (auto& vector_quantity : vector_quantities_) {
+        if (other.vector_quantities_.find(vector_quantity.first) == other.vector_quantities_.end()) {
+            throw std::runtime_error("Cannot add VolumeQuantityContainers with different vector quantities.");
         }
     }
+    for (auto& count_quantity : count_quantities_) {
+        if (other.count_quantities_.find(count_quantity.first) == other.count_quantities_.end()) {
+            throw std::runtime_error("Cannot add VolumeQuantityContainers with different count quantities.");
+        }
+    }
+    // check that the two containers have the same volume (e.g they are both the same volume tally)
+    if (volume_ != other.volume_) {
+        throw std::runtime_error("Cannot add VolumeQuantityContainers with different volumes.");
+    }
+    // add the quantities
+    auto new_container = VolumeQuantityContainer();
+    new_container.setVolume(volume_);
+    for (auto& vector_quantity : vector_quantities_) {
+        new_container.addVectorQuantity(vector_quantity.second + other.vector_quantities_.at(vector_quantity.first));
+    }
+    for (auto& count_quantity : count_quantities_) {
+        new_container.addCountQuantity(count_quantity.second + other.count_quantities_.at(count_quantity.first));
+    }
+    return new_container;
 }
 
 std::unordered_map<VectorVolumeQuantityType, VectorVolumeQuantity>& VolumeQuantityContainer::getVectorQuantities() {

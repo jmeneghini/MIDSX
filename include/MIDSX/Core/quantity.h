@@ -10,6 +10,9 @@
  */
 class VectorValue {
 public:
+    // overloading the + operator
+    VectorValue operator+(const VectorValue& other) const;
+
     // pretty self-explanatory
     void addValue(double value);
     void addValues(const std::vector<double>& values);
@@ -34,6 +37,9 @@ private:
  */
 class CountValue {
 public:
+    // overloading the + operator
+    CountValue operator+(const CountValue& other) const;
+
     // pretty self-explanatory
     void addCount();
     void addCounts(int count);
