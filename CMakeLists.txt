@@ -17,7 +17,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_library(MIDSX STATIC ${SOURCES})
 
-if(CMAKE_BUILD_TYPE MATCHES Release OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo)
+if(CMAKE_BUILD_TYPE MATCHES Release OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo OR CMAKE_BUILD_TYPE MATCHES Debug)
     message(STATUS "Release build. Parallelization enabled.")
     find_package(OpenMP REQUIRED)
     target_link_libraries(MIDSX PUBLIC OpenMP::OpenMP_CXX)

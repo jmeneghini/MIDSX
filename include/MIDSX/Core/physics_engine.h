@@ -29,9 +29,9 @@ public:
      * @param volume_tallies The volume tallies.
      * @param surface_tallies The surface tallies.
      */
-    PhysicsEngine(ComputationalDomain& comp_domain, InteractionData& interaction_data,
-                  std::vector<std::unique_ptr<VolumeTally>>&& volume_tallies, std::vector<std::unique_ptr<SurfaceTally>>&& surface_tallies);
+    PhysicsEngine(ComputationalDomain& comp_domain, InteractionData& interaction_data);
 
+//    std::vector<std::unique_ptr<VolumeTally>>&& volume_tallies, std::vector<std::unique_ptr<SurfaceTally>>&& surface_tallies
     /**
      * @brief Transports a photon until an photoelectric interaction occurs or leaves the voxel grid (i.e. terminated).
      *
@@ -67,18 +67,32 @@ public:
     void setInteractionType(Photon& photon, Material& material, double total_cross_section);
 
     /**
+     * @brief Sets the volume tallies of the simulation.
+     *
+     * @param volume_tallies The volume tallies.
+     */
+    void addVolumeTallies(std::vector<std::unique_ptr<VolumeTally>>&& volume_tallies);
+
+    /**
+     * @brief Sets the surface tallies of the simulation.
+     *
+     * @param surface_tallies The surface tallies.
+     */
+    void addSurfaceTallies(std::vector<std::unique_ptr<SurfaceTally>>&& surface_tallies);
+
+    /**
      * @brief Returns the volume tallies of the simulation.
      *
      * @return The volume tallies.
      */
-    std::vector<std::unique_ptr<VolumeTally>>& getVolumeTallies();
+    std::vector<VolumeQuantityContainer> getVolumeQuantityContainers();
 
     /**
      * @brief Returns the surface tallies of the simulation.
      *
      * @return The surface tallies.
      */
-    std::vector<std::unique_ptr<SurfaceTally>>& getSurfaceTallies();
+    std::vector<SurfaceQuantityContainer> getSurfaceQuantityContainers();
 
     /**
      * @brief Processes the domain boundary crossing of a photon by terminating the photon.
@@ -90,8 +104,8 @@ private:
     ComputationalDomain& comp_domain_;
     ProbabilityDist::Uniform uniform_dist_;
     InteractionData& interaction_data_;
-    std::vector<std::unique_ptr<VolumeTally>> volume_tallies_;
-    std::vector<std::unique_ptr<SurfaceTally>> surface_tallies_;
+    std::vector<std::vector<std::unique_ptr<VolumeTally>>> thread_local_volume_tallies_;
+    std::vector<std::vector<std::unique_ptr<SurfaceTally>>> thread_local_surface_tallies_;
     std::shared_ptr<PhotoelectricEffect> photoelectric_effect_;
     std::shared_ptr<IncoherentScattering> incoherent_scattering_;
     std::shared_ptr<CoherentScattering> coherent_scattering_;

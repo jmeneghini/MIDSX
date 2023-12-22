@@ -122,10 +122,10 @@ std::vector<std::unique_ptr<VolumeTally>> initializeVolumeTallies() {
 
     // WHOLE BODY VOI:
 
-    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-            Eigen::Vector3d(0, 0, 155),
-            Eigen::Vector3d(39.0, 39.0, 175),
-            volume_container));
+//    tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+//            Eigen::Vector3d(0, 0, 155),
+//            Eigen::Vector3d(39.0, 39.0, 175),
+//            volume_container));
 
 
     // BODY VOIS:
@@ -205,12 +205,11 @@ PhotonSource initializeSource() {
 }
 
 
-void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& volume_tallies, int N_photons, ComputationalDomain& comp_domain) {
+void displayVolumeTallyResults(std::vector<VolumeQuantityContainer>& quantity_containers, int N_photons, ComputationalDomain& comp_domain) {
     int i = 1;
-    for (auto &tally: volume_tallies) {
+    for (auto &quantity_container: quantity_containers) {
         std::cout << "Volume tally " << i << ":" << std::endl;
         std::cout << "----------------" << std::endl;
-        auto quantity_container = tally->getVolumeQuantityContainer();
         auto vector_quantities = quantity_container.getVectorQuantities();
         auto count_quantities = quantity_container.getCountQuantities();
         for (auto &vector_quantity: vector_quantities) {
@@ -252,12 +251,11 @@ void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& 
 
 
 
-void displaySurfaceTallyResults(const std::vector<std::unique_ptr<SurfaceTally>>& surface_tallies, int N_photons, ComputationalDomain& comp_domain) {
+void displaySurfaceTallyResults(std::vector<SurfaceQuantityContainer>& quantity_containers, int N_photons, ComputationalDomain& comp_domain) {
     int i = 1;
-    for (auto &tally: surface_tallies) {
+    for (auto &quantity_container: quantity_containers) {
         std::cout << "Surface tally " << i << ":" << std::endl;
         std::cout << "----------------" << std::endl;
-        auto quantity_container = tally->getSurfaceQuantityContainer();
         auto vector_quantities = quantity_container.getVectorQuantities();
         auto count_quantities = quantity_container.getCountQuantities();
         for (auto &vector_quantity: vector_quantities) {
@@ -312,23 +310,25 @@ void displayVoxelData(ComputationalDomain& comp_domain, int N_photons) {
 }
 
 int main() {
-    auto surface_tallies = initializeSurfaceTallies();
-    auto volume_tallies = initializeVolumeTallies();
-
     ComputationalDomain comp_domain("cpp_simulations/radiography/radiography_0_degrees.json");
     InteractionData interaction_data = comp_domain.getInteractionData();
-    PhysicsEngine physics_engine(comp_domain, interaction_data, std::move(volume_tallies), std::move(surface_tallies));
+    PhysicsEngine physics_engine(comp_domain, interaction_data);
 
     PhotonSource source = initializeSource();
 
-    const int NUM_OF_PHOTONS = 1000000;
+    const int NUM_OF_PHOTONS = 10000000;
 
     std::cout << std::fixed << std::setprecision(15);
 
-    runSimulation(source, physics_engine, NUM_OF_PHOTONS);
+    runSimulation(source, physics_engine, initializeSurfaceTallies, initializeVolumeTallies, NUM_OF_PHOTONS);
 
-    displaySurfaceTallyResults(physics_engine.getSurfaceTallies(), NUM_OF_PHOTONS, comp_domain);
-    displayVolumeTallyResults(physics_engine.getVolumeTallies(), NUM_OF_PHOTONS, comp_domain);
+    auto surface_tally_results = physics_engine.getSurfaceQuantityContainers();
+    auto volume_tally_results = physics_engine.getVolumeQuantityContainers();
+    std::cout << surface_tally_results.size() << std::endl;
+    std::cout << volume_tally_results.size() << std::endl;
+
+    displaySurfaceTallyResults(surface_tally_results, NUM_OF_PHOTONS, comp_domain);
+    displayVolumeTallyResults(volume_tally_results, NUM_OF_PHOTONS, comp_domain);
     displayVoxelData(comp_domain, NUM_OF_PHOTONS);
 
     return 0;

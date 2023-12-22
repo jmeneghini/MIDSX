@@ -18,6 +18,14 @@ void VolumeQuantityContainer::measureAll(TempVolumeTallyData& temp_tally_data) {
 }
 
 VolumeQuantityContainer VolumeQuantityContainer::operator+(const VolumeQuantityContainer& other) const {
+    // check if either container is empty, if so return the other container
+    if (vector_quantities_.empty()) {
+        return other;
+    }
+    if (other.vector_quantities_.empty()) {
+        return *this;
+    }
+
     // check that the two containers have the same quantities
     for (auto& vector_quantity : vector_quantities_) {
         if (other.vector_quantities_.find(vector_quantity.first) == other.vector_quantities_.end()) {

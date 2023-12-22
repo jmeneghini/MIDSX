@@ -8,14 +8,11 @@ bool PhysicsEngineHelpers::areCollinearAndSameDirection(const Eigen::Vector3d& v
     return mag_diff < EPSILON;
 }
 
-PhysicsEngine::PhysicsEngine(ComputationalDomain& comp_domain, InteractionData& interaction_data,
-                             std::vector<std::unique_ptr<VolumeTally>>&& volume_tallies,
-                             std::vector<std::unique_ptr<SurfaceTally>>&& surface_tallies) :
+PhysicsEngine::PhysicsEngine(ComputationalDomain& comp_domain, InteractionData& interaction_data):
                              comp_domain_(comp_domain), interaction_data_(interaction_data),
                              uniform_dist_(0.0, 1.0), photoelectric_effect_(std::make_shared<PhotoelectricEffect>()),
                              coherent_scattering_(std::make_shared<CoherentScattering>()),
-                             incoherent_scattering_(std::make_shared<IncoherentScattering>()),
-                             volume_tallies_(std::move(volume_tallies)), surface_tallies_(std::move(surface_tallies)) {}
+                             incoherent_scattering_(std::make_shared<IncoherentScattering>()) {}
 
 void PhysicsEngine::transportPhoton(Photon& photon) {
     std::vector<TempSurfaceTallyData> temp_surface_tally_data_per_photon;
@@ -25,10 +22,7 @@ void PhysicsEngine::transportPhoton(Photon& photon) {
     while (!photon.isTerminated()) {
         transportPhotonOneStep(photon, temp_surface_tally_data_per_photon, temp_volume_tally_data_per_photon, temp_voxel_data_per_photon);
     }
-#pragma omp critical
-    {
-        processTallies(temp_surface_tally_data_per_photon, temp_volume_tally_data_per_photon, temp_voxel_data_per_photon);
-    }
+    processTallies(temp_surface_tally_data_per_photon, temp_volume_tally_data_per_photon, temp_voxel_data_per_photon);
 }
 
 void PhysicsEngine::transportPhotonOneStep(Photon& photon, std::vector<TempSurfaceTallyData>& temp_surface_tally_data_per_photon,
@@ -114,12 +108,44 @@ void PhysicsEngine::setInteractionType(Photon& photon, Material& material, doubl
     }
 }
 
-std::vector<std::unique_ptr<VolumeTally>>& PhysicsEngine::getVolumeTallies() {
-    return volume_tallies_;
+void PhysicsEngine::addVolumeTallies(std::vector<std::unique_ptr<VolumeTally>>&& volume_tallies) {
+    thread_local_volume_tallies_.push_back(std::move(volume_tallies));
 }
 
-std::vector<std::unique_ptr<SurfaceTally>>& PhysicsEngine::getSurfaceTallies() {
-    return surface_tallies_;
+void PhysicsEngine::addSurfaceTallies(std::vector<std::unique_ptr<SurfaceTally>>&& surface_tallies) {
+    thread_local_surface_tallies_.push_back(std::move(surface_tallies));
+}
+
+std::vector<VolumeQuantityContainer> PhysicsEngine::getVolumeQuantityContainers() {
+    // return sum of all thread local tallies
+    int num_of_volume_tallies = thread_local_volume_tallies_[0].size();
+    int num_of_threads = thread_local_volume_tallies_.size();
+    std::vector<VolumeQuantityContainer> combined_volume_containers(num_of_volume_tallies);
+
+    for (int i = 0; i < num_of_threads; ++i) {
+        for (int j = 0; j < num_of_volume_tallies; ++j) {
+            auto thread_local_volume_container = thread_local_volume_tallies_[i][j]->getVolumeQuantityContainer();
+            combined_volume_containers[j] = combined_volume_containers[j] + thread_local_volume_container;
+        }
+    }
+
+    return combined_volume_containers;
+}
+
+std::vector<SurfaceQuantityContainer> PhysicsEngine::getSurfaceQuantityContainers() {
+    // return sum of all thread local tallies
+    int num_of_surface_tallies = thread_local_surface_tallies_[0].size();
+    int num_of_threads = thread_local_surface_tallies_.size();
+    std::vector<SurfaceQuantityContainer> combined_surface_containers(num_of_surface_tallies);
+
+    for (int i = 0; i < num_of_threads; ++i) {
+        for (int j = 0; j < num_of_surface_tallies; ++j) {
+            auto thread_local_surface_container = thread_local_surface_tallies_[i][j]->getSurfaceQuantityContainer();
+            combined_surface_containers[j] = combined_surface_containers[j] + thread_local_surface_container;
+        }
+    }
+
+    return combined_surface_containers;
 }
 
 double PhysicsEngine::getFreePath(double max_cross_section) {
@@ -147,12 +173,12 @@ void PhysicsEngine::updateTempTallyPerPhoton(std::vector<TempSurfaceTallyData>& 
 void PhysicsEngine::processTallies(std::vector<TempSurfaceTallyData>& temp_surface_tally_data_per_photon,
                                    std::vector<TempVolumeTallyData>& temp_volume_tally_data_per_photon,
                                     std::vector<TempVoxelData>& temp_voxel_data_per_photon) {
-    for (auto &surface_tally: surface_tallies_) {
+    for (auto &surface_tally: thread_local_surface_tallies_[omp_get_thread_num()]) {
         for (auto &temp_surface_tally_data: temp_surface_tally_data_per_photon) {
             surface_tally->processMeasurements(temp_surface_tally_data);
         }
     }
-    for (auto &volume_tally: volume_tallies_) {
+    for (auto &volume_tally: thread_local_volume_tallies_[omp_get_thread_num()]) {
         for (auto &temp_volume_tally_data: temp_volume_tally_data_per_photon) {
             volume_tally->processMeasurements(temp_volume_tally_data);
         }

@@ -18,6 +18,9 @@
  * @param physics_engine The physics engine.
  * @param N_photons The number of photons to simulate.
  */
-void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine, int num_photons);
+void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine,
+                   std::function<std::vector<std::unique_ptr<SurfaceTally>>()> surface_tally_init,
+                   std::function<std::vector<std::unique_ptr<VolumeTally>>()> volume_tally_init,
+                   int N_photons);
 
 #endif //HVL_RUN_SIMULATION_H
