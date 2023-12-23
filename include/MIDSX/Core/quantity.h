@@ -1,9 +1,8 @@
 #ifndef MCXRAYTRANSPORT_QUANTITY_H
 #define MCXRAYTRANSPORT_QUANTITY_H
 
-#include <Eigen/Dense>
-#include "photon.h"
-#include "tally_data.h"
+#include <vector>
+#include <cmath>
 
 /**
  * @brief Class which represents a vector quantity. Used by the Tally classes to store simulation data.

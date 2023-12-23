@@ -116,6 +116,11 @@ void PhysicsEngine::addSurfaceTallies(std::vector<std::unique_ptr<SurfaceTally>>
     thread_local_surface_tallies_.push_back(std::move(surface_tallies));
 }
 
+void PhysicsEngine::initializeVoxelData() {
+    std::vector<TempVoxelData> temp_voxel_data;
+    thread_local_voxel_data_.push_back(temp_voxel_data);
+}
+
 std::vector<VolumeQuantityContainer> PhysicsEngine::getVolumeQuantityContainers() {
     // return sum of all thread local tallies
     int num_of_volume_tallies = thread_local_volume_tallies_[0].size();
@@ -146,6 +151,14 @@ std::vector<SurfaceQuantityContainer> PhysicsEngine::getSurfaceQuantityContainer
     }
 
     return combined_surface_containers;
+}
+
+void PhysicsEngine::addVoxelDataToComputationalDomain() {
+    for (auto &thread_local_voxel_data: thread_local_voxel_data_) {
+        for (auto &temp_voxel_data: thread_local_voxel_data) {
+            temp_voxel_data.voxel.dose.addValue(temp_voxel_data.energy_deposited);
+        }
+    }
 }
 
 double PhysicsEngine::getFreePath(double max_cross_section) {
@@ -185,7 +198,7 @@ void PhysicsEngine::processTallies(std::vector<TempSurfaceTallyData>& temp_surfa
     }
     for (auto &temp_voxel_data: temp_voxel_data_per_photon) {
         if (temp_voxel_data.energy_deposited != 0.0) {
-            VoxelHelpers::updateWelford(temp_voxel_data.voxel, temp_voxel_data.energy_deposited);
+            thread_local_voxel_data_[omp_get_thread_num()].push_back(temp_voxel_data);
         }
     }
 }

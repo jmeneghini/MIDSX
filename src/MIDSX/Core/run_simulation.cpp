@@ -24,6 +24,7 @@ void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine,
         {
             physics_engine.addSurfaceTallies(std::move(surface_tallies));
             physics_engine.addVolumeTallies(std::move(volume_tallies));
+            physics_engine.initializeVoxelData();
         }
 #pragma omp for
         for (int i = 0; i < N_photons; i++) {
@@ -35,5 +36,6 @@ void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine,
             }
         }
     }
+    physics_engine.addVoxelDataToComputationalDomain();
 }
 #pragma clang diagnostic pop

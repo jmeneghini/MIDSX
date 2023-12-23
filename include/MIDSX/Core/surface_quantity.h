@@ -3,6 +3,9 @@
 
 #include <memory>
 #include "quantity.h"
+#include <Eigen/Dense>
+#include "photon.h"
+#include "tally_data.h"
 
 /**
  * @brief Enum class which represents the types of vector quantities which can be measured for a surface tally.

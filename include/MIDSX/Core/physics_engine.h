@@ -81,6 +81,14 @@ public:
     void addSurfaceTallies(std::vector<std::unique_ptr<SurfaceTally>>&& surface_tallies);
 
     /**
+     * @brief Initializes the voxel data for a thread.
+     * Exists since omp_max_num_threads() is influenced by previous parallel sections.
+     * So, the number of threads that are available does not match the result of omp_get_max_threads().
+     */
+    void initializeVoxelData();
+
+
+    /**
      * @brief Returns the volume tallies of the simulation.
      *
      * @return The volume tallies.
@@ -95,6 +103,12 @@ public:
     std::vector<SurfaceQuantityContainer> getSurfaceQuantityContainers();
 
     /**
+     * @brief Takes thread local voxel data and adds it to the computational domain.
+     * Should be called after all photons have been transported. Not thread safe.
+     */
+    void addVoxelDataToComputationalDomain();
+
+    /**
      * @brief Processes the domain boundary crossing of a photon by terminating the photon.
      *
      * @param photon The photon to process.
@@ -106,6 +120,7 @@ private:
     InteractionData& interaction_data_;
     std::vector<std::vector<std::unique_ptr<VolumeTally>>> thread_local_volume_tallies_;
     std::vector<std::vector<std::unique_ptr<SurfaceTally>>> thread_local_surface_tallies_;
+    std::vector<std::vector<TempVoxelData>> thread_local_voxel_data_;
     std::shared_ptr<PhotoelectricEffect> photoelectric_effect_;
     std::shared_ptr<IncoherentScattering> incoherent_scattering_;
     std::shared_ptr<CoherentScattering> coherent_scattering_;

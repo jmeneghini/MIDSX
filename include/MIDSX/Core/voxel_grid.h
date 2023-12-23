@@ -92,7 +92,7 @@ public:
      *
      * @return unordered map of material name to total energy deposited in the voxel grid by material (eV)
      */
-    std::unordered_map<int, std::pair<double, double>> getEnergyDepositedInMaterials();
+    std::unordered_map<int, VectorValue> getEnergyDepositedInMaterials();
 
     /**
      * @brief Adds to the number of photons that have exited the voxel grid.

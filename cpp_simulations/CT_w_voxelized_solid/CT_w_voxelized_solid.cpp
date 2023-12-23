@@ -49,12 +49,11 @@ PhotonSource initializeSource() {
     return source;
 }
 
-void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& volume_tallies, int N_photons, ComputationalDomain& comp_domain) {
+void displayVolumeTallyResults(std::vector<VolumeQuantityContainer>& quantity_containers, int N_photons, ComputationalDomain& comp_domain) {
     int i = 1;
-    for (auto &tally: volume_tallies) {
+    for (auto &quantity_container: quantity_containers) {
         std::cout << "Volume tally " << i << ":" << std::endl;
         std::cout << "----------------" << std::endl;
-        auto quantity_container = tally->getVolumeQuantityContainer();
         auto vector_quantities = quantity_container.getVectorQuantities();
         auto count_quantities = quantity_container.getCountQuantities();
         for (auto &vector_quantity: vector_quantities) {
@@ -94,14 +93,11 @@ void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& 
     }
 }
 
-
-
-void displaySurfaceTallyResults(const std::vector<std::unique_ptr<SurfaceTally>>& surface_tallies, int N_photons, ComputationalDomain& comp_domain) {
+void displaySurfaceTallyResults(std::vector<SurfaceQuantityContainer>& quantity_containers, int N_photons, ComputationalDomain& comp_domain) {
     int i = 1;
-    for (auto &tally: surface_tallies) {
+    for (auto &quantity_container: quantity_containers) {
         std::cout << "Surface tally " << i << ":" << std::endl;
         std::cout << "----------------" << std::endl;
-        auto quantity_container = tally->getSurfaceQuantityContainer();
         auto vector_quantities = quantity_container.getVectorQuantities();
         auto count_quantities = quantity_container.getCountQuantities();
         for (auto &vector_quantity: vector_quantities) {
@@ -141,6 +137,7 @@ void displaySurfaceTallyResults(const std::vector<std::unique_ptr<SurfaceTally>>
     }
 }
 
+
 void displayVoxelData(ComputationalDomain& comp_domain, int N_photons) {
     const int NUM_VOXEL_GRIDS = comp_domain.getNumVoxelGrids();
     for (int i = 0; i < NUM_VOXEL_GRIDS; i++) {
@@ -156,12 +153,9 @@ void displayVoxelData(ComputationalDomain& comp_domain, int N_photons) {
 }
 
 int main() {
-    auto surface_tallies = initializeSurfaceTallies();
-    auto volume_tallies = initializeVolumeTallies();
-
     ComputationalDomain comp_domain("cpp_simulations/CT_w_voxelized_solid/CT_w_voxelized_solid.json");
     InteractionData interaction_data = comp_domain.getInteractionData();
-    PhysicsEngine physics_engine(comp_domain, interaction_data, std::move(volume_tallies), std::move(surface_tallies));
+    PhysicsEngine physics_engine(comp_domain, interaction_data);
 
     PhotonSource source = initializeSource();
 
@@ -169,11 +163,15 @@ int main() {
 
     std::cout << std::fixed << std::setprecision(15);
 
-    runSimulation(source, physics_engine, NUM_OF_PHOTONS);
+    runSimulation(source, physics_engine, initializeSurfaceTallies, initializeVolumeTallies, NUM_OF_PHOTONS);
 
-    displaySurfaceTallyResults(physics_engine.getSurfaceTallies(), NUM_OF_PHOTONS, comp_domain);
-    displayVolumeTallyResults(physics_engine.getVolumeTallies(), NUM_OF_PHOTONS, comp_domain);
+    auto surface_tally_results = physics_engine.getSurfaceQuantityContainers();
+    auto volume_tally_results = physics_engine.getVolumeQuantityContainers();
+
+    displaySurfaceTallyResults(surface_tally_results, NUM_OF_PHOTONS, comp_domain);
+    displayVolumeTallyResults(volume_tally_results, NUM_OF_PHOTONS, comp_domain);
     displayVoxelData(comp_domain, NUM_OF_PHOTONS);
+
 
     return 0;
 }

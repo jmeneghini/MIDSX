@@ -86,40 +86,18 @@ std::vector<std::string> VoxelGrid::getMaterialNames() const {
 double VoxelGrid::getTotalEnergyDeposited() {
     double totalDose = 0.0;
     for (auto& voxel : voxels_) {
-        totalDose += voxel.dose;
+        totalDose += voxel.dose.getSum();
     }
     return totalDose;
 }
 
-struct MaterialStats {
-    double totalDose = 0.0;
-    double totalVariance = 0.0;  // Will store the sum of squares of uncertainties
-};
-
-std::unordered_map<int, std::pair<double, double>> VoxelGrid::getEnergyDepositedInMaterials() {
-    std::unordered_map<int, MaterialStats> materialStats;
+std::unordered_map<int, VectorValue> VoxelGrid::getEnergyDepositedInMaterials() {
+    std::unordered_map<int, VectorValue> energyDepositedInMaterials;
 
     for (auto& voxel : voxels_) {
-        auto& stats = materialStats[voxel.materialID];
-
-        // Aggregate dose
-        stats.totalDose += voxel.dose;
-
-        // Aggregate uncertainty
-        double voxelVariance;
-        if (voxel.count > 1) {
-            voxelVariance = voxel.M2 / (voxel.count - 1);
-        } else {
-            voxelVariance = 0.0;  // Or another default value if count is 0 or 1
-        }
-        stats.totalVariance += voxelVariance;
-    }
-
-    // Convert to desired output format and calculate total uncertainty
-    std::unordered_map<int, std::pair<double, double>> energyDepositedInMaterials;
-    for (const auto& [materialID, stats] : materialStats) {
-        double totalUncertainty = std::sqrt(stats.totalVariance);
-        energyDepositedInMaterials[materialID] = {stats.totalDose, totalUncertainty};
+        int materialID = voxel.materialID;
+        std::vector<double> voxel_dose = voxel.dose.getVector();
+        energyDepositedInMaterials[materialID].addValues(voxel_dose);
     }
 
     return energyDepositedInMaterials;
