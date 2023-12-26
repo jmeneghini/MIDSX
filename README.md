@@ -60,9 +60,9 @@ MIDSX has been tested on macOS and Ubuntu. To install with the command line:
    ```
 
 ## Documentation
-The [documentation](https://jmeneghini.github.io/MIDSX/) for MIDSX is generated via Doxygen and is hosted with Github Pages.
-The preprint for the validation of MIDSX can be found on [arXiv](https://arxiv.org/abs/2311.16873)
-
+The [documentation](https://jmeneghini.github.io/MIDSX/) for MIDSX is generated via Doxygen and is hosted with Github Pages. \
+\
+The preprint for the validation of MIDSX can be found on [arXiv](https://arxiv.org/abs/2311.16873).
 
 ## Usage
 To use the library, configure a project with the following CMakeLists.txt structure:
@@ -82,6 +82,9 @@ find_package(pybind11 REQUIRED)
 find_package(MIDSX REQUIRED)
 # Needed for parallelization
 find_package(OpenMP REQUIRED)
+
+# If unable to find pybind11, manually set the extern directory
+# add_subdirectory(../../extern/pybind11 pybind11)
 
 # Sets common libs that are linked to executable
 set(COMMON_LIBS pybind11::embed MIDSX::MIDSX)
@@ -114,9 +117,7 @@ A typical MIDSX simulation has the following structure:
 ComputationalDomain comp_domain("domain.json");
 ```
 
-* The `InteractionData` object can either be manually initialized via a list of material names or by calling `comp_domain.getInteractionData()`, which generates an `InteractionData` object using the materials
-
-contained in the `ComputationalDomain` object.
+* The `InteractionData` object can either be manually initialized via a list of material names or by calling `comp_domain.getInteractionData()`, which generates an `InteractionData` object using the materials contained in the `ComputationalDomain` object.
 
 ```C++
 std::vector<std::string> material_names = {"Air, Dry (near sea level)", "Water, Liquid"};
@@ -127,29 +128,42 @@ InteractionData interaction_data(material_names);
 InteractionData interaction_data = comp_domain.getInteractionData();
 ```
 
-* To make measurements, tallies must be specified. Various `SurfaceTally` and `VolumeTally` objects are available, and these objects must be supplied with a `QuantityContainer` which holds `Quantity`'s to be measured by the tallies. These containers can be created manually, or predefined containers can be used via `QuantityContainerFactory`. These created tallies must be contained as pointers in two separate vectors for surface and volume tallies.
-
+* Using these two objects, the `PhysicsEngine` can now be initialized:
 ```C++
-std::vector<std::unique_ptr<SurfaceTally>> surface_tallies;
-surface_tallies.emplace_back(std::make_unique<DiscSurfaceTally>(
-            Eigen::Vector3d(2, 2, 100),
-            Eigen::Vector3d(0, 0, 1),
-            1.0,
-            SurfaceQuantityContainerFactory::AllQuantities()));
-
-std::vector<std::unique_ptr<VolumeTally>> volume_tallies;
-auto volume_container = VolumeQuantityContainer();
-volume_container.addVectorQuantity(VectorVolumeQuantity(VectorVolumeQuantityType::EnergyDeposition));
-volume_tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
-            Eigen::Vector3d(0, 0, 155),
-            Eigen::Vector3d(39.0, 39.0, 175),
-            volume_container));
+PhysicsEngine physics_engine(comp_domain, interaction_data);
 ```
 
-* Using all these objects, the `PhysicsEngine` can now be initialized:
+* To make measurements, tallies must be specified. Various `SurfaceTally` and `VolumeTally` objects are available, and these objects must be supplied with a `SurfaceQuantityContainer` or `VolumeQuanitityContainer` which holds `SurfaceQuantity`'s and `VolumeQuantity`'s, respectively, to be measured by the tallies. These containers can be created manually, or predefined containers can be used via `SurfaceQuantityContainerFactory` or `VolumeQuantityContainerFactory`. Since these tallies must be constructed in an OpenMP parallel region, you must create seperate functions which return a vector of unique pointers to these tallies.
+
 ```C++
-PhysicsEngine physics_engine(comp_domain, interaction_data,
- std::move(volume_tallies), std::move(surface_tallies));
+std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
+    // Create an empty vector of unique pointers to surface tallies
+    std::vector<std::unique_ptr<SurfaceTally>> tallies = {};
+    
+    // Use the predefined container factory to create a container with all quantities
+    // to create a disc surface tally and add it to the vector
+    surface_tallies.emplace_back(std::make_unique<DiscSurfaceTally>(
+                Eigen::Vector3d(2, 2, 100),
+                Eigen::Vector3d(0, 0, 1),
+                1.0,
+                SurfaceQuantityContainerFactory::AllQuantities()));
+    return tallies;
+}
+std::vector<std::unique_ptr<VolumeTally>> initializeVolumeTallies() {
+    // Create an empty vector of unique pointers to volume tallies
+    std::vector<std::unique_ptr<VolumeTally>> tallies = {};
+    
+    // Manually create a container with only energy deposition
+    auto volume_container = VolumeQuantityContainer();
+    volume_container.addVectorQuantity(VectorVolumeQuantity(VectorVolumeQuantityType::EnergyDeposition));
+    
+    // Create a cuboid volume tally and add it to the vector
+    volume_tallies.emplace_back(std::make_unique<AACuboidVolumeTally>(
+                Eigen::Vector3d(0, 0, 155),
+                Eigen::Vector3d(39.0, 39.0, 175),
+                volume_container));
+    return tallies;
+}
 ```
 
 * In order to run the simulation, one just needs a way to generate photons. MIDSX uses `EnergySpectrum`, `Directionality`, and `SourceGeometry` objects to build a `PhotonSource`.
@@ -168,13 +182,14 @@ std::unique_ptr<SourceGeometry> geometry = std::make_unique<PointGeometry>(
 PhotonSource source(std::move(spectrum), std::move(directionality), std::move(geometry));
 ```
 
-* Now, with `PhotonSource` and `PhysicsEngine`, you can use `runSimulation` to run the simulation:
+* Now, with `PhotonSource`, `PhysicsEngine`, and the tally initialization functions, you can use `runSimulation` to run the simulation:
 
 ```C++
 const int NUM_OF_PHOTONS = 1000000;
-runSimulation(source, physics_engine, NUM_OF_PHOTONS);
+runSimulation(source, physics_engine, initializeSurfaceTallies,
+              initializeVolumeTallies, NUM_OF_PHOTONS);
 ```
 
-* Data can be retrieved from the simulation via `physics_engine.getSurfaceTallies()` and `physics_engine.getVolumeTallies()`.
+* Data can be retrieved from the simulation via `physics_engine.getSurfaceQuantityContainers()` and `physics_engine.getVolumeQuantityContainers()`.
 
 * For further info, look at the several examples in the `cpp_simulations` folder.

@@ -44,9 +44,8 @@ PhotonSource initializeSource() {
     return source;
 }
 
-
-void displayResults(const std::vector<std::unique_ptr<SurfaceTally>>& surface_tallies, int N_photons, InteractionData& interaction_data) {
-    auto quantity_container = surface_tallies[0]->getSurfaceQuantityContainer();
+void displayResults(std::vector<SurfaceQuantityContainer>& quantity_containers, int N_photons, InteractionData& interaction_data) {
+    auto quantity_container = quantity_containers.at(0);
     auto vector_quantities = quantity_container.getVectorQuantities();
     auto count_quantities = quantity_container.getCountQuantities();
 
@@ -61,19 +60,19 @@ void displayResults(const std::vector<std::unique_ptr<SurfaceTally>>& surface_ta
 }
 
 int main() {
-    auto surface_tallies = initializeSurfaceTallies();
-
     ComputationalDomain comp_domain("cpp_simulations/half_value_layer/hvl.json");
     InteractionData interaction_data = comp_domain.getInteractionData();
-    PhysicsEngine physics_engine(comp_domain, interaction_data, {}, std::move(surface_tallies));
-
-
+    PhysicsEngine physics_engine(comp_domain, interaction_data);
 
     PhotonSource source = initializeSource();
 
-    runSimulation(source, physics_engine, 10000000);
+    int N_PHOTONS = 100000000;
+    runSimulation(source, physics_engine, initializeSurfaceTallies, [](){return std::vector<std::unique_ptr<VolumeTally>>();}, N_PHOTONS);
 
-    displayResults(physics_engine.getSurfaceTallies(), 10000000, interaction_data);
+    auto surface_tally_results = physics_engine.getSurfaceQuantityContainers();
+
+    displayResults(surface_tally_results, N_PHOTONS, interaction_data);
 
     return 0;
 }
+

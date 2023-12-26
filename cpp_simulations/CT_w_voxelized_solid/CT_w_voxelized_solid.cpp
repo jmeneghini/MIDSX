@@ -146,8 +146,8 @@ void displayVoxelData(ComputationalDomain& comp_domain, int N_photons) {
         VoxelGrid& voxel_grid = comp_domain.getVoxelGridN(i);
         auto material_deposition = voxel_grid.getEnergyDepositedInMaterials();
         for (auto &material: material_deposition) {
-            std::cout << "Material " << material.first << ": " << material.second.first/N_photons << " +- "
-            << material.second.second/N_photons << std::endl << "\n";
+            std::cout << "Material " << material.first << ": " << material.second.getSum()/N_photons << " +- "
+            << material.second.getSumSTD()/N_photons << std::endl << "\n";
         }
     }
 }

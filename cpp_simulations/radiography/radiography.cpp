@@ -320,12 +320,14 @@ int main() {
 
     std::cout << std::fixed << std::setprecision(15);
 
-    runSimulation(source, physics_engine, initializeSurfaceTallies, initializeVolumeTallies, NUM_OF_PHOTONS);
+    double run_time;
+
+    runSimulation(source, physics_engine, initializeSurfaceTallies, initializeVolumeTallies, NUM_OF_PHOTONS, run_time);
+
+    std::cout << "Run time: " << run_time << " seconds" << std::endl;
 
     auto surface_tally_results = physics_engine.getSurfaceQuantityContainers();
     auto volume_tally_results = physics_engine.getVolumeQuantityContainers();
-    std::cout << surface_tally_results.size() << std::endl;
-    std::cout << volume_tally_results.size() << std::endl;
 
     displaySurfaceTallyResults(surface_tally_results, NUM_OF_PHOTONS, comp_domain);
     displayVolumeTallyResults(volume_tally_results, NUM_OF_PHOTONS, comp_domain);

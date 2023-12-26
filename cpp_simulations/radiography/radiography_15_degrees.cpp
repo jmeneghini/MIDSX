@@ -208,14 +208,13 @@ PhotonSource initializeSource() {
     return source;
 }
 
-void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& volume_tallies, int N_photons, ComputationalDomain& comp_domain) {
+void displayVolumeTallyResults(std::vector<VolumeQuantityContainer>& quantity_containers, int N_photons, ComputationalDomain& comp_domain) {
     int i = 1;
-    for (auto &tally: volume_tallies) {
+    for (auto &quantity_container: quantity_containers) {
         std::cout << "Volume tally " << i << ":" << std::endl;
         std::cout << "----------------" << std::endl;
-        auto& quantity_container = tally->getVolumeQuantityContainer();
-        auto& vector_quantities = quantity_container.getVectorQuantities();
-        auto& count_quantities = quantity_container.getCountQuantities();
+        auto vector_quantities = quantity_container.getVectorQuantities();
+        auto count_quantities = quantity_container.getCountQuantities();
         for (auto &vector_quantity: vector_quantities) {
             std::cout << VectorVolumeQuantityHelper::toString(vector_quantity.first) << ":" << std::endl;
             std::cout << "  Total: " << vector_quantity.second.getTotalValues().getSum() / N_photons << " +- "
@@ -230,7 +229,7 @@ void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& 
                       << vector_quantity.second.getSingleIncoherentScatterValues().getSumSTD() / N_photons << std::endl;
             std::cout << "  Multiple scatter: "
                       << vector_quantity.second.getMultipleScatterValues().getSum() / N_photons << " +- "
-                      << vector_quantity.second.getMultipleScatterValues().getSumSTD() / N_photons << std::endl;
+                      << vector_quantity.second.getMultipleScatterValues().getSumSTD() / N_photons << std::endl << "\n";
         }
 
         for (auto &count_quantity: count_quantities) {
@@ -247,7 +246,7 @@ void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& 
                       << count_quantity.second.getSingleIncoherentScatterValues().getCountSTD() << std::endl;
             std::cout << "  Multiple scatter: "
                       << count_quantity.second.getMultipleScatterValues().getCount() << " +- "
-                      << count_quantity.second.getMultipleScatterValues().getCountSTD() << std::endl;
+                      << count_quantity.second.getMultipleScatterValues().getCountSTD() << std::endl << "\n";
         }
         i++;
     }
@@ -255,14 +254,13 @@ void displayVolumeTallyResults(const std::vector<std::unique_ptr<VolumeTally>>& 
 
 
 
-void displaySurfaceTallyResults(const std::vector<std::unique_ptr<SurfaceTally>>& surface_tallies, int N_photons, ComputationalDomain& comp_domain) {
+void displaySurfaceTallyResults(std::vector<SurfaceQuantityContainer>& quantity_containers, int N_photons, ComputationalDomain& comp_domain) {
     int i = 1;
-    for (auto &tally: surface_tallies) {
+    for (auto &quantity_container: quantity_containers) {
         std::cout << "Surface tally " << i << ":" << std::endl;
         std::cout << "----------------" << std::endl;
-        auto& quantity_container = tally->getSurfaceQuantityContainer();
-        auto& vector_quantities = quantity_container.getVectorQuantities();
-        auto& count_quantities = quantity_container.getCountQuantities();
+        auto vector_quantities = quantity_container.getVectorQuantities();
+        auto count_quantities = quantity_container.getCountQuantities();
         for (auto &vector_quantity: vector_quantities) {
             std::cout << VectorSurfaceQuantityHelper::toString(vector_quantity.first) << ":" << std::endl;
             std::cout << "  Total: " << vector_quantity.second.getTotalValues().getSum() / N_photons << " +- "
@@ -308,18 +306,16 @@ void displayVoxelData(ComputationalDomain& comp_domain, int N_photons) {
         VoxelGrid& voxel_grid = comp_domain.getVoxelGridN(i);
         auto material_deposition = voxel_grid.getEnergyDepositedInMaterials();
         for (auto &material: material_deposition) {
-            std::cout << "Material " << material.first << ": " << material.second/N_photons << std::endl << "\n";
+            std::cout << "Material " << material.first << ": " << material.second.getSum()/N_photons << " +- "
+                      << material.second.getSumSTD()/N_photons << std::endl << "\n";
         }
     }
 }
 
 int main() {
-    auto surface_tallies = initializeSurfaceTallies();
-    auto volume_tallies = initializeVolumeTallies();
-
     ComputationalDomain comp_domain("cpp_simulations/radiography/radiography_15_degrees.json");
     InteractionData interaction_data = comp_domain.getInteractionData();
-    PhysicsEngine physics_engine(comp_domain, interaction_data, std::move(volume_tallies), std::move(surface_tallies));
+    PhysicsEngine physics_engine(comp_domain, interaction_data);
 
     PhotonSource source = initializeSource();
 
@@ -327,10 +323,19 @@ int main() {
 
     std::cout << std::fixed << std::setprecision(15);
 
-    runSimulation(source, physics_engine, NUM_OF_PHOTONS);
+    runSimulation(source, physics_engine, initializeSurfaceTallies, initializeVolumeTallies, NUM_OF_PHOTONS);
 
-    displaySurfaceTallyResults(physics_engine.getSurfaceTallies(), NUM_OF_PHOTONS, comp_domain);
-    displayVolumeTallyResults(physics_engine.getVolumeTallies(), NUM_OF_PHOTONS, comp_domain);
+    double run_time;
+
+    runSimulation(source, physics_engine, initializeSurfaceTallies, initializeVolumeTallies, NUM_OF_PHOTONS, run_time);
+
+    std::cout << "Run time: " << run_time << " seconds" << std::endl;
+
+    auto surface_tally_results = physics_engine.getSurfaceQuantityContainers();
+    auto volume_tally_results = physics_engine.getVolumeQuantityContainers();
+
+    displaySurfaceTallyResults(surface_tally_results, NUM_OF_PHOTONS, comp_domain);
+    displayVolumeTallyResults(volume_tally_results, NUM_OF_PHOTONS, comp_domain);
     displayVoxelData(comp_domain, NUM_OF_PHOTONS);
 
     return 0;

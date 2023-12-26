@@ -26,12 +26,9 @@ public:
      *
      * @param comp_domain The computational domain.
      * @param interaction_data The interaction data.
-     * @param volume_tallies The volume tallies.
-     * @param surface_tallies The surface tallies.
      */
     PhysicsEngine(ComputationalDomain& comp_domain, InteractionData& interaction_data);
 
-//    std::vector<std::unique_ptr<VolumeTally>>&& volume_tallies, std::vector<std::unique_ptr<SurfaceTally>>&& surface_tallies
     /**
      * @brief Transports a photon until an photoelectric interaction occurs or leaves the voxel grid (i.e. terminated).
      *
@@ -89,16 +86,16 @@ public:
 
 
     /**
-     * @brief Returns the volume tallies of the simulation.
+     * @brief Returns the VolumeQuantityContainers of the simulation.
      *
-     * @return The volume tallies.
+     * @return A vector of VolumeQuantityContainers corresponding to each volume tally.
      */
     std::vector<VolumeQuantityContainer> getVolumeQuantityContainers();
 
     /**
-     * @brief Returns the surface tallies of the simulation.
+     * @brief Returns the SurfaceQuantityContainers of the simulation.
      *
-     * @return The surface tallies.
+     * @return A vector of SurfaceQuantityContainers corresponding to each surface tally.
      */
     std::vector<SurfaceQuantityContainer> getSurfaceQuantityContainers();
 
