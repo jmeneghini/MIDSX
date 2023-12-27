@@ -18,7 +18,7 @@ jobs:
         run: sudo pip3 install pandas
 
       - name: Generate Materials HTML
-        run: sudo python3 ./docs/gen_materials_page.py
+        run: sudo mkdir ./docs/html && sudo python3 ./docs/gen_materials_page.py
 
       - name: Doxygen Action
         uses: mattnotmitt/doxygen-action@v1.1.0
