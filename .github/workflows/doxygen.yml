@@ -24,7 +24,7 @@ jobs:
         run: pip3 install pandas
 
       - name: Generate Materials HTML
-        run: python3 ./docs/gen_materials_page.py
+        run: sudo python3 ./docs/gen_materials_page.py
 
 
       - name: Deploy
