@@ -9,5 +9,6 @@ var searchData=
   ['addvectorquantity_6',['addVectorQuantity',['../class_surface_quantity_container.html#afbcc1d90fb19b5a362bbd91d11c8a323',1,'SurfaceQuantityContainer::addVectorQuantity()'],['../class_volume_quantity_container.html#a2f3747d909cc833ff66f9bf16c80a269',1,'VolumeQuantityContainer::addVectorQuantity()']]],
   ['addvolumetallies_7',['addVolumeTallies',['../class_physics_engine.html#a1c453aa6a2c81dc1d1ec6ecb42cda3b9',1,'PhysicsEngine']]],
   ['addvoxeldatatocomputationaldomain_8',['addVoxelDataToComputationalDomain',['../class_physics_engine.html#a833b9a85ef9ed6e7b4cb9c18b98edbed',1,'PhysicsEngine']]],
-  ['and_20dosage_20simulation_20of_20x_20rays_9',['MIDSX (Monte Carlo Interactions and Dosage Simulation of X-rays)',['../index.html',1,'']]]
+  ['and_20dosage_20simulation_20of_20x_20rays_9',['MIDSX (Monte Carlo Interactions and Dosage Simulation of X-rays)',['../index.html',1,'']]],
+  ['available_20for_20simulation_10',['Materials Available For Simulation',['../md_docs_2additional__docs_2_materials.html',1,'']]]
 ];
