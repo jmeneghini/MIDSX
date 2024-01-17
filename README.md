@@ -118,7 +118,6 @@ ComputationalDomain comp_domain("domain.json");
 ```
 
 * The `InteractionData` object can either be manually initialized via a list of material names or by calling `comp_domain.getInteractionData()`, which generates an `InteractionData` object using the materials contained in the `ComputationalDomain` object.
-* A list of materials available for simulation can be found in the [documentation](https://jmeneghini.github.io/MIDSX/md_docs_2additional__docs_2_materials.html)
 
 ```C++
 std::vector<std::string> material_names = {"Air, Dry (near sea level)", "Water, Liquid"};
