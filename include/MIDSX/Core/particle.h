@@ -15,17 +15,6 @@ namespace ParticleHelpers{
      * @return The rotated vector.
      */
     Eigen::Vector3d rotateDirection(const Eigen::Vector3d& vector, const double& theta, const double& phi);
-
-
-    /**
-     * @brief Returns a vector perpendicular to the given vector.
-     *
-     * The returned vector is not normalized and could be any vector perpendicular to the given vector.
-     *
-     * @param vector The vector to find a perpendicular vector to.
-     * @return The perpendicular vector.
-     */
-    Eigen::Vector3d getPerpendicularVector(const Eigen::Vector3d& vector);
 }
 
 /**
