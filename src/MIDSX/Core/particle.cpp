@@ -11,14 +11,22 @@ Eigen::Vector3d ParticleHelpers::rotateDirection(const Eigen::Vector3d &vector, 
 
     // Using quaternion rotation, rotate the vector about the perpendicular vector by theta (polar angle)
     // Eigen has some nice helper functions for this
-    auto rotation = Eigen::AngleAxisd(theta, perp_vector);
-    Eigen::Vector3d rotated_vector = rotation * perp_vector;
+//    auto rotation = Eigen::AngleAxisd(theta, perp_vector);
+//    Eigen::Vector3d rotated_vector = rotation * perp_vector;
+//
+//    // Now rotate about the direction vector by phi (azimuthal angle)
+//    rotation = Eigen::AngleAxisd(phi, vector);
+//    rotated_vector = rotation * rotated_vector;
 
-    // Now rotate about the direction vector by phi (azimuthal angle)
-    rotation = Eigen::AngleAxisd(phi, vector);
-    rotated_vector = rotation * rotated_vector;
+    Eigen::Quaterniond q_theta(cos(theta/2), perp_vector.x()*sin(theta/2), perp_vector.y()*sin(theta/2), perp_vector.z()*sin(theta/2));
+    Eigen::Quaterniond q_phi(cos(phi/2), vector.x()*sin(phi/2), vector.y()*sin(phi/2), vector.z()*sin(phi/2));
+    Eigen::Quaterniond q = q_phi * q_theta;
+    Eigen::Quaterniond v(0, vector.x(), vector.y(), vector.z());
 
-    return rotated_vector;
+    Eigen::Quaterniond rotated_vector = q * v * q.inverse();
+
+
+    return {rotated_vector.x(), rotated_vector.y(), rotated_vector.z()};
 }
 
 Eigen::Vector3d ParticleHelpers::getPerpendicularVector(const Eigen::Vector3d &vector) {
