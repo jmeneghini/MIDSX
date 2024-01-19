@@ -5,7 +5,7 @@ import os
 # Change working directory to the directory of this file
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-db_path = '../../data/data_sources/EPDL/EPDL.db'
+db_path = '../../data/data_sources/EPDL/midsx.db'
 conn = sqlite3.connect(db_path)
 c = conn.cursor()
 
