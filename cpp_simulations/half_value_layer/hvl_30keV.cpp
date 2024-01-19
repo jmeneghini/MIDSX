@@ -18,7 +18,7 @@ std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
 }
 
 Eigen::MatrixXd processEnergySpectrum() {
-    Eigen::MatrixXd energy_spectrum = SourceHelpers::readCSV("data/source_distributions/RQRM3_MO_MO_30kVp_E_spectrum.csv");
+    Eigen::MatrixXd energy_spectrum = SourceHelpers::readCSV("../../data/source_distributions/RQRM3_MO_MO_30kVp_E_spectrum.csv");
     energy_spectrum.col(0) = energy_spectrum.col(0).array() * 1000;  // Convert from keV to eV
     return energy_spectrum;
 }
@@ -60,14 +60,18 @@ void displayResults(std::vector<SurfaceQuantityContainer>& quantity_containers, 
 }
 
 int main() {
-    ComputationalDomain comp_domain("cpp_simulations/half_value_layer/hvl.json");
+    ComputationalDomain comp_domain("hvl.json");
     InteractionData interaction_data = comp_domain.getInteractionData();
     PhysicsEngine physics_engine(comp_domain, interaction_data);
 
     PhotonSource source = initializeSource();
 
-    int N_PHOTONS = 100000000;
-    runSimulation(source, physics_engine, initializeSurfaceTallies, [](){return std::vector<std::unique_ptr<VolumeTally>>();}, N_PHOTONS);
+    int N_PHOTONS = 10000000;
+    double run_time;
+    runSimulation(source, physics_engine, initializeSurfaceTallies, [](){return std::vector<std::unique_ptr<VolumeTally>>();}, N_PHOTONS, run_time);
+
+    std::cout << "Run time: " << run_time << std::endl;
+    std::cout << "\n" << std::endl;
 
     auto surface_tally_results = physics_engine.getSurfaceQuantityContainers();
 

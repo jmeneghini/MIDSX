@@ -7,6 +7,7 @@
 #include "data_access_object.h"
 #include "interpolators.h"
 #include "material.h"
+#include "config.h"
 #include <iostream>
 #include <memory>
 #include <map>
@@ -16,7 +17,9 @@ namespace {
     /**
      * @brief Relative path to the EPDL database.
      */
-    const std::string MIDSX_DB_PATH = "data/data_sources/EPDL/EPDL.db";
+    const std::string MIDSX_DB_DIR_VAR = MIDSX_DB_DIR;
+    const std::string MIDSX_DB_NAME = "midsx.db";
+    const std::string MIDSX_DB_PATH = MIDSX_DB_DIR_VAR + "/" + MIDSX_DB_NAME;
 }
 
 /**

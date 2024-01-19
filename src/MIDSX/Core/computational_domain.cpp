@@ -49,7 +49,8 @@ int ComputationalDomain::getNumVoxelGrids() const {
 
 void ComputationalDomain::initializeCompDomain(const std::string &json_file_path) {
     json json_object;
-    std::string json_directory_path = std::filesystem::path(json_file_path).parent_path();
+    std::filesystem::path json_absolute_path = std::filesystem::absolute(json_file_path);
+    std::string json_directory_path = json_absolute_path.parent_path().string();
     if (isJSON(json_file_path)) {
         // create json object
         std::ifstream json_file(json_file_path);

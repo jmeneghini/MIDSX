@@ -8,8 +8,15 @@ include(AddGitSubmodule.cmake)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-find_package(OpenMP REQUIRED)
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    message(STATUS "Setting build type to 'Release' as none was specified.")
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+    # Set the possible values of build type for cmake-gui
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
 
+set(MIDSX_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(SOURCE_DIR src/MIDSX)
 set(INCLUDE_DIR include/MIDSX/)
 file(GLOB_RECURSE SOURCES "${SOURCE_DIR}/*.cpp")
@@ -57,6 +64,16 @@ configure_package_config_file(
         INSTALL_DESTINATION lib/cmake/MIDSX
 )
 
+# Set db install directory
+set(MIDSX_DB_DIR ${CMAKE_INSTALL_PREFIX}/share/MIDSX)
+
+# Configure the config file
+configure_file(
+        ${CMAKE_CURRENT_LIST_DIR}/include/MIDSX/Core/config.h.in
+        ${CMAKE_CURRENT_LIST_DIR}/include/MIDSX/Core/config.h
+        @ONLY
+)
+
 # Installation and export
 install(TARGETS MIDSX
         EXPORT MIDSXTargets
@@ -64,6 +81,10 @@ install(TARGETS MIDSX
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION bin
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+# install db
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/data_sources/EPDL/midsx.db
+        DESTINATION ${MIDSX_DB_DIR})
 
 
 install(DIRECTORY ${INCLUDE_DIR}/

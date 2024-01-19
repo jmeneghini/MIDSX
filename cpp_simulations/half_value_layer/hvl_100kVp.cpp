@@ -18,7 +18,7 @@ std::vector<std::unique_ptr<SurfaceTally>> initializeSurfaceTallies() {
 }
 
 Eigen::MatrixXd processEnergySpectrum() {
-    Eigen::MatrixXd energy_spectrum = SourceHelpers::readCSV("data/source_distributions/RQR8_W_AL_100kVp_E_spectrum.csv");
+    Eigen::MatrixXd energy_spectrum = SourceHelpers::readCSV("../../data/source_distributions/RQR8_W_AL_100kVp_E_spectrum.csv");
     energy_spectrum.col(0) = energy_spectrum.col(0).array() * 1000;  // Convert from keV to eV
     return energy_spectrum;
 }
@@ -60,7 +60,7 @@ void displayResults(std::vector<SurfaceQuantityContainer>& quantity_containers, 
 }
 
 int main() {
-    ComputationalDomain comp_domain("cpp_simulations/half_value_layer/hvl.json");
+    ComputationalDomain comp_domain("hvl.json");
     InteractionData interaction_data = comp_domain.getInteractionData();
     PhysicsEngine physics_engine(comp_domain, interaction_data);
 

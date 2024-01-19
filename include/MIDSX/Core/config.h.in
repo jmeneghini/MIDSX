@@ -1,0 +1,3 @@
+#pragma once
+
+#define MIDSX_DB_DIR "@MIDSX_DB_DIR@"

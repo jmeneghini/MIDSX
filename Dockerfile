@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     git \
     sqlite3 \
-    libsqlite3-dev
+    libsqlite3-dev \
+    libboost-all-dev
 
 # Install Python dependencies
 RUN python3.10 -m pip install \
@@ -19,10 +20,10 @@ RUN python3.10 -m pip install \
 RUN git clone --recurse-submodules https://github.com/jmeneghini/MIDSX.git /usr/src/MIDSX
 
 # Set the working directory
-WORKDIR usr/src/MIDSX
+WORKDIR /usr/src/MIDSX
 
-# Build the project
-RUN mkdir build && cd build && cmake .. && make
+# Build and install MIDSX
+RUN mkdir build && cd build && cmake .. && make install
 
 
 

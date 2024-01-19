@@ -1,5 +1,6 @@
 #include "Core/source.h"
 #include <utility>
+#include <filesystem>
 
 Eigen::Vector3d SourceHelpers::angleToUnitDirection(double theta, double phi) {
     Eigen::Vector3d unit_direction;
@@ -8,6 +9,15 @@ Eigen::Vector3d SourceHelpers::angleToUnitDirection(double theta, double phi) {
 }
 
 Eigen::MatrixXd SourceHelpers::readCSV(const std::string& file) {
+    // check if file exists first and if its a csv or txt file with std::filesystem
+    if (!std::filesystem::exists(file)) {
+        throw std::invalid_argument("File does not exist");
+    }
+    std::string extension = std::filesystem::path(file).extension();
+    if (extension != ".csv" && extension != ".txt") {
+        throw std::invalid_argument("File is not a csv or txt file");
+    }
+
     std::ifstream in(file);
     std::string line;
 

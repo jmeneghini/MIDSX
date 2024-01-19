@@ -6,13 +6,10 @@ function(create_executable EXE_NAME SRC_FILE)
     target_link_libraries(${EXE_NAME} PRIVATE ${COMMON_LIBS})
 endfunction()
 
-# add submodules (root/extern)
-add_subdirectory(../../extern/pybind11 pybind11)
-
+# MIDSX and any other libraries that you want to link to
 find_package(MIDSX REQUIRED)
-find_package(OpenMP REQUIRED)
 
-set(COMMON_LIBS pybind11::embed MIDSX::MIDSX)
+set(COMMON_LIBS MIDSX::MIDSX)
 
 create_executable(radiography radiography.cpp)
 create_executable(radiography_15_degrees radiography_15_degrees.cpp)

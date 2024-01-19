@@ -179,7 +179,7 @@ std::vector<std::unique_ptr<VolumeTally>> initializeVolumeTallies() {
 }
 
 Eigen::MatrixXd processEnergySpectrum() {
-    Eigen::MatrixXd energy_spectrum = SourceHelpers::readCSV("data/source_distributions/RQR9_W_AL_120kVp_E_spectrum.csv");
+    Eigen::MatrixXd energy_spectrum = SourceHelpers::readCSV("../../data/source_distributions/RQR9_W_AL_120kVp_E_spectrum.csv");
     energy_spectrum.col(0) = energy_spectrum.col(0).array() * 1000;  // Convert from keV to eV
     return energy_spectrum;
 }
@@ -310,7 +310,7 @@ void displayVoxelData(ComputationalDomain& comp_domain, int N_photons) {
 }
 
 int main() {
-    ComputationalDomain comp_domain("cpp_simulations/radiography/radiography_0_degrees.json");
+    ComputationalDomain comp_domain("radiography_0_degrees.json");
     InteractionData interaction_data = comp_domain.getInteractionData();
     PhysicsEngine physics_engine(comp_domain, interaction_data);
 
