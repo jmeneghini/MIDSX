@@ -66,7 +66,7 @@ int main() {
 
     PhotonSource source = initializeSource();
 
-    int N_PHOTONS = 10000000;
+    int N_PHOTONS = 1000000;
     double run_time;
     runSimulation(source, physics_engine, initializeSurfaceTallies, [](){return std::vector<std::unique_ptr<VolumeTally>>();}, N_PHOTONS, run_time);
 

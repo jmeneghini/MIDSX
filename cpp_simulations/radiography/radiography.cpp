@@ -316,7 +316,7 @@ int main() {
 
     PhotonSource source = initializeSource();
 
-    const int NUM_OF_PHOTONS = 10000000;
+    const int NUM_OF_PHOTONS = 1000000;
 
     std::cout << std::fixed << std::setprecision(15);
 

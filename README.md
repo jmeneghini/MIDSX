@@ -66,6 +66,11 @@ To install with the command line:
    sudo make install
    ```
    
+4. To build all the cpp_simulations (not required) assuming you are still in the build directory:
+   ```sh
+   ./../utility_scripts/build_cpp_sims.sh
+   ```
+   
 ### Installation (Docker)
 
 MIDSX can be built and run in a Docker container. This is currently the only way to build on MacOS. \
@@ -81,7 +86,7 @@ Then, to run the container with an interactive shell:
 ```sh
 docker run -it jmeneghini/midsx:latest
 ```
-The container will have already installed MIDSX and its dependencies, so you can start using it right away.
+The container will have already installed/compiled MIDSX, its dependencies, and the cpp_simulations, so you can start using it right away.
 
 ## Documentation
 The [documentation](https://jmeneghini.github.io/MIDSX/) for MIDSX is generated via Doxygen and is hosted with Github Pages. \

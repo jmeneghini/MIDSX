@@ -35,8 +35,6 @@ target_include_directories(MIDSX PUBLIC
 add_git_submodule(${CMAKE_CURRENT_LIST_DIR}/extern/eigen)
 target_link_libraries(MIDSX PUBLIC Eigen3::Eigen)
 
-
-
 # Specify the Python interpreter
 find_package(Python3 COMPONENTS Interpreter Development)
 if(Python3_FOUND)
@@ -73,6 +71,8 @@ configure_file(
         ${CMAKE_CURRENT_LIST_DIR}/include/MIDSX/Core/config.h
         @ONLY
 )
+
+
 
 # Installation and export
 install(TARGETS MIDSX

@@ -66,7 +66,7 @@ int main() {
 
     PhotonSource source = initializeSource();
 
-    int N_PHOTONS = 100000000;
+    int N_PHOTONS = 1000000;
     runSimulation(source, physics_engine, initializeSurfaceTallies, [](){return std::vector<std::unique_ptr<VolumeTally>>();}, N_PHOTONS);
 
     auto surface_tally_results = physics_engine.getSurfaceQuantityContainers();

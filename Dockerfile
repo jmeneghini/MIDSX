@@ -28,6 +28,9 @@ COPY . .
 # Build and install MIDSX
 RUN mkdir build && cd build && cmake .. && make install
 
+# Build the cpp_sims
+RUN ./../scripts/build_cpp_sims.sh
+
 
 
 
