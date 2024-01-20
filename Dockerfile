@@ -29,7 +29,8 @@ COPY . .
 RUN mkdir build && cd build && cmake .. && make install
 
 # Build the cpp_sims
-RUN ./../scripts/build_cpp_sims.sh
+WORKDIR /usr/src/MIDSX
+RUN ./utility_scripts/build_cpp_sims.sh
 
 
 
