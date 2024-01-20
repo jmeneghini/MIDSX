@@ -17,7 +17,7 @@ void SurfaceQuantityContainer::measureAll(TempSurfaceTallyData& temp_tally_data)
     }
 }
 
-SurfaceQuantityContainer SurfaceQuantityContainer::operator+(const SurfaceQuantityContainer& other) const {
+SurfaceQuantityContainer SurfaceQuantityContainer::operator+(SurfaceQuantityContainer& other) const {
     // check if either container is empty, if so return the other container
     if (vector_quantities_.empty()) {
         return other;
@@ -51,6 +51,11 @@ SurfaceQuantityContainer SurfaceQuantityContainer::operator+(const SurfaceQuanti
         new_container.addCountQuantity(count_quantity.second + other.count_quantities_.at(count_quantity.first));
     }
     return new_container;
+}
+
+void SurfaceQuantityContainer::clear() {
+    vector_quantities_.clear();
+    count_quantities_.clear();
 }
 
 std::unordered_map<VectorSurfaceQuantityType, VectorSurfaceQuantity>& SurfaceQuantityContainer::getVectorQuantities() {

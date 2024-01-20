@@ -129,8 +129,10 @@ std::vector<VolumeQuantityContainer> PhysicsEngine::getVolumeQuantityContainers(
 
     for (int i = 0; i < num_of_threads; ++i) {
         for (int j = 0; j < num_of_volume_tallies; ++j) {
-            auto thread_local_volume_container = thread_local_volume_tallies_[i][j]->getVolumeQuantityContainer();
+            auto& thread_local_volume_container = thread_local_volume_tallies_[i][j]->getVolumeQuantityContainer();
             combined_volume_containers[j] = combined_volume_containers[j] + thread_local_volume_container;
+            // clear the thread local container to save memory
+            thread_local_volume_container.clear();
         }
     }
 
@@ -147,6 +149,8 @@ std::vector<SurfaceQuantityContainer> PhysicsEngine::getSurfaceQuantityContainer
         for (int j = 0; j < num_of_surface_tallies; ++j) {
             auto thread_local_surface_container = thread_local_surface_tallies_[i][j]->getSurfaceQuantityContainer();
             combined_surface_containers[j] = combined_surface_containers[j] + thread_local_surface_container;
+            // clear the thread local container to save memory
+            thread_local_surface_container.clear();
         }
     }
 
@@ -158,6 +162,8 @@ void PhysicsEngine::addVoxelDataToComputationalDomain() {
         for (auto &temp_voxel_data: thread_local_voxel_data) {
             temp_voxel_data.voxel.dose.addValue(temp_voxel_data.energy_deposited);
         }
+        // after adding all the dose values, clear the thread local voxel data to save memory
+        thread_local_voxel_data.clear();
     }
 }
 

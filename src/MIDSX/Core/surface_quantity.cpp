@@ -34,7 +34,7 @@ VectorSurfaceQuantity::VectorSurfaceQuantity(VectorSurfaceQuantityType type) {
     }
 }
 
-VectorSurfaceQuantity VectorSurfaceQuantity::operator+(const VectorSurfaceQuantity& other) const {
+VectorSurfaceQuantity VectorSurfaceQuantity::operator+(VectorSurfaceQuantity& other) const {
     if (type_ != other.type_) {
         throw std::runtime_error("Cannot add VectorSurfaceQuantity objects of different types");
     }
@@ -66,7 +66,7 @@ VectorSurfaceQuantityType VectorSurfaceQuantity::getType() const {
     return type_;
 }
 
-VectorValue VectorSurfaceQuantity::getTotalValues() {
+VectorValue& VectorSurfaceQuantity::getTotalValues() {
     if (!totaled_) {
         total_values_.addValues(primary_values_.getVector());
         total_values_.addValues(single_incoherent_scatter_values_.getVector());
@@ -77,19 +77,19 @@ VectorValue VectorSurfaceQuantity::getTotalValues() {
     return total_values_;
 }
 
-VectorValue VectorSurfaceQuantity::getPrimaryValues() const {
+VectorValue& VectorSurfaceQuantity::getPrimaryValues() {
     return primary_values_;
 }
 
-VectorValue VectorSurfaceQuantity::getSingleIncoherentScatterValues() const {
+VectorValue& VectorSurfaceQuantity::getSingleIncoherentScatterValues() {
     return single_incoherent_scatter_values_;
 }
 
-VectorValue VectorSurfaceQuantity::getSingleCoherentScatterValues() const {
+VectorValue& VectorSurfaceQuantity::getSingleCoherentScatterValues() {
     return single_coherent_scatter_values_;
 }
 
-VectorValue VectorSurfaceQuantity::getMultipleScatterValues() const {
+VectorValue& VectorSurfaceQuantity::getMultipleScatterValues() {
     return multiple_scatter_values_;
 }
 

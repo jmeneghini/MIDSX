@@ -17,7 +17,7 @@ void VolumeQuantityContainer::measureAll(TempVolumeTallyData& temp_tally_data) {
     }
 }
 
-VolumeQuantityContainer VolumeQuantityContainer::operator+(const VolumeQuantityContainer& other) const {
+VolumeQuantityContainer VolumeQuantityContainer::operator+(VolumeQuantityContainer& other) const {
     // check if either container is empty, if so return the other container
     if (vector_quantities_.empty()) {
         return other;
@@ -51,6 +51,11 @@ VolumeQuantityContainer VolumeQuantityContainer::operator+(const VolumeQuantityC
         new_container.addCountQuantity(count_quantity.second + other.count_quantities_.at(count_quantity.first));
     }
     return new_container;
+}
+
+void VolumeQuantityContainer::clear() {
+    vector_quantities_.clear();
+    count_quantities_.clear();
 }
 
 std::unordered_map<VectorVolumeQuantityType, VectorVolumeQuantity>& VolumeQuantityContainer::getVectorQuantities() {

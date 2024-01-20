@@ -40,7 +40,13 @@ public:
      * @param other The SurfaceQuantityContainer to add to this SurfaceQuantityContainer.
      * @return The sum of the two SurfaceQuantityContainer objects.
      */
-    SurfaceQuantityContainer operator+(const SurfaceQuantityContainer& other) const;
+    SurfaceQuantityContainer operator+(SurfaceQuantityContainer& other) const;
+
+    /**
+     * @brief Clears the container of all quantities.
+     *
+     */
+    void clear();
 
     /**
      * @brief Gets the map of vector quantities in the container.

@@ -41,7 +41,13 @@ public:
      * @param other The VolumeQuantityContainer to add to this VolumeQuantityContainer.
      * @return The sum of the two VolumeQuantityContainer objects.
      */
-    VolumeQuantityContainer operator+(const VolumeQuantityContainer& other) const;
+    VolumeQuantityContainer operator+(VolumeQuantityContainer& other) const;
+
+    /**
+     * @brief Clears the container of all quantities.
+     *
+     */
+    void clear();
 
     /**
      * @brief Gets the map of vector quantities in the container.

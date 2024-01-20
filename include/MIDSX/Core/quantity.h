@@ -10,12 +10,12 @@
 class VectorValue {
 public:
     // overloading the + operator
-    VectorValue operator+(const VectorValue& other) const;
+    VectorValue operator+(VectorValue& other) const;
 
     // pretty self-explanatory
     void addValue(double value);
     void addValues(const std::vector<double>& values);
-    std::vector<double> getVector() const;
+    std::vector<double>& getVector();
     double getSum();
     double getSumSTD();
     double getMean();

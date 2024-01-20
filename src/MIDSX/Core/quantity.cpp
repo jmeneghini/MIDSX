@@ -1,6 +1,6 @@
 #include "Core/quantity.h"
 
-VectorValue VectorValue::operator+(const VectorValue& other) const {
+VectorValue VectorValue::operator+(VectorValue& other) const {
     // combine two vectors
     VectorValue sum = *this;
     sum.addValues(other.getVector());
@@ -20,7 +20,7 @@ void VectorValue::addValues(const std::vector<double>& values) {
     values_.insert(values_.end(), values.begin(), values.end());
 }
 
-std::vector<double> VectorValue::getVector() const {
+std::vector<double>& VectorValue::getVector() {
     return values_;
 }
 

@@ -96,7 +96,7 @@ std::unordered_map<int, VectorValue> VoxelGrid::getEnergyDepositedInMaterials() 
 
     for (auto& voxel : voxels_) {
         int materialID = voxel.materialID;
-        std::vector<double> voxel_dose = voxel.dose.getVector();
+        std::vector<double>& voxel_dose = voxel.dose.getVector();
         energyDepositedInMaterials[materialID].addValues(voxel_dose);
     }
 

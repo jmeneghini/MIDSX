@@ -38,7 +38,7 @@ VectorVolumeQuantity::VectorVolumeQuantity(VectorVolumeQuantityType type) {
     }
 }
 
-VectorVolumeQuantity VectorVolumeQuantity::operator+(const VectorVolumeQuantity& other) const {
+VectorVolumeQuantity VectorVolumeQuantity::operator+(VectorVolumeQuantity& other) const {
     if (type_ != other.type_) {
         throw std::runtime_error("Cannot add VectorVolumeQuantity objects of different types");
     }
@@ -70,7 +70,7 @@ VectorVolumeQuantityType VectorVolumeQuantity::getType() const {
     return type_;
 }
 
-VectorValue VectorVolumeQuantity::getTotalValues() {
+VectorValue& VectorVolumeQuantity::getTotalValues() {
     if (!totaled_) {
         total_values_.addValues(primary_values_.getVector());
         total_values_.addValues(single_incoherent_scatter_values_.getVector());
@@ -81,19 +81,19 @@ VectorValue VectorVolumeQuantity::getTotalValues() {
     return total_values_;
 }
 
-VectorValue VectorVolumeQuantity::getPrimaryValues() const {
+VectorValue& VectorVolumeQuantity::getPrimaryValues() {
     return primary_values_;
 }
 
-VectorValue VectorVolumeQuantity::getSingleIncoherentScatterValues() const {
+VectorValue& VectorVolumeQuantity::getSingleIncoherentScatterValues() {
     return single_incoherent_scatter_values_;
 }
 
-VectorValue VectorVolumeQuantity::getSingleCoherentScatterValues() const {
+VectorValue& VectorVolumeQuantity::getSingleCoherentScatterValues() {
     return single_coherent_scatter_values_;
 }
 
-VectorValue VectorVolumeQuantity::getMultipleScatterValues() const {
+VectorValue& VectorVolumeQuantity::getMultipleScatterValues() {
     return multiple_scatter_values_;
 }
 

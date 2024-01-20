@@ -3,27 +3,30 @@
 double DerivedQuantity::getPrimaryFluence(SurfaceQuantityContainer &surface_quantity_container, double energy, double energy_width, bool is_cosine_weighted) {
     // fluence (E +- delta E / 2) = dN/dE = total number of photons in energy range / area of surface  [units: 1/cm^2]
     double total = 0;
-    VectorValue incident_energies;
 
     try {
-        incident_energies = surface_quantity_container.getVectorQuantities().at(VectorSurfaceQuantityType::IncidentEnergy).getPrimaryValues();
+        auto& incident_energies = surface_quantity_container.getVectorQuantities().at(VectorSurfaceQuantityType::IncidentEnergy);
     } catch (std::out_of_range& e) {
         throw std::runtime_error("SurfaceQuantityContainer does not contain incident energy vector quantity required for cosine-weighted fluence calculation");
     }
+
+    VectorValue& incident_energies = surface_quantity_container.getVectorQuantities().at(VectorSurfaceQuantityType::IncidentEnergy).getPrimaryValues();
+
     // get vector
-    std::vector<double> incident_energies_vector;
-    incident_energies_vector = incident_energies.getVector();
+    std::vector<double>& incident_energies_vector = incident_energies.getVector();
 
     if (is_cosine_weighted) {
         // sum of entrance cosine
-        VectorValue entrance_cosines;
         try {
-            entrance_cosines = surface_quantity_container.getVectorQuantities().at(VectorSurfaceQuantityType::EntranceCosine).getPrimaryValues();
+            auto& entrance_cosines = surface_quantity_container.getVectorQuantities().at(VectorSurfaceQuantityType::EntranceCosine);
         } catch (std::out_of_range& e) {
             throw std::runtime_error("SurfaceQuantityContainer does not contain entrance cosine vector quantity required for cosine-weighted fluence calculation");
         }
+
+        VectorValue& entrance_cosines = surface_quantity_container.getVectorQuantities().at(VectorSurfaceQuantityType::EntranceCosine).getPrimaryValues();
+
         // get vectors
-        std::vector<double> entrance_cosines_vector = entrance_cosines.getVector();
+        std::vector<double>& entrance_cosines_vector = entrance_cosines.getVector();
 
         for (int i = 0; i < incident_energies_vector.size(); i++) {
             if (incident_energies_vector[i] >= energy - energy_width/2 && incident_energies_vector[i] <= energy + energy_width/2) {
@@ -45,7 +48,7 @@ double DerivedQuantity::getPrimaryAirKerma(SurfaceQuantityContainer &surface_qua
                                            double energy, double energy_width, bool is_cosine_weighted) {
     // AK(E +- delta E / 2) = E * fluence(E +- delta E / 2) * (mu_en(E)/rho)  [units: eV/g]
     int AIR_INDEX = 3;
-    auto air_data = interaction_data.getMaterialFromId(AIR_INDEX).getData();
+    auto& air_data = interaction_data.getMaterialFromId(AIR_INDEX).getData();
     double mu_en = air_data.interpolateMassEnergyAbsorptionCoefficient(energy); // [units: cm^2/g]
     double fluence = getPrimaryFluence(surface_quantity_container, energy, energy_width, is_cosine_weighted); // [units: 1/cm^2]
     return energy * fluence * mu_en; // [units: eV/g]

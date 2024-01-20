@@ -61,7 +61,7 @@ public:
      * @return The sum of the two VectorSurfaceQuantity objects.
      */
 
-    VectorSurfaceQuantity operator+(const VectorSurfaceQuantity& other) const;
+    VectorSurfaceQuantity operator+(VectorSurfaceQuantity& other) const;
 
     /**
      * @brief Measures the VectorSurfaceQuantity for a TempSurfaceTallyData object.
@@ -78,11 +78,11 @@ public:
     VectorSurfaceQuantityType getType() const;
 
     // Wrapper functions for VectorValue. Self-explanatory.
-    VectorValue getTotalValues();
-    VectorValue getPrimaryValues() const;
-    VectorValue getSingleIncoherentScatterValues() const;
-    VectorValue getSingleCoherentScatterValues() const;
-    VectorValue getMultipleScatterValues() const;
+    VectorValue& getTotalValues();
+    VectorValue& getPrimaryValues();
+    VectorValue& getSingleIncoherentScatterValues();
+    VectorValue& getSingleCoherentScatterValues();
+    VectorValue& getMultipleScatterValues();
 private:
     VectorSurfaceQuantityType type_;
     bool totaled_ = false;

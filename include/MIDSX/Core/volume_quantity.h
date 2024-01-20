@@ -59,7 +59,7 @@ public:
      * @param other The VectorVolumeQuantity to add to this VectorVolumeQuantity.
      * @return The sum of the two VectorVolumeQuantity objects.
      */
-    VectorVolumeQuantity operator+(const VectorVolumeQuantity& other) const;
+    VectorVolumeQuantity operator+(VectorVolumeQuantity& other) const;
 
     /**
      * @brief Measures the VectorVolumeQuantity for a TempVolumeTallyData object.
@@ -74,11 +74,11 @@ public:
      * @return The type of the VectorVolumeQuantity.
      */
     VectorVolumeQuantityType getType() const;
-    VectorValue getTotalValues();
-    VectorValue getPrimaryValues() const;
-    VectorValue getSingleIncoherentScatterValues() const;
-    VectorValue getSingleCoherentScatterValues() const;
-    VectorValue getMultipleScatterValues() const;
+    VectorValue& getTotalValues();
+    VectorValue& getPrimaryValues();
+    VectorValue& getSingleIncoherentScatterValues();
+    VectorValue& getSingleCoherentScatterValues();
+    VectorValue& getMultipleScatterValues();
 private:
     VectorVolumeQuantityType type_;
     bool totaled_ = false;
