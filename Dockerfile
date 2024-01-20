@@ -16,11 +16,14 @@ RUN python3.10 -m pip install \
     numpy \
     nibabel
 
-# Clone the MIDSX repository, and all submodules
-RUN git clone --recurse-submodules https://github.com/jmeneghini/MIDSX.git /usr/src/MIDSX
+# Make a directory for MIDSX
+RUN mkdir /usr/src/MIDSX
 
 # Set the working directory
 WORKDIR /usr/src/MIDSX
+
+# Copy the source code into the container
+COPY . .
 
 # Build and install MIDSX
 RUN mkdir build && cd build && cmake .. && make install
