@@ -94,12 +94,12 @@ $(function() { codefold.init(0); });
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="class_vector_value.html">   10</a></span><span class="keyword">class </span><a class="code hl_class" href="class_vector_value.html">VectorValue</a> {</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="comment">// overloading the + operator</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <a class="code hl_class" href="class_vector_value.html">VectorValue</a> operator+(<span class="keyword">const</span> <a class="code hl_class" href="class_vector_value.html">VectorValue</a>&amp; other) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <a class="code hl_class" href="class_vector_value.html">VectorValue</a> operator+(<a class="code hl_class" href="class_vector_value.html">VectorValue</a>&amp; other) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="comment">// pretty self-explanatory</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keywordtype">void</span> addValue(<span class="keywordtype">double</span> value);</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keywordtype">void</span> addValues(<span class="keyword">const</span> std::vector&lt;double&gt;&amp; values);</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    std::vector&lt;double&gt; getVector() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    std::vector&lt;double&gt;&amp; getVector();</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keywordtype">double</span> getSum();</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keywordtype">double</span> getSumSTD();</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keywordtype">double</span> getMean();</div>
