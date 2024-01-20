@@ -8,7 +8,8 @@
 - [Description](#description)
 - [Getting Started](#getting-started)
   * [Dependencies](#dependencies)
-  * [Installation](#installation)
+  * [Installation (CMake)](#installation-cmake)
+  * [Installation (Docker)](#installation-docker)
 - [Documentation](#documentation)
 - [Usage](#usage)
 
@@ -25,11 +26,13 @@ MIDSX requires the following dependencies to be manually installed:
 
 * **CMake 3.10.0 or higher:** If you don't have CMake installed, or require a newer version, follow this [guide](https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line).
 
-* **SQLite3 Library:** On Linux, the library can be installed using your distribution's package manager. Using apt: `sudo apt install sqlite3 libsqlite3-dev`. On Mac, the library can be installed with brew: `brew install sqlite3 libsqlite3-dev`.
+* **SQLite3 Library:** On Linux, the library can be installed using your distribution's package manager. Using apt: `sudo apt install sqlite3 libsqlite3-dev`.
 
 * **Python 3.8.x or higher:** If not already installed, go [here](https://www.python.org/downloads/).
 
 * **nibabel:** To load NifTI files, MIDSX uses the python package nibabel. It can be easily installed with pip: `pip install nibabel`.
+
+* **Boost:** On Linux, the library can be installed using your distribution's package manager. Using apt: `sudo apt install libboost-all-dev`.
 
 MIDSX additionally uses the following libraries via Git submodules; these do not need to be installed manually:
 
@@ -37,9 +40,13 @@ MIDSX additionally uses the following libraries via Git submodules; these do not
 
 * **pybind11:** For use of nibabel in C++ code. Will be used later for MIDSX python bindings.
 
-### Installation
+### Installation (CMake)
 
-MIDSX has been tested on macOS and Ubuntu. To install with the command line:
+MIDSX has been shown to work on Ubuntu with GCC. It will likely work on other Linux distributions with GCC or Clang.
+Support for MacOS is close to being added,
+but issues with AppleClang's OpenMP implementation and a known bug with Xcode's linker with GCC (see [here](https://github.com/Homebrew/homebrew-core/issues/145991))
+are preventing it from being finished. For those who want to build on MacOS, see the Docker section [below](#installation-docker). \
+To install with the command line:
 
 1. Clone the repo and enter the directory:
    ```sh
@@ -58,6 +65,23 @@ MIDSX has been tested on macOS and Ubuntu. To install with the command line:
    cmake ..
    sudo make install
    ```
+   
+### Installation (Docker)
+
+MIDSX can be built and run in a Docker container. This is currently the only way to build on MacOS. \
+\
+If you don't have Docker installed, follow the instructions for Docker Desktop [(GUI)](https://docs.docker.com/desktop/)
+or for Docker Engine [(CLI)](https://docs.docker.com/engine/install/). Docker has excellent documentation, so if you have any issues, refer to their website. \
+\
+To pull the Docker image from Docker Hub:
+```sh
+docker pull jmeneghini/midsx:latest
+```
+Then, to run the container with an interactive shell:
+```sh
+docker run -it jmeneghini/midsx:latest
+```
+The container will have already installed MIDSX and its dependencies, so you can start using it right away.
 
 ## Documentation
 The [documentation](https://jmeneghini.github.io/MIDSX/) for MIDSX is generated via Doxygen and is hosted with Github Pages. \
@@ -71,23 +95,17 @@ To use the library, configure a project with the following CMakeLists.txt struct
 cmake_minimum_required(VERSION 3.10)
 project(project_name)
 
-# Links libraries and turns off parallelization if building in debug mode
+# Links libraries to executable (function is useful for multiple executables)
 function(create_executable EXE_NAME SRC_FILE)
     add_executable(${EXE_NAME} ${SRC_FILE})
     target_link_libraries(${EXE_NAME} PRIVATE ${COMMON_LIBS})
 endfunction()
 
-# Finds pybind11 (doesn't seem to link with library) and MIDSX
-find_package(pybind11 REQUIRED)
+# Finds MIDSX package
 find_package(MIDSX REQUIRED)
-# Needed for parallelization
-find_package(OpenMP REQUIRED)
 
-# If unable to find pybind11, manually set the extern directory
-# add_subdirectory(../../extern/pybind11 pybind11)
-
-# Sets common libs that are linked to executable
-set(COMMON_LIBS pybind11::embed MIDSX::MIDSX)
+# Sets common libs that are linked to executable. You can add your own libraries you want to link here.
+set(COMMON_LIBS MIDSX::MIDSX)
 
 create_executable(project main.cpp)
 ```
@@ -111,6 +129,7 @@ A typical MIDSX simulation has the following structure:
   ]
 }
 ```
+* Note that the `file_path` is relative to the location of the .json file, not the executable.
 
 * Using the .json file, the `ComputationalDomain` object can be initialized:
 ```C++
@@ -193,4 +212,5 @@ runSimulation(source, physics_engine, initializeSurfaceTallies,
 
 * Data can be retrieved from the simulation via `physics_engine.getSurfaceQuantityContainers()` and `physics_engine.getVolumeQuantityContainers()`.
 
-* For further info, look at the several examples in the `cpp_simulations` folder.
+* For further info, look at the several examples in the `cpp_simulations` folder. When building these examples, note that the paths in the `.cpp` files located in each simulation folder were written with the assumption that the executables will be run from the directory containing the `.cpp` file. 
+If you want to run the executable from a different directory, you will need to change the paths in the `.cpp` files.
