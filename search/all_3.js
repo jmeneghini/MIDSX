@@ -8,6 +8,7 @@ var searchData=
   ['discisotropicdirectionality_5',['DiscIsotropicDirectionality',['../class_disc_isotropic_directionality.html',1,'DiscIsotropicDirectionality'],['../class_disc_isotropic_directionality.html#a289cf4446ad942579acbe1a1924c1b22',1,'DiscIsotropicDirectionality::DiscIsotropicDirectionality()']]],
   ['discreteinversion_6',['DiscreteInversion',['../class_probability_dist_1_1_discrete_inversion.html',1,'ProbabilityDist::DiscreteInversion'],['../class_probability_dist_1_1_discrete_inversion.html#a5c5363632fcef30e1c07cf5951843e82',1,'ProbabilityDist::DiscreteInversion::DiscreteInversion()']]],
   ['discsurfacetally_7',['DiscSurfaceTally',['../class_disc_surface_tally.html',1,'DiscSurfaceTally'],['../class_disc_surface_tally.html#a807a9f50cb6df9cb214363e49565e5f6',1,'DiscSurfaceTally::DiscSurfaceTally()']]],
-  ['documentation_8',['Documentation',['../index.html#autotoc_md6',1,'']]],
-  ['dosage_20simulation_20of_20x_20rays_9',['MIDSX (Monte Carlo Interactions and Dosage Simulation of X-rays)',['../index.html',1,'']]]
+  ['docker_8',['Installation (Docker)',['../index.html#autotoc_md6',1,'']]],
+  ['documentation_9',['Documentation',['../index.html#autotoc_md7',1,'']]],
+  ['dosage_20simulation_20of_20x_20rays_10',['MIDSX (Monte Carlo Interactions and Dosage Simulation of X-rays)',['../index.html',1,'']]]
 ];

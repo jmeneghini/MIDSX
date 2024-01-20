@@ -82,7 +82,8 @@ Table of Contents</h1>
 <li>Description</li>
 <li>Getting Started<ul>
 <li>Dependencies</li>
-<li>Installation</li>
+<li>Installation (CMake)</li>
+<li>Installation (Docker)</li>
 </ul>
 </li>
 <li>Documentation</li>
@@ -98,9 +99,10 @@ Dependencies</h2>
 <p>MIDSX requires the following dependencies to be manually installed:</p>
 <ul>
 <li><b>CMake 3.10.0 or higher:</b> If you don't have CMake installed, or require a newer version, follow this <a href="https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line">guide</a>.</li>
-<li><b>SQLite3 Library:</b> On Linux, the library can be installed using your distribution's package manager. Using apt: <code>sudo apt install sqlite3 libsqlite3-dev</code>. On Mac, the library can be installed with brew: <code>brew install sqlite3 libsqlite3-dev</code>.</li>
+<li><b>SQLite3 Library:</b> On Linux, the library can be installed using your distribution's package manager. Using apt: <code>sudo apt install sqlite3 libsqlite3-dev</code>.</li>
 <li><b>Python 3.8.x or higher:</b> If not already installed, go <a href="https://www.python.org/downloads/">here</a>.</li>
 <li><b>nibabel:</b> To load NifTI files, MIDSX uses the python package nibabel. It can be easily installed with pip: <code>pip install nibabel</code>.</li>
+<li><b>Boost:</b> On Linux, the library can be installed using your distribution's package manager. Using apt: <code>sudo apt install libboost-all-dev</code>.</li>
 </ul>
 <p>MIDSX additionally uses the following libraries via Git submodules; these do not need to be installed manually:</p>
 <ul>
@@ -108,8 +110,8 @@ Dependencies</h2>
 <li><b>pybind11:</b> For use of nibabel in C++ code. Will be used later for MIDSX python bindings.</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md5"></a>
-Installation</h2>
-<p>MIDSX has been tested on macOS and Ubuntu. To install with the command line:</p>
+Installation (CMake)</h2>
+<p>MIDSX has been shown to work on Ubuntu with GCC. It will likely work on other Linux distributions with GCC or Clang. Support for MacOS is close to being added, but issues with AppleClang's OpenMP implementation and a known bug with Xcode's linker with GCC (see <a href="https://github.com/Homebrew/homebrew-core/issues/145991">here</a>) are preventing it from being finished. For those who want to build on MacOS, see the Docker section below. \ To install with the command line:</p>
 <ol type="1">
 <li>Clone the repo and enter the directory: <div class="fragment"><div class="line">git clone https://github.com/jmeneghini/MIDSX.git</div>
 <div class="line">cd MIDSX</div>
@@ -121,32 +123,31 @@ Installation</h2>
 <div class="line">sudo make install</div>
 </div><!-- fragment --></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md6"></a>
+Installation (Docker)</h2>
+<p>MIDSX can be built and run in a Docker container. This is currently the only way to build on MacOS. \ \ If you don't have Docker installed, follow the instructions for Docker Desktop <a href="https://docs.docker.com/desktop/">(GUI)</a> or for Docker Engine <a href="https://docs.docker.com/engine/install/">(CLI)</a>. Docker has excellent documentation, so if you have any issues, refer to their website. \ \ To pull the Docker image from Docker Hub: </p><div class="fragment"><div class="line">docker pull jmeneghini/midsx:latest</div>
+</div><!-- fragment --><p> Then, to run the container with an interactive shell: </p><div class="fragment"><div class="line">docker run -it jmeneghini/midsx:latest</div>
+</div><!-- fragment --><p> The container will have already installed MIDSX and its dependencies, so you can start using it right away.</p>
+<h1><a class="anchor" id="autotoc_md7"></a>
 Documentation</h1>
 <p>The <a href="https://jmeneghini.github.io/MIDSX/">documentation</a> for MIDSX is generated via Doxygen and is hosted with Github Pages. \ \ The preprint for the validation of MIDSX can be found on <a href="https://arxiv.org/abs/2311.16873">arXiv</a>.</p>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md8"></a>
 Usage</h1>
 <p>To use the library, configure a project with the following CMakeLists.txt structure:</p>
 <div class="fragment"><div class="line">cmake_minimum_required(VERSION 3.10)</div>
 <div class="line">project(project_name)</div>
 <div class="line"> </div>
-<div class="line"># Links libraries and turns off parallelization if building in debug mode</div>
+<div class="line"># Links libraries to executable (function is useful for multiple executables)</div>
 <div class="line">function(create_executable EXE_NAME SRC_FILE)</div>
 <div class="line">    add_executable(${EXE_NAME} ${SRC_FILE})</div>
 <div class="line">    target_link_libraries(${EXE_NAME} PRIVATE ${COMMON_LIBS})</div>
 <div class="line">endfunction()</div>
 <div class="line"> </div>
-<div class="line"># Finds pybind11 (doesn&#39;t seem to link with library) and MIDSX</div>
-<div class="line">find_package(pybind11 REQUIRED)</div>
+<div class="line"># Finds MIDSX package</div>
 <div class="line">find_package(MIDSX REQUIRED)</div>
-<div class="line"># Needed for parallelization</div>
-<div class="line">find_package(OpenMP REQUIRED)</div>
 <div class="line"> </div>
-<div class="line"># If unable to find pybind11, manually set the extern directory</div>
-<div class="line"># add_subdirectory(../../extern/pybind11 pybind11)</div>
-<div class="line"> </div>
-<div class="line"># Sets common libs that are linked to executable</div>
-<div class="line">set(COMMON_LIBS pybind11::embed MIDSX::MIDSX)</div>
+<div class="line"># Sets common libs that are linked to executable. You can add your own libraries you want to link here.</div>
+<div class="line">set(COMMON_LIBS MIDSX::MIDSX)</div>
 <div class="line"> </div>
 <div class="line">create_executable(project main.cpp)</div>
 </div><!-- fragment --><p>A typical MIDSX simulation has the following structure:</p>
@@ -166,6 +167,7 @@ Usage</h1>
 <div class="line">  ]</div>
 <div class="line">}</div>
 </div><!-- fragment --></li>
+<li>Note that the <code>file_path</code> is relative to the location of the .json file, not the executable.</li>
 <li>Using the .json file, the <code><a class="el" href="class_computational_domain.html" title="Class which represents the computational domain.">ComputationalDomain</a></code> object can be initialized: <div class="fragment"><div class="line"> ++</div>
 <div class="line"><a class="code hl_class" href="class_computational_domain.html">ComputationalDomain</a> comp_domain(<span class="stringliteral">&quot;domain.json&quot;</span>);</div>
 <div class="ttc" id="aclass_computational_domain_html"><div class="ttname"><a href="class_computational_domain.html">ComputationalDomain</a></div><div class="ttdoc">Class which represents the computational domain.</div><div class="ttdef"><b>Definition</b> <a href="computational__domain_8h_source.html#l00022">computational_domain.h:22</a></div></div>
@@ -248,7 +250,7 @@ Usage</h1>
 <div class="ttc" id="arun__simulation_8h_html_ad0907c789d1306f78691fa483d0dfad1"><div class="ttname"><a href="run__simulation_8h.html#ad0907c789d1306f78691fa483d0dfad1">runSimulation</a></div><div class="ttdeci">void runSimulation(PhotonSource &amp;source, PhysicsEngine &amp;physics_engine, std::function&lt; std::vector&lt; std::unique_ptr&lt; SurfaceTally &gt; &gt;()&gt; surface_tally_init, std::function&lt; std::vector&lt; std::unique_ptr&lt; VolumeTally &gt; &gt;()&gt; volume_tally_init, int N_photons, double &amp;run_time= *(new double))</div><div class="ttdoc">Helper function which runs the particle transport simulation.</div></div>
 </div><!-- fragment --><ul>
 <li>Data can be retrieved from the simulation via <code>physics_engine.getSurfaceQuantityContainers()</code> and <code>physics_engine.getVolumeQuantityContainers()</code>.</li>
-<li>For further info, look at the several examples in the <code>cpp_simulations</code> folder. </li>
+<li>For further info, look at the several examples in the <code>cpp_simulations</code> folder. When building these examples, note that the paths in the <code>.cpp</code> files located in each simulation folder were written with the assumption that the executables will be run from the directory containing the <code>.cpp</code> file. If you want to run the executable from a different directory, you will need to change the paths in the <code>.cpp</code> files. </li>
 </ul>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"/>
