@@ -48,21 +48,35 @@ int ComputationalDomain::getNumVoxelGrids() const {
 
 
 void ComputationalDomain::initializeCompDomain(const std::string &json_file_path) {
-    json json_object;
-    std::filesystem::path json_absolute_path = std::filesystem::absolute(json_file_path);
-    std::string json_directory_path = json_absolute_path.parent_path().string();
-    if (isJSON(json_file_path)) {
-        // create json object
-        std::ifstream json_file(json_file_path);
-        json_file >> json_object;
-        setCompProperties(json_object);
-        setVoxelGrids(json_object, json_directory_path);
-    }
-    else {
+    // Check if the file is a JSON
+    if (!isJSON(json_file_path)) {
         throw std::runtime_error("The file provided is not a JSON file.");
     }
-}
 
+    // Check if the file exists and is readable
+    std::filesystem::path json_absolute_path = std::filesystem::absolute(json_file_path);
+    if (!std::filesystem::exists(json_absolute_path) || !std::filesystem::is_regular_file(json_absolute_path)) {
+        throw std::runtime_error("JSON file does not exist or is not accessible.");
+    }
+
+    // Create json object
+    json json_object;
+    try {
+        std::ifstream json_file(json_file_path);
+        if (!json_file.is_open()) {
+            throw std::runtime_error("Failed to open JSON file.");
+        }
+
+        json_file >> json_object;
+    } catch (const std::exception& e) {
+        throw std::runtime_error("Error parsing JSON file: " + std::string(e.what()));
+    }
+
+    // Further processing
+    std::string json_directory_path = json_absolute_path.parent_path().string();
+    setCompProperties(json_object);
+    setVoxelGrids(json_object, json_directory_path);
+}
 bool ComputationalDomain::isJSON(const std::string &file_path) {
     return file_path.find(".json") != std::string::npos;
 }

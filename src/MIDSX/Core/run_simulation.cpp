@@ -20,6 +20,7 @@ void runSimulation(PhotonSource& source, PhysicsEngine& physics_engine,
             physics_engine.addVolumeTallies(std::move(volume_tallies));
             physics_engine.initializeVoxelData();
         }
+#pragma omp barrier // wait for all threads to finish initialization
 #pragma omp for
         for (int i = 0; i < N_photons; i++) {
             Photon photon = source.generatePhoton();
