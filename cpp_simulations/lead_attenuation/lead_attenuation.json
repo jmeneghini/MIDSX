@@ -1,0 +1,14 @@
+{
+  "dim_space": [
+    107,
+    62,
+    82
+  ],
+  "background_material_name": "Air, Dry (near sea level)",
+  "voxel_grids": [
+    {
+      "file_path": "../../data/voxels/lead_attenuation.nii.gz",
+      "origin": [0, 0, 0]
+    }
+  ]
+}
