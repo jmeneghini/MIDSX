@@ -97,6 +97,10 @@ void ComputationalDomain::setVoxelGrids(const json &json_object, const std::stri
         getNIFTIFilePaths(voxel_grid_json, json_directory_path, nifti_file_paths);
         getOrigins(voxel_grid_json, origins);
     }
+    std::unique_ptr<py::scoped_interpreter> guard;
+    if (!is_python_environment_) {
+        guard = std::make_unique<py::scoped_interpreter>(); // start python interpreter only if not already started
+    }
     for (int i = 0; i < nifti_file_paths.size(); i++) {
         voxel_grids_.emplace_back(VoxelGrid(nifti_file_paths[i], is_python_environment_), origins[i]);
     }

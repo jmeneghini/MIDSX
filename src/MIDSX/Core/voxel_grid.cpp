@@ -107,11 +107,7 @@ std::unordered_map<int, VectorValue> VoxelGrid::getEnergyDepositedInMaterials() 
 
 
 void VoxelGrid::initializeVoxels() {
-    std::unique_ptr<py::scoped_interpreter> guard;
-    if (!is_python_environment_) {
-        guard = std::make_unique<py::scoped_interpreter>(); // start python interpreter only if not already started
-    }
-    py::module nibabel = py::module::import("nibabel"); // import nibabel
+    py::module   nibabel = py::module::import("nibabel");
     py::object img = nibabel.attr("load")(filename_); // load the nifti file into img
     py::object data = img.attr("get_fdata")(); // get the data from img
     py::object header = img.attr("header");
