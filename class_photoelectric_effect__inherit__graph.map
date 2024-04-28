@@ -1,5 +1,0 @@
-<map id="PhotoelectricEffect" name="PhotoelectricEffect">
-<area shape="rect" id="Node000001" title="Class which represents the photoelectric effect interaction." alt="" coords="29,79,159,105"/>
-<area shape="rect" id="Node000002" href="$class_particle_interaction_behavior.html" title="Virtual class which represents the behavior of a particle when it interacts with a material." alt="" coords="5,5,183,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,46,97,79,91,79,91,46"/>
-</map>

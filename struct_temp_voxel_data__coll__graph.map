@@ -1,0 +1,7 @@
+<map id="TempVoxelData" name="TempVoxelData">
+<area shape="rect" id="Node000001" title="Struct which represents the temporary data for a voxel." alt="" coords="5,542,129,607"/>
+<area shape="rect" id="Node000002" href="$struct_voxel.html" title="Struct which represents a voxel." alt="" coords="26,414,109,479"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,479,70,525,65,525,65,479"/>
+<area shape="rect" id="Node000003" href="$class_vector_value.html" title="Class which represents a vector quantity. Used by the Tally classes to store simulation data." alt="" coords="10,5,125,351"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="70,351,70,397,65,397,65,351"/>
+</map>

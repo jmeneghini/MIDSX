@@ -1,7 +1,0 @@
-<map id="SurfaceTally" name="SurfaceTally">
-<area shape="rect" id="Node000001" title="Virtual class which represents a surface tally." alt="" coords="101,5,194,31"/>
-<area shape="rect" id="Node000002" href="$class_disc_surface_tally.html" title="Class which represents a disc surface tally." alt="" coords="5,79,125,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,44,81,81,77,77,120,39"/>
-<area shape="rect" id="Node000003" href="$class_rectangular_surface_tally.html" title="Class which represents a rectangular surface tally." alt="" coords="149,79,312,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,39,218,77,215,81,172,44"/>
-</map>

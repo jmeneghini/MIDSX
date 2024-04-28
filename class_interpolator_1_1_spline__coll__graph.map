@@ -1,0 +1,5 @@
+<map id="Interpolator::Spline" name="Interpolator::Spline">
+<area shape="rect" id="Node000001" title="Class which performs 3rd order spline interpolation." alt="" coords="20,139,140,364"/>
+<area shape="rect" id="Node000002" href="$class_interpolator_1_1_interpolator.html" title="Abstract base class for interpolators." alt="" coords="5,5,155,91"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,106,83,139,77,139,77,106"/>
+</map>

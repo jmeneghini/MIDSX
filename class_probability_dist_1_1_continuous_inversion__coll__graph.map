@@ -1,0 +1,5 @@
+<map id="ProbabilityDist::ContinuousInversion" name="ProbabilityDist::ContinuousInversion">
+<area shape="rect" id="Node000001" title="Class which uses PENELOPE&#39;s RITA inversion sampling algorithm to sample from a continuous distributio..." alt="" coords="5,214,225,683"/>
+<area shape="rect" id="Node000002" href="$class_probability_dist_1_1_uniform.html" title="Class which represents a uniform distribution." alt="" coords="41,5,189,151"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,151,118,197,113,197,113,151"/>
+</map>

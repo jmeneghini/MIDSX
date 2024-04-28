@@ -1,0 +1,7 @@
+<map id="Photon" name="Photon">
+<area shape="rect" id="Node000001" title="Class which represents a photon. Inherits from Particle." alt="" coords="43,454,229,679"/>
+<area shape="rect" id="Node000002" href="$class_particle.html" title="Class which represents a particle." alt="" coords="5,5,112,391"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,404,115,453,110,455,100,406"/>
+<area shape="rect" id="Node000003" href="$struct_photon_scattering_history.html" title="Struct which contains the scattering history of a photon." alt="" coords="137,145,290,251"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="205,251,166,438,160,436,200,250"/>
+</map>

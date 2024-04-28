@@ -1,5 +1,0 @@
-<map id="AACuboidVolumeTally" name="AACuboidVolumeTally">
-<area shape="rect" id="Node000001" title="Class which represents an axis&#45;aligned cuboid volume tally." alt="" coords="5,79,156,105"/>
-<area shape="rect" id="Node000002" href="$class_volume_tally.html" title="Virtual class which represents a volume tally." alt="" coords="34,5,127,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,46,83,79,78,79,78,46"/>
-</map>

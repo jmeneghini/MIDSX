@@ -1,0 +1,9 @@
+<map id="PolyenergeticSpectrum" name="PolyenergeticSpectrum">
+<area shape="rect" id="Node000001" title="Class which represents a polyenergetic energy spectrum." alt="" coords="41,497,207,602"/>
+<area shape="rect" id="Node000002" href="$class_energy_spectrum.html" title="Virtual class which represents an energy spectrum for a photon source." alt="" coords="5,281,139,366"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,380,115,496,109,497,82,381"/>
+<area shape="rect" id="Node000003" href="$class_probability_dist_1_1_discrete_inversion.html" title="Class which uses inversion sampling to sample from a discrete distribution." alt="" coords="163,214,312,434"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,434,160,483,155,480,180,432"/>
+<area shape="rect" id="Node000004" href="$class_probability_dist_1_1_uniform.html" title="Class which represents a uniform distribution." alt="" coords="163,5,311,151"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="240,150,240,197,235,197,235,150"/>
+</map>

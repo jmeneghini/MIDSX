@@ -1,0 +1,7 @@
+<map id="RectangularIsotropicDirectionality" name="RectangularIsotropicDirectionality">
+<area shape="rect" id="Node000001" title="Class which represents a rectangular isotropic directionality." alt="" coords="35,214,259,399"/>
+<area shape="rect" id="Node000002" href="$class_directionality.html" title="Virtual class which represents a directionality for a photon source." alt="" coords="5,35,129,121"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,134,118,213,113,215,84,135"/>
+<area shape="rect" id="Node000003" href="$class_probability_dist_1_1_uniform.html" title="Class which represents a uniform distribution." alt="" coords="153,5,301,151"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="205,151,188,199,183,197,200,149"/>
+</map>

@@ -1,5 +1,0 @@
-<map id="PointGeometry" name="PointGeometry">
-<area shape="rect" id="Node000001" title="Class which represents a point geometry." alt="" coords="11,79,118,105"/>
-<area shape="rect" id="Node000002" href="$class_source_geometry.html" title="Virtual class which represents a geometry for a photon source." alt="" coords="5,5,124,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,46,67,79,62,79,62,46"/>
-</map>

@@ -1,0 +1,5 @@
+<map id="CountSurfaceQuantity" name="CountSurfaceQuantity">
+<area shape="rect" id="Node000001" title="Class which represents a count quantity for a surface tally." alt="" coords="5,319,185,613"/>
+<area shape="rect" id="Node000002" href="$class_count_value.html" title="Class which represents a count quantity. Used by the Tally classes to store simulation data." alt="" coords="41,5,150,151"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,150,98,302,93,302,93,150"/>
+</map>

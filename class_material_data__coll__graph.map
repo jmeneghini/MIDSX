@@ -1,0 +1,25 @@
+<map id="MaterialData" name="MaterialData">
+<area shape="rect" id="Node000001" title="Class which contains the computed simulation data for a material." alt="" coords="259,1275,511,2288"/>
+<area shape="rect" id="Node000002" href="$class_material_properties.html" title="Class which represents the properties of a material." alt="" coords="88,442,284,1062"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="249,1061,287,1258,282,1259,244,1062"/>
+<area shape="rect" id="Node000003" href="$class_data_access_object.html" title="Class which provides an interface to a SQLite database." alt="" coords="6,204,154,329"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="65,329,53,384,43,442,22,617,9,754,9,820,13,890,25,969,43,1061,82,1196,134,1328,193,1452,253,1564,248,1567,188,1455,129,1330,77,1198,38,1063,19,970,8,891,3,820,4,754,17,616,38,442,48,383,60,328"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,328,117,425,112,426,91,329"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="54,15,105,81"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="82,80,82,187,77,187,77,80"/>
+<area shape="rect" id="Node000005" href="$class_interpolator_1_1_log_log_spline.html" title="Class which performs 3rd order spline interpolation on a log&#45;log scale." alt="" coords="308,699,472,805"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="392,805,389,1086,388,1258,383,1258,383,1086,387,805"/>
+<area shape="rect" id="Node000006" href="$class_interpolator_1_1_spline.html" title="Class which performs 3rd order spline interpolation." alt="" coords="332,154,452,379"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="394,394,393,700,388,700,389,394"/>
+<area shape="rect" id="Node000007" href="$class_interpolator_1_1_interpolator.html" title="Abstract base class for interpolators." alt="" coords="410,5,560,91"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="464,105,442,155,437,153,459,103"/>
+<area shape="rect" id="Node000009" href="$class_interpolator_1_1_linear.html" title="Class which performs linear interpolation." alt="" coords="477,164,677,369"/>
+<area shape="poly" id="edge10_Node000009_Node000007" title=" " alt="" coords="511,103,537,163,532,165,506,105"/>
+<area shape="rect" id="Node000008" href="$class_interpolator_1_1_log_log_linear.html" title="Class which performs linear interpolation on a log&#45;log scale." alt="" coords="496,699,660,805"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="582,804,578,1001,569,1126,552,1251,518,1398,513,1397,547,1251,564,1126,573,1001,577,804"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="580,384,581,700,576,700,575,384"/>
+<area shape="rect" id="Node000010" href="$class_probability_dist_1_1_continuous_inversion.html" title="Class which uses PENELOPE&#39;s RITA inversion sampling algorithm to sample from a continuous distributio..." alt="" coords="684,517,904,987"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="798,987,782,1120,767,1187,748,1252,703,1355,647,1454,585,1546,523,1627,519,1624,581,1543,642,1451,698,1352,743,1250,762,1186,777,1119,793,986"/>
+<area shape="rect" id="Node000011" href="$class_probability_dist_1_1_uniform.html" title="Class which represents a uniform distribution." alt="" coords="720,194,868,339"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="797,339,797,500,792,500,792,339"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="BeamDirectionality" name="BeamDirectionality">
+<area shape="rect" id="Node000001" title="Class which represents a beam directionality." alt="" coords="5,139,149,224"/>
+<area shape="rect" id="Node000002" href="$class_directionality.html" title="Virtual class which represents a directionality for a photon source." alt="" coords="15,5,139,91"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,106,80,139,75,139,75,106"/>
+</map>
